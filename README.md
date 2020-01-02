@@ -114,6 +114,7 @@ We will need forking so that we can fork a server-client off of the main client 
    * Helps for messaging, which is described below in algorithms
 * int has_message
    * Boolean that says whether there is an impending message from anybody
+
 **Algorithms**
 * Timer
    * We will need a timer to keep track of the amount of time that has elapsed based on a given point. It will be used to time debates and the amount of time the roles are given for the night.
