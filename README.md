@@ -46,25 +46,30 @@ Vote for who you think is the mafia!
 
 ### Technical Design
 Topics Implemented:
-Signaling
-Semaphores
-Networking
-Pipes
-Forking
+1. Signaling
+2. Semaphores
+3. Networking
+4. Pipes
+5. Forking
 
 SIGNALING
+
 We will use signaling to stop and start the forking for the server in order to begin the game. A signal will be sent to the other computers to start the game and the signal will be sent to the other computers to stop the game.
 
 SEMAPHORES
+
 We will use semaphores so that during the “night” phase, the mafias and each player will have to take turns to perform their action. Also, all players with similar roles have to choose a victim at the same time, so we will need semaphores for that.
 
 NETWORKING
+
 We will need networking because this is a multiplayer game (not pass and play version) so everyone will get their computer and join into a game like a server. This requires networking to coordinate all the computers together with the game.
 
 PIPES
+
 We will need pipes for the chat box. The input text that one user types in should show up on the other computers and should be printed out on all the terminals that are in this game.
 
 FORK
+
 We will need forking so that we can fork a server-client off of the main client so that we have a more organized code. A forked child will get all the data from the main parent and if it messes up, we can make the child die and fork again and revert to the original data.
 
 ### Development Stages
