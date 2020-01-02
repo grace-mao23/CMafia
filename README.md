@@ -4,7 +4,9 @@
 * Amanda Zheng, pd 10
 * George Zhou, pd 10
 
+## PROPOSAL
+Please see attached PDF for our Official Proposal.
+
 ## Description
-Look in proposal for description
 
 ## Instructions
