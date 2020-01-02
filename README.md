@@ -133,5 +133,35 @@ JANUARY 14 | Voting system finished if not finished before
 JANUARY 15 | Finish networking and start final debugging
 JANUARY 17 | Final Project Due
 
+### Work Division
+ 
+Legend |
+--- | ---
+H | Hard
+M | Medium
+E | Easy
+
+**George**
+* Networking (H)
+* Police Role (M)
+* Sharing memory across computers (M)
+* Username Controls (E)
+* End Game (E)
+    
+**Amanda**
+* Mafia Role (H)
+* Creating Server (M)
+* Vote (M)
+* Timer (E)
+* Quit Game (E)
+
+**Grace**
+* Chat Room (H)
+* Doctor Role (M)
+* Allowing people to join server (M)
+* Terminal Updates (E)
+* Spectate mode (E)
+
+
 ## Instructions
 Coming soon in theaters near you!
