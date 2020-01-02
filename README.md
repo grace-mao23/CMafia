@@ -135,8 +135,7 @@ JANUARY 15 | Finish networking and start final debugging
 JANUARY 17 | Final Project Due
 
 ### Work Division
- 
-Legend |  
+Symbol | Level
 --- | ---
 H | Hard
 M | Medium
