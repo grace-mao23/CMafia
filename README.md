@@ -46,19 +46,19 @@ Vote for who you think is the mafia!
 
 ### Technical Design
 Topics Implemented:
-1. Signaling
+1. Shared Memory
 2. Semaphores
 3. Networking
 4. Pipes
 5. Forking
 
-SIGNALING
+SHARED MEMORY
 
-We will use signaling to stop and start the forking for the server in order to begin the game. A signal will be sent to the other computers to start the game and the signal will be sent to the other computers to stop the game.
+Between spectate mode and the game mode, players should still be able to access the existing game that they died in. However while they are spectating, they shouldn't be able to play the game, but should be able to spectate. In this way, shared memory would be used to preserve the game data so that spectating players can still view it.
 
 SEMAPHORES
 
-We will use semaphores so that during the “night” phase, the mafias and each player will have to take turns to perform their action. Also, all players with similar roles have to choose a victim at the same time, so we will need semaphores for that.
+We will use semaphores so that during the “night” phase, the mafias and each player will have to take turns to perform their action. Additionally, while players are spectating a game, they should not be able to play the game, and this would help control the number of subservers.
 
 NETWORKING
 
@@ -66,7 +66,7 @@ We will need networking because this is a multiplayer game (not pass and play ve
 
 PIPES
 
-We will need pipes for the chat box. The input text that one user types in should show up on the other computers and should be printed out on all the terminals that are in this game.
+Pipes along with semaphores will be used to monitor the subservers on the main server, where memory will need to be controlled by the main server but transferred to and changed by the subservers.
 
 FORK
 
