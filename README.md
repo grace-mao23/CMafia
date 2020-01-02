@@ -136,7 +136,7 @@ JANUARY 17 | Final Project Due
 
 ### Work Division
  
-Legend |
+Legend |  
 --- | ---
 H | Hard
 M | Medium
