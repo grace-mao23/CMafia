@@ -1,0 +1,2 @@
+Grace -- 23:02 1-2-2020
+Coded the startings of the shell before the game begins, such as waiting for players to join and generating roles.
