@@ -1,2 +1,5 @@
 Grace -- 23:02 1-2-2020
 Coded the startings of the shell before the game begins, such as waiting for players to join and generating roles.
+
+George -- 2:03 1-3-2020
+Added some more helpful functions and variables, such as turning a list of players into a readable string format and keeping track of the number of days and votes. Also further developed the initialization of the game by setting everything to 0 and ending all arrays and strings with NULL.

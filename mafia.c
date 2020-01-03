@@ -6,11 +6,7 @@
 char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
 int *votes;
-int maf;
-int nur;
-int det;
-int village;
-int num_day;
+int maf, nur, det, village, num_day;
 //method for length of char **
 int len_double(char **ary) {
     int count = 0;
@@ -21,8 +17,8 @@ int len_double(char **ary) {
 }
 //havent figured out exact numbers yet
 //number of people based off of users (number of players)
-int mafiaNum(int users){
-    int mafia=0;
+int mafiaNum(int users) {
+    int mafia = 0;
     if (users > 17) {
         mafia = 7;
     } else if (users > 13) {
@@ -64,13 +60,13 @@ int nurseNum(int users){
 int detectiveNum(int users) {
     int detective;
     if (users > 13) {
-      detective = 4;
+        detective = 4;
     } else if (users > 9) {
-      detective = 3;
+        detective = 3;
     } else if (users > 7) {
-      detective = 2;
+        detective = 2;
     } else {
-      dectecive = 1;
+        dectecive = 1;
     }
     det = detective;
     printf("Total Detective(s): %d\n", detective);
@@ -78,6 +74,7 @@ int detectiveNum(int users) {
 }
 //gonna needa set village = length(players)
 int genRoles() {
+    roles = malloc(num_players * sizeof(int));
     unsigned int r;
     for (size_t i = 0; i < village; i++) {
         r = rand() % village;
@@ -107,6 +104,9 @@ char *to_string(char **ary) {
     line[0] = NULL;
     for (i = 0; i < len_double(ary); i++) {
         strcat(line, ary[i]);
+        if (i < len_double(ary) - 1) {
+            strcat(line, ", ");
+        }
     }
     return line;
 }
@@ -153,8 +153,11 @@ int main() {
             game_start = 1;
             night = 0;
             num_day = 1;
-            roles = malloc(num_players * sizeof(int));
-            votes = malloc(num_players * sizeof(int));
+            votes = malloc(num_players * (sizeof(int) + 1));
+            for (int i = 0; i < num_players; i++) {
+                votes[i] = 0;
+            }
+            votes[num_players] = NULL;
             mafiaNum(num_players);
             detectiveNum(num_players);
             nurseNum(num_players);
