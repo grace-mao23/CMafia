@@ -20,15 +20,17 @@ int main() {
         if (f) { // parent
             close(client);
         } else {
+            sub_num = lowest_available(taken);
+            printf("Current: %d\n", sub_num);
             printf("Subserverrrr\n");
             fd1[0] = sd;
-            fd1[1] = client;
+            fd1[sub_num] = client;
             pipe(fd1);
             fd2[0] = client;
-            fd2[1] = sd;
+            fd2[sub_num] = sd;
             pipe(fd2);
             printf("Just added 1: %d\n", sub_num);
-
+            sub_num++;
             //WILL WORK ON LATER
             int quitted = 0;
             while (read(client, buffer, sizeof(buffer)) && !quitted) { //this quitting is when you want to quit before the game starts

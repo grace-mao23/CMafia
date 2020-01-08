@@ -10,7 +10,7 @@
 #include <string.h>
 #include <errno.h>
 
-#define PORT "9001"
+#define PORT "42069"
 #define TEST_IP "127.0.0.1"
 #define BUFFER_SIZE 1024
 #define INPLAY 0
