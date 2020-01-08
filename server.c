@@ -5,7 +5,7 @@
 int main() {
     int inplay = 1;
 
-    int sd, f, client, sub_num;
+    int sd, f, client, sub_num = 0;
     int taken[13]; //boolean of numbers saying which fd's are taken already;
     taken[0] = 1; //false means not taken, true means taken
     int fd1[13];
@@ -13,10 +13,11 @@ int main() {
     sd = server_setup();
 
     while (inplay != 0){
+        sub_num++;
         int client = server_connect(sd);
         char buffer[BUFFER_SIZE];
         f = fork();
-        if (f) {
+        if (f) { // parent
             close(client);
         } else {
             printf("Subserverrrr\n");
@@ -26,7 +27,6 @@ int main() {
             fd2[0] = client;
             fd2[1] = sd;
             pipe(fd2);
-            sub_num++;
             printf("Just added 1: %d\n", sub_num);
 
             //WILL WORK ON LATER
@@ -36,7 +36,7 @@ int main() {
                     quitted = 1;
                 }
             }
-            sub_num--;
+          //  sub_num--;
             printf("Just removed 1: %d\n", sub_num);
             close(client);
             exit(0);
