@@ -6,16 +6,19 @@ int main() {
     int inplay = 1;
 
     int sd, f, client, sub_num;
+    int taken[13]; //boolean of numbers saying which fd's are taken already;
+    taken[0] = 1; //false means not taken, true means taken
     int fd1[13];
     int fd2[13];
     sd = server_setup();
-    sub_num = 0;
 
     while (inplay != 0){
         int client = server_connect(sd);
         char buffer[BUFFER_SIZE];
         f = fork();
-        if (f == 0) {
+        if (f) {
+            close(client);
+        } else {
             printf("Subserverrrr\n");
             fd1[0] = sd;
             fd1[1] = client;
@@ -38,8 +41,6 @@ int main() {
             close(client);
             exit(0);
             //WILL WORK ON LATER
-        } else {
-            close(client);
         }
     }
     close(sd);
@@ -88,4 +89,14 @@ int server_connect(int sd) {
 
     //printf("Client Socket: %d\n", client_socket);
     return client_socket;
+}
+
+int lowest_available(int *taken) { //finds the closest available fd
+    int i = 1;
+    for (; i < sizeof(taken) / sizeof(int); i++) {
+        if (!taken[i]) {
+            return i;
+        }
+    }
+    return -1;
 }

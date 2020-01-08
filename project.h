@@ -25,3 +25,4 @@ void error_check( int i, char *s ) {
     exit(1);
   }
 }
+int lowest_available(int *taken);
