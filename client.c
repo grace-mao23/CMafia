@@ -9,7 +9,12 @@ int main() {
   sd_conn = client_setup(TEST_IP);
 
   if (sd_conn >= 0) {
-    printf("CONNECTION ACHIEVED \n");
+    printf("enter data: ");
+    fgets(buffer, sizeof(buffer), stdin);
+    *strchr(buffer, '\n') = 0;
+    write(sd_conn, buffer, sizeof(buffer));
+    //read(sd_conn, buffer, sizeof(buffer));
+    //printf("here: %s", buffer);
   }
 
   return 0;

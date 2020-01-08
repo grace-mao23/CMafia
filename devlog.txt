@@ -3,3 +3,9 @@ Coded the startings of the shell before the game begins, such as waiting for pla
 
 George -- 2:03 1-3-2020
 Added some more helpful functions and variables, such as turning a list of players into a readable string format and keeping track of the number of days and votes. Also further developed the initialization of the game by setting everything to 0 and ending all arrays and strings with NULL.
+
+Grace -- 22:33 1-7-2020
+Added the required functions and lines and code in order to create subservers that interact with clients. Also created the required pipes to have the servers interact with subservers.
+
+George -- 23:59 1-7-2020
+Added onto the pipes by creating a counter that helps keep track of number of people on the server.

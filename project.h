@@ -18,7 +18,8 @@
 int server_setup();
 int server_connect(int sd);
 int client_setup(char *server);
-void error_check( int i, char *s );void error_check( int i, char *s ) {
+void error_check( int i, char *s );
+void error_check( int i, char *s ) {
   if ( i < 0 ) {
     printf("[%s] error %d: %s\n", s, errno, strerror(errno) );
     exit(1);
