@@ -8,6 +8,8 @@ int main() {
   // when game ends, redefine inplay as 0
 
   int sd, f, client;
+  int fd1[2];
+  int fd2[2];
   sd = server_setup();
 
   while (INPLAY != 0){
@@ -15,8 +17,15 @@ int main() {
     f = fork();
     if (f == 0) {
       printf("Subserverrrr\n");
-      close(client);
-      exit(0);
+      fd1[0] = sd;
+      fd1[1] = client;
+      pipe(fd1);
+      fd2[0] = client;
+      fd2[1] = sd;
+      pipe(fd2);
+
+    //  close(client);
+    //  exit(0);
     } else {
       close(client);
     }
