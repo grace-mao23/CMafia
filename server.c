@@ -26,6 +26,7 @@ int main() {
             sub_num++;
             printf("Just added 1: %d\n", sub_num);
 
+            //WILL WORK ON LATER
             int quitted = 0;
             while (read(client, buffer, sizeof(buffer)) && !quitted) { //this quitting is when you want to quit before the game starts
                 if (strcmp(buffer, "quit") == 0) {
@@ -36,6 +37,7 @@ int main() {
             printf("Just removed 1: %d\n", sub_num);
             close(client);
             exit(0);
+            //WILL WORK ON LATER
         } else {
             close(client);
         }
