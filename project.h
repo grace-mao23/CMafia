@@ -26,4 +26,5 @@ void error_check( int i, char *s ) {
     exit(1);
   }
 }
+void taken_setup(int *taken);
 int lowest_available(int *taken);

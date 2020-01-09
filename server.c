@@ -7,20 +7,20 @@ int main() {
 
     int sd, f, client, sub_num = 0;
     int taken[13]; //boolean of numbers saying which fd's are taken already;
-    taken[0] = 1; //false means not taken, true means taken
+    taken_setup(taken);
     int fd1[13];
     int fd2[13];
     sd = server_setup();
 
     while (inplay != 0){
-        sub_num++;
         int client = server_connect(sd);
+        sub_num = lowest_available(taken);
+        taken[sub_num] = 1;
         char buffer[BUFFER_SIZE];
         f = fork();
         if (f) { // parent
             close(client);
         } else {
-            sub_num = lowest_available(taken);
             printf("Current: %d\n", sub_num);
             printf("Subserverrrr\n");
             fd1[0] = sd;
@@ -30,7 +30,6 @@ int main() {
             fd2[sub_num] = sd;
             pipe(fd2);
             printf("Just added 1: %d\n", sub_num);
-            sub_num++;
             //WILL WORK ON LATER
             int quitted = 0;
             while (read(client, buffer, sizeof(buffer)) && !quitted) { //this quitting is when you want to quit before the game starts
@@ -38,7 +37,6 @@ int main() {
                     quitted = 1;
                 }
             }
-          //  sub_num--;
             printf("Just removed 1: %d\n", sub_num);
             close(client);
             exit(0);
@@ -93,9 +91,18 @@ int server_connect(int sd) {
     return client_socket;
 }
 
+void taken_setup(int *taken) {
+    taken[0] = 1; //false means not taken, true means taken
+    int i = 1;
+    for (; i < sizeof(taken); i++) {
+        taken[i] = 0;
+    }
+}
+
 int lowest_available(int *taken) { //finds the closest available fd
     int i = 1;
-    for (; i < sizeof(taken) / sizeof(int); i++) {
+    for (; i < sizeof(taken); i++) {
+        printf("%d\n", taken[i]);
         if (!taken[i]) {
             return i;
         }

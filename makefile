@@ -1,13 +1,16 @@
-all: server.o mafia.o client.o
-	gcc -c server.c -o server
-	gcc -c mafia.c -o mafia
-	gcc -c client.c -o client
+ifeq ($(type), server)
+	type = server
+endif
 
-server:
-	./server
+ifeq ($(type), client)
+	type = client
+endif
 
-mafia:
-	./mafia
+all: $(type).c
+	gcc $(type).c -o $(type)  
 
-client:
-	./client
+run:
+	./$(type)
+
+clean:
+	rm *.o
