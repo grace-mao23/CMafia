@@ -2,11 +2,20 @@
 #include<time.h>
 #include<stdlib.h>
 #include <unistd.h>
+#include <stdio.h>
 //Amanda's Code
 char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
 int *votes;
 int maf, nur, det, village, num_day;
+
+typedef struct turns{
+  char ** member;
+  int index;
+}
+struct turns m_turn;
+struct turns n_turn;
+struct turns d_turn;
 //method for length of char **
 int len_double(char **ary) {
     int count = 0;
@@ -73,15 +82,39 @@ int detectiveNum(int users) {
     return detective;
 }
 //gonna needa set village = length(players)
+//need to initialize turns to 0
 int genRoles() {
-    roles = malloc(num_players * sizeof(int));
+    total=village;
+    m=mafia
+    d=det
+    n=nur
+    roles = malloc(total * sizeof(int));
     unsigned int r;
     for (size_t i = 0; i < village; i++) {
-        r = rand() % village;
-        roles[i] = r;
+      r = srand(time(0)) % total;
+      if(r<m){
+        roles[i]=1;
+        m_turn->member[m_turn->index]=players[i];
+        m_turn->index++;
+        m--;
+      }else if(r<m+d){
+        roles[i]=2;
+        d_turn->member[m_turn->index]=players[i];
+        d_turn->index++;
+        d--;
+      }else{
+        roles[i]=0;
+        n_turn->member[m_turn->index]=players[i];
+        n_turn->index++;
+        n--;
+      }
+      total--;
     }
 }
 
+void assignTurns(){
+  struct turns m_turn
+}
 //=================================================================================================================
 //George's Code
 int len_single(char *ary) {
