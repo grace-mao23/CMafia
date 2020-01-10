@@ -8,8 +8,8 @@ int main() {
     int sd, f, client, sub_num = 0;
     int taken[13]; //boolean of numbers saying which fd's are taken already;
     taken_setup(taken);
-    int fd1[13];
-    int fd2[13];
+    int fd1[12][2]; // host reading from subserver
+    int fd2[12][2]; // host writing to subserver
     sd = server_setup();
 
     while (inplay != 0){
@@ -24,22 +24,22 @@ int main() {
             if (sub_num >= 2) {
               int i = 0;
               for (; i < 13; i++) {
-                write(fd2[i], buffer, BUFFER_SIZE);
+                write(fd2[i][1], buffer, BUFFER_SIZE);
               }
             }
         } else {
             printf("Current: %d\n", sub_num);
             printf("Waiting for players to join...\n");
-            fd1[0] = getppid();
-            fd1[sub_num] = getpid();
+            fd1[sub_num][0] = getppid();
+            fd1[sub_num][1] = getpid();
             pipe(fd1);
-            fd2[0] = getpid();
-            fd2[sub_num] = getppid();
+            fd2[sub_num][0] = getpid();
+            fd2[sub_num][1] = getppid();
             pipe(fd2);
             printf("Just added 1: %d\n", sub_num);
             //WILL WORK ON LATER
             int quitted = 0;
-            while (read(fd2[0], buffer, sizeof(buffer))) {
+            while (read(fd2[0][0], buffer, sizeof(buffer))) {
               if (strcmp(buffer, "Start") == 0) {
                 write(client, buffer, sizeof(buffer));
               }
