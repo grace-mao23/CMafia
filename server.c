@@ -21,7 +21,7 @@ int main() {
         if (f) { // parent
             close(client);
             sleep(1); // give time for creation of pipe
-            if (sub_num >= 5) {
+            if (sub_num >= 2) {
               int i = 0;
               for (; i < 13; i++) {
                 write(fd2[i], buffer, BUFFER_SIZE);
