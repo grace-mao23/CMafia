@@ -41,7 +41,7 @@ int main() {
             int quitted = 0;
             while (read(fd2[0], buffer, sizeof(buffer))) {
               if (strcmp(buffer, "Start") == 0) {
-                printf("%d players in the game. Start? ", sub_num);
+                write(client, buffer, sizeof(buffer));
               }
             }
             while (read(client, buffer, sizeof(buffer)) && !quitted) { //this quitting is when you want to quit before the game starts
