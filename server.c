@@ -16,22 +16,34 @@ int main() {
         int client = server_connect(sd);
         sub_num = lowest_available(taken);
         taken[sub_num] = 1;
-        char buffer[BUFFER_SIZE];
+        char buffer[BUFFER_SIZE] = "Start";
         f = fork();
         if (f) { // parent
             close(client);
+            sleep(1); // give time for creation of pipe
+            if (sub_num >= 5) {
+              int i = 0;
+              for (; i < 13; i++) {
+                write(fd2[i], buffer, BUFFER_SIZE);
+              }
+            }
         } else {
             printf("Current: %d\n", sub_num);
-            printf("Subserverrrr\n");
-            fd1[0] = sd;
-            fd1[sub_num] = client;
+            printf("Waiting for players to join...\n");
+            fd1[0] = getppid();
+            fd1[sub_num] = getpid();
             pipe(fd1);
-            fd2[0] = client;
-            fd2[sub_num] = sd;
+            fd2[0] = getpid();
+            fd2[sub_num] = getppid();
             pipe(fd2);
             printf("Just added 1: %d\n", sub_num);
             //WILL WORK ON LATER
             int quitted = 0;
+            while (read(fd2[0], buffer, sizeof(buffer))) {
+              if (strcmp(buffer, "Start") == 0) {
+                printf("%d players in the game. Start? ", sub_num);
+              }
+            }
             while (read(client, buffer, sizeof(buffer)) && !quitted) { //this quitting is when you want to quit before the game starts
                 if (strcmp(buffer, "quit") == 0) {
                     quitted = 1;

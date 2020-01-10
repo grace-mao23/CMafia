@@ -9,6 +9,8 @@ int main() {
   sd_conn = client_setup(TEST_IP);
 
   if (sd_conn >= 0) {
+    printf("Waiting for players to join...\n");
+    
     printf("enter data: ");
     fgets(buffer, sizeof(buffer), stdin);
     *strchr(buffer, '\n') = 0;

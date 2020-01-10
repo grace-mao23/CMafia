@@ -89,6 +89,7 @@ int genRoles() {
     d=det
     n=nur
     roles = malloc(total * sizeof(int));
+    //need to be freed
     unsigned int r;
     for (size_t i = 0; i < village; i++) {
       r = srand(time(0)) % total;
