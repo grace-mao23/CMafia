@@ -32,10 +32,10 @@ int main() {
             printf("Waiting for players to join...\n");
             fd1[sub_num][0] = getppid();
             fd1[sub_num][1] = getpid();
-            pipe(fd1);
+            pipe(fd1[sub_num]);
             fd2[sub_num][0] = getpid();
             fd2[sub_num][1] = getppid();
-            pipe(fd2);
+            pipe(fd2[sub_num]);
             printf("Just added 1: %d\n", sub_num);
             //WILL WORK ON LATER
             int quitted = 0;
