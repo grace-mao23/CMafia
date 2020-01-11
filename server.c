@@ -21,7 +21,8 @@ int main() {
         if (f) { // parent
             close(client);
             sleep(1); // give time for creation of pipe
-            if (sub_num >= 2) {
+            printf("SERVER: %d\n", sub_num);
+            if (sub_num >= 2) { //CHANGE TO 5 LATER
               int i = 0;
               for (; i < 13; i++) {
                 write(fd2[i][1], buffer, BUFFER_SIZE);
