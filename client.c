@@ -3,7 +3,7 @@
 // LATER SHOULD BE MOVED TO MAFIA.C
 
 int main() {
-  int sd_conn;
+  int sd_conn, game_start = 0;
   char buffer[BUFFER_SIZE];
 
   sd_conn = client_setup(TEST_IP);
@@ -13,8 +13,9 @@ int main() {
 
     while(read(sd_conn, buffer, sizeof(buffer))) {
       if (strcmp(buffer, "Start") == 0) {
-        printf("2 Players in the game. Ready to start?");
-        fgets(buffer, sizeof(buffer), stdin);
+        game_start = 1;
+        strcpy(buffer, "Game Started");
+        printf("\n\n\nLET'S BEGIN!\n\n\n");
       }
     }
     //printf("enter data: ");
