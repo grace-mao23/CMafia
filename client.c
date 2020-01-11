@@ -1,4 +1,4 @@
-#include "project.h"
+#include "networking.c"
 
 // LATER SHOULD BE MOVED TO MAFIA.C
 

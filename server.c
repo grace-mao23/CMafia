@@ -1,4 +1,4 @@
-#include "project.h"
+#include "networking.c"
 
 int main() {
     int inplay = 1;
