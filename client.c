@@ -4,7 +4,7 @@
 
 int main() {
   int sd_conn, game_start = 0;
-  char buffer[BUFFER_SIZE];
+  char buffer[BUFFER_SIZE] = "not yet";
 
   sd_conn = client_setup(TEST_IP);
 

@@ -29,6 +29,7 @@ int main() {
                 checkin += 3;
               } else if (strcmp(buffer, "yes")) {
                 strcpy(buffer, "Start");
+                printf("Game begins!");
                 game_start = 1;
                 int i = 0;
                 for (; i < 13; i++) {
