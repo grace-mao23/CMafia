@@ -11,6 +11,7 @@ int main() {
     int fd2[12][2]; // host writing to subserver
     sd = server_setup();
     int checkin = 2; // when to prompt host // chenge to 6
+    char *buffer_p = 0; // buffer pointer
 
     while (inplay != 0){
         int client = server_connect(sd);
@@ -24,7 +25,7 @@ int main() {
 
             if (sub_num >= checkin) {
               printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
-              fgets(buffer, sizeof(buffer), stdin);
+              buffer_p = fgets(buffer, sizeof(buffer), stdin);
               printf("|%s|", buffer);
               if (strcmp(buffer, "no")) {
                 checkin += 3;
