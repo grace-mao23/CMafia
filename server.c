@@ -10,24 +10,25 @@ int main() {
     int fd1[12][2]; // host reading from subserver
     int fd2[12][2]; // host writing to subserver
     sd = server_setup();
-    int checkin = 3; // when to prompt host
+    int checkin = 2; // when to prompt host // chenge to 6
 
     while (inplay != 0){
         int client = server_connect(sd);
         sub_num = lowest_available(taken);
         taken[sub_num] = 1;
-        char buffer[BUFFER_SIZE] = "Start";
+        char buffer[BUFFER_SIZE] = "not yet";
         f = fork();
         if (f) { // parent
             close(client);
             sleep(1); // give time for creation of pipe
 
-            if (sub_num >= checkin) { //CHANGE TO 6 LATER --> sub_num = number of subservers + 1
+            if (sub_num >= checkin) {
               printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
               fgets(buffer, sizeof(buffer), stdin);
               if (strcmp(buffer, "no")) {
                 checkin += 3;
               } else if (strcmp(buffer, "yes")) {
+                strcpy(buffer, "Start");
                 game_start = 1;
                 int i = 0;
                 for (; i < 13; i++) {
