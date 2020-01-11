@@ -15,7 +15,6 @@
 #define BUFFER_SIZE 1024
 #define INPLAY 0
 
-// networking.c
 int server_setup();
 int server_connect(int sd);
 int client_setup(char *server);

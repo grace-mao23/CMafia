@@ -30,7 +30,7 @@ int main() {
               } else if (strcmp(buffer, "yes")) {
                 game_start = 1;
                 int i = 0;
-                for (; i < 13, i++) {
+                for (; i < 13; i++) {
                   write(fd2[i][1], buffer, sizeof(buffer));
                 }
               }
