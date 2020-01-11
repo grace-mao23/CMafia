@@ -14,6 +14,7 @@ int main() {
     while(read(sd_conn, buffer, sizeof(buffer))) {
       if (strcmp(buffer, "Start") == 0) {
         printf("2 Players in the game. Ready to start?");
+        fgets(buffer, sizeof(buffer), stdin);
       }
     }
     //printf("enter data: ");
