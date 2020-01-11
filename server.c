@@ -26,10 +26,10 @@ int main() {
             if (sub_num >= checkin) {
               printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
               buffer_p = fgets(buffer, sizeof(buffer), stdin);
-              printf("|%s|", buffer);
-              if (strcmp(buffer, "no")) {
+              printf("|%s|", buffer_p);
+              if (strcmp(buffer_p, "no")) {
                 checkin += 3;
-              } else if (strcmp(buffer, "yes")) {
+              } else if (strcmp(buffer_p, "yes")) {
                 strcpy(buffer, "Start");
                 printf("Game begins!");
                 game_start = 1;
