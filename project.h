@@ -19,10 +19,10 @@ int server_setup();
 int server_connect(int sd);
 int client_setup(char *server);
 void error_check(int i, char *s) {
-  if ( i < 0 ) {
-    printf("[%s] error %d: %s\n", s, errno, strerror(errno) );
-    exit(1);
-  }
+    if ( i < 0 ) {
+        printf("[%s] error %d: %s\n", s, errno, strerror(errno) );
+        exit(1);
+    }
 }
 void taken_setup(int *taken);
 int lowest_available(int *taken);
