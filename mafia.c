@@ -247,7 +247,7 @@ int main() {
             d_turn->index = 0;
             n_turn->index = 0;
         }
-      }
+    }
     while (!game_over) {
         if (!night) { //daytime
             if (num_day == 1) {
