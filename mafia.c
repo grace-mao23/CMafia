@@ -7,8 +7,8 @@
 char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
 int *votes;
-int maf, nur, det, village, num_day,num_night;
-char * username;
+int maf, nur, det, village, num_day, num_night;
+char *username;
 char *victim;
 typedef struct turns{
     char **member;
@@ -211,7 +211,7 @@ int main() {
         if (strcmp(buffer, "y") == 0) {
             printf("\\Mafia$ Enter Username: ");
             fgets(buffer, 1000, stdin);
-            buffer[strlen(buffer)-1]='\0';
+            buffer[strlen(buffer) - 1] = '\0';
             printf("Your Username is: %s\n", buffer);
             usernames(&buffer);
             printf("\\Mafia$ Waiting for other players...");
@@ -233,7 +233,7 @@ int main() {
             game_start = 1;
             night = 0;
             num_day = 1;
-            num_night=0;
+            num_night = 0;
             votes = malloc(num_players * (sizeof(int) + 1));
             for (int i = 0; i < num_players; i++) {
                 votes[i] = 0;
@@ -279,14 +279,14 @@ int main() {
                     printf("Here are all of your suspects: %s\n", to_string(players));
                     printf("\\Choose to investigate a suspects: ");
                     fgets(buffer, 1000, stdin);
-                    buffer[strlen(buffer)-1] = '\0';
+                    buffer[strlen(buffer) - 1] = '\0';
                     while (!valid(&buffer)) { //function to see if its valid victim
                         printf("\nYou have chosen an invalid suspect.\n Here are all of your suspects: %s\n", to_string(players));
                         printf("\\Choose to investigate a suspects: ");
                         fgets(buffer, 1000, stdin);
                         buffer[strlen(buffer) - 1] = '\0';
                     }
-                    printf("\nYou have chosen to investiage: %s\n", buffer);
+                    printf("\nYou have chosen to investigate: %s\n", buffer);
                     if (getRole(buffer) == 0) {
                         printf("%s's identity is: Civilian\n", buffer);
                     } else if (getRole(buffer) == 1) {
