@@ -6,11 +6,14 @@ ifeq ($(type), client)
 	type = client
 endif
 
-all: $(type).c
-	gcc $(type).c -o $(type)  
+all: server.c client.c
+	gcc server.c -o server
+	gcc client.c -o client
 
 run:
 	./$(type)
 
 clean:
+	rm server
+	rm client
 	rm *.o
