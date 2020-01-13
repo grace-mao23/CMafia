@@ -7,7 +7,7 @@
 char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
 int *votes;
-int maf, nur, det, village, num_day,num_night;
+int maf, nur, det, village, num_day,num_night,mdone,ddone,ndone;
 char * username;
 char *victim;
 typedef struct turns{
@@ -246,16 +246,34 @@ int main() {
             m_turn->index=0;
             d_turn->index=0;
             n_turn->index=0;
+            mdone=0;
+            ndone=0;
+            ddone=0;
         }
       }
     while (!game_over) {
         if (!night) { //daytime
+            printf("It's Daytime!\n", );
             if (num_day == 1) {
+              if(victim!=NULL){
+                printf("%s has died!\n",victim);
+                if(strcmp(username,victim)==0){
+                  game_over=true;
+                }else{
+                  printf("You have 5 minutes to discuss.\n"); //George's Timer
+                }
+              }else{
+                printf("Nobody Died!\n");
+              }
+              num_day=2
+            } else if(num_day==2){
+              //chatbox
+            }else{
 
-            } else {
-
+              //voting
             }
         } else { //nighttime
+          printf("It's Nighttime!\n", );
           if(num_night==0){
             printf("Waiting for Mafia\n");
             if(strcmp(username,m_turn->member[m_turn->index])==0){
@@ -270,9 +288,14 @@ int main() {
                 buffer[strlen(buffer)-1]='\0';
               }
               printf("\nYou have selected to kill: %s\n", buffer);
-              strcpy(victim, buffer);
-              m_turn->index++;
+              strcpy(victim, buffer);//how to make sure the victim selected by mafia is saved on everyone'scomputers?
+            }else{
+              while (!mdone) {
+                sleep(1)
+              }
             }
+            m_turn->index++;
+            num_night=2;
           }else if(num_night==1){
             printf("Waiting for Detective\n");
             if(strcmp(username,d_turn->member[d_turn->index])==0){
@@ -297,8 +320,13 @@ int main() {
                 printf("%s's identity is: Nurse\n",buffer);
               }
             }
+            while (!ddone) {
+              sleep(1);
+            }
             d_turn->index++;
-          }else{
+            num_night=3;
+          }
+          else{
             printf("Waiting for Nurse\n");
             if(strcmp(username,n_turn->member[n_turn->index])==0){
               printf("Here are all of your patients: %s\n", to_string(players));
@@ -315,8 +343,13 @@ int main() {
               if(strcmp(victim,buffer)==0){
                 victim=NULL;
               }
-              n_turn->index++;
+            }else{
+              while (!ddone) {
+                sleep(1);
+              }
             }
+            n_turn->index++;
+            num_night=1;
           }
         }
     }
