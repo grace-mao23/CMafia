@@ -7,8 +7,9 @@
 char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
 int *votes;
-int maf, nur, det, village, num_day;
-
+int maf, nur, det, village, num_day,num_night;
+char * username;
+char *victim;
 typedef struct turns{
     char **member;
     int index;
@@ -116,6 +117,43 @@ int genRoles() {
 void assignTurns() {
     struct turns m_turn
 }
+int usernames(char * new){
+  int i=0;
+  strcpy(username,new);
+  printf("Players in Game:");
+  for (i = 0; i < players[i]!=NULL; i++) {
+    printf("%s, ",players[i]);
+  }
+  strcpy(players[i],new);
+  printf("%s\n", new);
+}
+
+int getRole(char * check){
+  for (size_t i = 0; players[i] != NULL; i++) {
+    if (strcmp(players[i],check)==0){
+      return i;
+    }
+  }
+  return -1;
+}
+
+void startSpecial(){
+  m_turn->index=0;
+  d_turn->index=0;
+  n_turn->index=0;
+  for (size_t i = 0; players[i] != NULL; i++) {
+    if (roles[i]==1){
+      m_turn[member]->[m_turn->index];
+      m_turn->index++;
+    }else if(roles[i]==2){
+      d_turn[member]->[m_turn->index];
+      d_turn->index++;
+    }else if(roles[i]==3){
+      n_turn[member]->[m_turn->index];
+      n_turn->index++;
+    }
+  }
+}
 //=================================================================================================================
 //George's Code
 int len_single(char *ary) {
@@ -173,31 +211,43 @@ int main() {
         if (strcmp(buffer, "y") == 0) {
             printf("\\Mafia$ Enter Username: ");
             fgets(buffer, 1000, stdin);
-            usernames(); // SOME CODE TO UPDATE PLAYER USERNAMES
+            buffer[strlen(buffer)-1]='\0';
             printf("Your Username is: %s\n", buffer);
+            usernames(&buffer);
             printf("\\Mafia$ Waiting for other players...");
-            while (num_players != len(players)) {
+            while (num_players != len_double(players)) {
                 sleep(1);
             }
             printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
             printf("\\Mafia$ Generating Role...\n");
             genRoles();
-            printf("Your Role: %s", role(user)); // DEVELOP FUNCTION TO DISPLAY ROLE BASED ON USER
-            //George's part
+            if(getRole(username)==0){
+              printf("Your Role: Civilian\n");
+            }else if(getRole(username)==1){
+              printf("Your Role: Mafia\n");
+            }else if(getRole(username)==2){
+              printf("Your Role: Detective\n");
+            }else{
+              printf("Your Role: Nurse\n");
+            }
             game_start = 1;
             night = 0;
             num_day = 1;
+            num_night=0;
             votes = malloc(num_players * (sizeof(int) + 1));
             for (int i = 0; i < num_players; i++) {
-                votes[i] = 0;
+              votes[i] = 0;
             }
             votes[num_players] = NULL;
             mafiaNum(num_players);
             detectiveNum(num_players);
             nurseNum(num_players);
+            startSpecial();
+            m_turn->index=0;
+            d_turn->index=0;
+            n_turn->index=0;
         }
-    }
-
+      }
     while (!game_over) {
         if (!night) { //daytime
             if (num_day == 1) {
@@ -206,7 +256,68 @@ int main() {
 
             }
         } else { //nighttime
-
+          if(num_night==0){
+            printf("Waiting for Mafia\n");
+            if(strcmp(username,m_turn->member[m_turn->index])==0){
+              printf("Here are all of your victims\n", to_string(players));
+              printf("\\Vote for your victim: ");
+              fgets(buffer, 1000, stdin);
+              buffer[strlen(buffer)-1]='\0';
+              while(!valid(&buffer)){ //function to see if its valid victim
+                printf("\nYou have voted for an invalid victim.\n Here are all of your victims\n", to_string(players));
+                printf("\\Vote for your victim: ");
+                fgets(buffer, 1000, stdin);
+                buffer[strlen(buffer)-1]='\0';
+              }
+              printf("\nYou have selected to kill: %s\n", buffer);
+              strcpy(victim, buffer);
+              m_turn->index++;
+            }
+          }else if(num_night==1){
+            printf("Waiting for Detective\n");
+            if(strcmp(username,d_turn->member[d_turn->index])==0){
+              printf("Here are all of your suspects: %s\n", to_string(players));
+              printf("\\Choose to investigate a suspects: ");
+              fgets(buffer, 1000, stdin);
+              buffer[strlen(buffer)-1]='\0';
+              while(!valid(&buffer)){ //function to see if its valid victim
+                printf("\nYou have chosen an invalid suspect.\n Here are all of your suspects: %s\n", to_string(players));
+                printf("\\Choose to investigate a suspects: ");
+                fgets(buffer, 1000, stdin);
+                buffer[strlen(buffer)-1]='\0';
+              }
+              printf("\nYou have chosen to investiage: %s\n", buffer);
+              if(getRole(buffer)==0){
+                printf("%s's identity is: Civilian\n",buffer);
+              }else if(getRole(buffer)==1){
+                printf("%s's identity is: Mafia\n",buffer);
+              }else if(getRole(buffer)==2){
+                printf("%s's identity is: Detective\n",buffer);
+              }else{
+                printf("%s's identity is: Nurse\n",buffer);
+              }
+            }
+            d_turn->index++;
+          }else{
+            printf("Waiting for Nurse\n");
+            if(strcmp(username,n_turn->member[n_turn->index])==0){
+              printf("Here are all of your patients: %s\n", to_string(players));
+              printf("\\Choose to save a patients: ");
+              fgets(buffer, 1000, stdin);
+              buffer[strlen(buffer)-1]='\0';
+              while(!valid(&buffer)){ //function to see if its valid victim
+                printf("\nYou have voted for an invalid victim.\n Here are all of your patients: %s\n", to_string(players));
+                printf("\\Choose to save a patient: ");
+                fgets(buffer, 1000, stdin);
+                buffer[strlen(buffer)-1]='\0';
+              }
+              printf("\nYou have chosent to save: %s\n", buffer);
+              if(strcmp(victim,buffer)==0){
+                victim=NULL;
+              }
+              n_turn->index++;
+            }
+          }
         }
     }
 }
