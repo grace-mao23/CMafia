@@ -7,10 +7,10 @@
 char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
 int *votes;
-int maf, nur, det, village, num_day, num_night;
+int maf, nur, det, village;
 char *username;
 char *victim;
-typedef struct turns{
+typedef struct turns {
     char **member;
     int index;
 }
@@ -205,7 +205,7 @@ int remove_name(char **ary, char *name) {
 // going with assumption that at least 5 people needed, will change later
 int game_over = 0;
 int game_start = 0;
-int num_players;
+int num_players, num_day, type_night, num_night; //type night is for the roles, while num night is how many nights have passed
 int night;
 
 int main() {
@@ -244,7 +244,8 @@ int main() {
             game_start = 1;
             night = 0;
             num_day = 1;
-            num_night = 0;
+            num_night = 1;
+            type_night = 0;
             votes = malloc(num_players * (sizeof(int) + 1));
             for (int i = 0; i < num_players; i++) {
                 votes[i] = 0;
@@ -262,12 +263,15 @@ int main() {
     while (!game_over) {
         if (!night) { //daytime
             if (num_day == 1) {
-
+                printf("Welcome to Mafia!\n");
+                sleep(2);
+                printf("The night will begin shortly...\n");
             } else {
 
+                //chat will happen later
             }
         } else { //nighttime
-            if (num_night == 0) {
+            if (type_night == 0) {
                 printf("Waiting for Mafia\n");
                 if (strcmp(username, m_turn->member[m_turn->index]) == 0) {
                     printf("Here are all of your victims\n", to_string(players));
@@ -284,7 +288,7 @@ int main() {
                     strcpy(victim, buffer);
                     m_turn->index++;
                 }
-            } else if (num_night == 1) {
+            } else if (type_night == 1) {
                 printf("Waiting for Detective\n");
                 if (strcmp(username, d_turn->member[d_turn->index]) == 0) {
                     printf("Here are all of your suspects: %s\n", to_string(players));
@@ -298,6 +302,7 @@ int main() {
                         buffer[strlen(buffer) - 1] = '\0';
                     }
                     printf("\nYou have chosen to investigate: %s\n", buffer);
+                    sleep(2);
                     if (getRole(buffer) == 0) {
                         printf("%s's identity is: Civilian\n", buffer);
                     } else if (getRole(buffer) == 1) {
