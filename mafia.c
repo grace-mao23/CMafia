@@ -118,7 +118,7 @@ void assignTurns() {
     struct turns m_turn
 }
 int usernames(char *new){
-    int i=0;
+    int i = 0;
     strcpy(username, new);
     printf("Players in Game:");
     for (i = 0; i < players[i] != NULL; i++) {
@@ -172,10 +172,12 @@ char *to_string(char **ary) {
         size += 2;
     }
     size -= 1;
-    char *line = malloc(size * sizeof(char));
+    char *line = malloc(size *sizeof(char));
     line[0] = NULL;
     for (i = 0; i < len_double(ary); i++) {
-        strcat(line, ary[i]);
+        if (strcmp(ary[i], " ") != 0) { //" " means the player has died
+            strcat(line, ary[i]);
+        }
         if (i < len_double(ary) - 1) {
             strcat(line, ", ");
         }
@@ -183,7 +185,16 @@ char *to_string(char **ary) {
     return line;
 }
 
-
+int remove_name(char **ary, char *name) {
+    int i = 0;
+    for (; i < len_double(ary); i++) {
+        if (strcmp(ary[i], name) == 0) {
+            strcpy(ary[i], " ");
+            return 1;
+        }
+    }
+    return 0;
+}
 
 //=================================================================================================================
 //Grace's Code
