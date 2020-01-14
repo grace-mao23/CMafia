@@ -22,7 +22,6 @@ int main() {
         if (f) { // parent
             close(client);
             sleep(1); // give time for creation of pipe
-f
             if (sub_num >= checkin) {
                 printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
                 buffer_p = fgets(buffer, sizeof(buffer), stdin);
