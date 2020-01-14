@@ -9,3 +9,6 @@ Added the required functions and lines and code in order to create subservers th
 
 George -- 23:59 1-7-2020
 Added onto the pipes by creating a counter that helps keep track of number of people on the server. It also manages the fd's used in pipes.
+
+George -- 15:30 1-13-2020
+Added a function which removed a character from a list of strings. In addition, started creating the networking code needed for announcing who died the previous night.

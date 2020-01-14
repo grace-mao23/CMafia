@@ -10,7 +10,7 @@ int *votes;
 int maf, nur, det, village, num_day,num_night,mdone,ddone,ndone;
 char * username;
 char *victim;
-typedef struct turns{
+typedef struct turns {
     char **member;
     int index;
 }
@@ -118,7 +118,7 @@ void assignTurns() {
     struct turns m_turn
 }
 int usernames(char *new){
-    int i=0;
+    int i = 0;
     strcpy(username, new);
     printf("Players in Game:");
     for (i = 0; i < players[i] != NULL; i++) {
@@ -172,10 +172,12 @@ char *to_string(char **ary) {
         size += 2;
     }
     size -= 1;
-    char *line = malloc(size * sizeof(char));
+    char *line = malloc(size *sizeof(char));
     line[0] = NULL;
     for (i = 0; i < len_double(ary); i++) {
-        strcat(line, ary[i]);
+        if (strcmp(ary[i], " ") != 0) { //" " means the player has died
+            strcat(line, ary[i]);
+        }
         if (i < len_double(ary) - 1) {
             strcat(line, ", ");
         }
@@ -183,7 +185,16 @@ char *to_string(char **ary) {
     return line;
 }
 
-
+int remove_name(char **ary, char *name) {
+    int i = 0;
+    for (; i < len_double(ary); i++) {
+        if (strcmp(ary[i], name) == 0) {
+            strcpy(ary[i], " ");
+            return 1;
+        }
+    }
+    return 0;
+}
 
 //=================================================================================================================
 //Grace's Code
@@ -194,7 +205,7 @@ char *to_string(char **ary) {
 // going with assumption that at least 5 people needed, will change later
 int game_over = 0;
 int game_start = 0;
-int num_players;
+int num_players, num_day, type_night, num_night; //type night is for the roles, while num night is how many nights have passed
 int night;
 
 int main() {
@@ -233,7 +244,8 @@ int main() {
             game_start = 1;
             night = 0;
             num_day = 1;
-            num_night = 0;
+            num_night = 1;
+            type_night = 0;
             votes = malloc(num_players * (sizeof(int) + 1));
             for (int i = 0; i < num_players; i++) {
                 votes[i] = 0;
@@ -255,6 +267,10 @@ int main() {
         if (!night) { //daytime
             printf("It's Daytime!\n", );
             if (num_day == 1) {
+              printf("Welcome to Mafia!\n");
+              sleep(2);
+              printf("The night will begin shortly...\n");
+          } else {
               if(victim!=NULL){
                 printf("%s has died!\n",victim);
                 if(strcmp(username,victim)==0){
@@ -273,7 +289,7 @@ int main() {
               //voting
             }
         } else { //nighttime
-            if (num_night == 0) {
+            if (type_night == 0) {
                 printf("Waiting for Mafia\n");
                 if (strcmp(username, m_turn->member[m_turn->index]) == 0) {
                     printf("Here are all of your victims\n", to_string(players));
@@ -290,7 +306,7 @@ int main() {
                     strcpy(victim, buffer);
                     m_turn->index++;
                 }
-            } else if (num_night == 1) {
+            } else if (type_night == 1) {
                 printf("Waiting for Detective\n");
                 if (strcmp(username, d_turn->member[d_turn->index]) == 0) {
                     printf("Here are all of your suspects: %s\n", to_string(players));
@@ -304,6 +320,7 @@ int main() {
                         buffer[strlen(buffer) - 1] = '\0';
                     }
                     printf("\nYou have chosen to investigate: %s\n", buffer);
+                    sleep(2);
                     if (getRole(buffer) == 0) {
                         printf("%s's identity is: Civilian\n", buffer);
                     } else if (getRole(buffer) == 1) {
