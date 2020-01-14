@@ -23,6 +23,10 @@ int main() {
             close(client);
             sleep(1); // give time for creation of pipe
 
+            fd2[sub_num][0] = fd1[sub_num][1][]
+            fd2[sub_num][1] = getpid();
+            pipe(fd2[sub_num]);
+
             if (sub_num >= checkin) {
                 printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
                 buffer_p = fgets(buffer, sizeof(buffer), stdin);
@@ -31,12 +35,14 @@ int main() {
                 if (strcmp(buffer_p, "no") == 1) {
                     checkin += 3;
                 } else if (strcmp(buffer_p, "yes") == 0) {
-                    strcpy(buffer, "Start");
+                    strcpy(buffer, "Start\n");
                     printf("Game begins!\n");
                     game_start = 1;
                     int i = 0;
                     for (; i < 13; i++) {
-                        write(fd2[i][1], buffer, sizeof(buffer));
+                      printf("wassup\n");
+                      write(fd2[i][1], buffer, sizeof(buffer));
+                      printf("hi\n");
                     }
                 }
             }
@@ -46,12 +52,13 @@ int main() {
             fd1[sub_num][0] = getppid();
             fd1[sub_num][1] = getpid();
             pipe(fd1[sub_num]);
-            fd2[sub_num][0] = getpid();
-            fd2[sub_num][1] = getppid();
-            pipe(fd2[sub_num]);
+            //fd2[sub_num][0] = getpid();
+            //fd2[sub_num][1] = getppid();
+            //pipe(fd2[sub_num]);
 
-            while (read(fd2[0][0], buffer, sizeof(buffer))) {
-                if (strcmp(buffer, "Start") == 0) {
+            while (read(fd2[sub_num][1], buffer, sizeof(buffer))) {
+                printf("[%s]\n",buffer );
+                if (strcmp(buffer, "Start\n") == 0) {
                     write(client, buffer, sizeof(buffer));
                     strcpy(buffer, "Game Started");
                 }
