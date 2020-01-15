@@ -1,7 +1,48 @@
 #include "networking.c"
 
 int main() {
-    int inplay = 1;
+    int sd = server_setup(); // sd is the server listening socket descriptor
+
+    int taken[13]; // which fd slots are taken already
+    taken_setup(taken); // the first one is taken by the server
+    int sub_num, inplay;
+    char buffer[BUFFER_SIZE];
+
+    int fd1[13][2]; // host - reading        subserver - writing
+    int fd2[13][2]; // subserver - reading   host -writing
+    fd1[0][0] = 0;
+    fd1[0][1] = 0;
+    fd2[0][0] = 0;
+    fd2[0][1] = 0;
+
+    while (inplay != 0) {
+      int client = server_connect(sd); // client is the client socket descriptor
+      printf("%d: client connected\n", client);
+      sub_num = lowest_available(taken);
+      printf("The lowest available is %d\n", sub_num);
+      int f = fork();
+      if (f) { // parent
+        close(client);
+        sleep(1); // time for subserver to pipe
+        printf("I'm the parent!\n");
+
+        fd2[sub_num][0] = fd1[sub_num][1];
+        fd2[sub_num][1] = fd1[sub_num][0];
+        int p2 = pipe(fd2[sub_num]);
+        printf("Parent pipe: %d\n", p2);
+
+      } else { // subserver
+        printf("I'm the child!\n");
+
+        fd1[sub_num][0] = getppid();
+        fd1[sub_num][1] = getpid();
+        int p1 = pipe(fd1[sub_num]);
+        printf("Child pipe: %d\n", p1);
+
+      }
+
+    }
+/*    int inplay = 1;
     int game_start = 0;
 
     int sd, f, client, sub_num = 0;
@@ -81,6 +122,6 @@ int main() {
             //WILL WORK ON LATER
         }
     }
-    close(sd);
+    close(sd);*/
     return 0;
 }
