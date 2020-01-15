@@ -20,6 +20,7 @@ int main() {
       int client = server_connect(sd); // client is the client socket descriptor
       printf("%d: client connected\n", client);
       sub_num = lowest_available(taken);
+      taken[sub_num] = 1;
   //    printf("The lowest available is %d\n", sub_num);
       int f = fork();
       if (f) { // parent
