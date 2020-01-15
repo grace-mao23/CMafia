@@ -40,7 +40,7 @@ int main() {
           printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
           fgets(buffer, sizeof(buffer), stdin);
           printf("You answered: %s!", buffer);
-          if (strcmp(buffer, "no")) {
+        /*  if (strcmp(buffer, "no")) {
             checkin+=3;
           } else if (strcmp(buffer, "yes")) {
             strcpy(buffer, "Start");
@@ -51,8 +51,7 @@ int main() {
             //  printf("wassup\n");
               write(fd2[i][1], buffer, sizeof(buffer));
             //  printf("hi\n");
-            }
-          }
+          }*/
         }
 
       } else { // subserver
