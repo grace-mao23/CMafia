@@ -65,9 +65,9 @@ int main() {
     //    printf("Child pipe: %d\n", p1);
         close(fd2[sub_num][1]);
 
-        int r = read(fd2[sub_num][0], buffer, sizeof(buffer));
-        while(r > 0) {
-          printf("Reading %s %d!!\n", buffer, r);
+        //int r = read(fd2[sub_num][0], buffer, sizeof(buffer));
+        while(read(fd2[sub_num][0], buffer, sizeof(buffer))) {
+          printf("Reading %s!!\n", buffer);
         }
 
       }
