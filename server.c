@@ -5,7 +5,7 @@ int main() {
 
     int taken[13]; // which fd slots are taken already
     taken_setup(taken); // the first one is taken by the server
-    int sub_num, inplay, game_start;
+    int sub_num, inplay, game_start = 0;
     int checkin = 2;
     char buffer[BUFFER_SIZE] = "";
 
@@ -76,14 +76,17 @@ int main() {
         fcntl(fd1[sub_num][1], F_SETFL, flag2); */
     //    printf("Child pipe: %d\n", p1);
       //  close(fd2[sub_num][1]);
-        int flag = fcntl(fd2[sub_num][0], F_GETFL, 0);
-        printf("Non blocking? %d!\n", flag & O_NONBLOCK);
+    //    int flag = fcntl(fd2[sub_num][0], F_GETFL, 0);
+      //  printf("Non blocking? %d!\n", flag & O_NONBLOCK);
 
-        int r = read(fd2[sub_num][0], buffer, sizeof(buffer));
-        printf("Just read\n");
-        while(r > 0) {
-          printf("Reading %s!!\n", buffer);
+        while (!game_start) {
+          int r = read(fd2[sub_num][0], buffer, sizeof(buffer));
+        //  printf("Just read\n");
+          while(r > 0) {
+            printf("Reading %s!!\n", buffer);
+          }
         }
+
 
       }
 
