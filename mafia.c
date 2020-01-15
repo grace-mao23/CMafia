@@ -116,7 +116,7 @@ int genRoles() {
     }
 }
 
-int usernames(char *new){
+int usernames(char * new){
     int i = 0;
     strcpy(username, new);
     printf("Players in Game:");
@@ -241,7 +241,7 @@ int main() {
                 fgets(buffer, 1000, stdin);
                 buffer[strlen(buffer) - 1] = '\0';
                 printf("Your Username is: %s\n", buffer);
-                usernames(&buffer);
+                usernames(buffer);
                 printf("\\Mafia$ Waiting for other players...");
                 while (num_players != len_double(players)) {
                     sleep(1);
