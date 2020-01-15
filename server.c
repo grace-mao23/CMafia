@@ -54,7 +54,7 @@ int main() {
             for (; i < 13; i++) {
               //printf("wassup\n");
               int w = write(fd2[i][1], buffer, sizeof(buffer));
-              printf("%d\n", w);
+              printf("%i %d\n", i, w);
             }
           } else if (strcmp(buffer, "no\n") == 0) {
             checkin += 3;
