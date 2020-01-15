@@ -43,7 +43,7 @@ int main() {
         close(fd2[sub_num][1]);
 
         int r = read(fd2[sub_num][0], buffer, sizeof(buffer));
-        while(r) {
+        while(r > 0) {
           printf("Reading %s %d!!\n", buffer, r);
         }
 
