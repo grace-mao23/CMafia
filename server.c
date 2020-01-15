@@ -19,25 +19,29 @@ int main() {
       int client = server_connect(sd); // client is the client socket descriptor
       printf("%d: client connected\n", client);
       sub_num = lowest_available(taken);
-      printf("The lowest available is %d\n", sub_num);
+  //    printf("The lowest available is %d\n", sub_num);
       int f = fork();
       if (f) { // parent
         close(client);
         sleep(1); // time for subserver to pipe
-        printf("I'm the parent!\n");
+      //  printf("I'm the parent!\n");
 
         fd2[sub_num][0] = fd1[sub_num][1];
         fd2[sub_num][1] = fd1[sub_num][0];
         int p2 = pipe(fd2[sub_num]);
-        printf("Parent pipe: %d\n", p2);
+      //  printf("Parent pipe: %d\n", p2);
 
       } else { // subserver
-        printf("I'm the child!\n");
+    //    printf("I'm the child!\n");
 
         fd1[sub_num][0] = getppid();
         fd1[sub_num][1] = getpid();
         int p1 = pipe(fd1[sub_num]);
-        printf("Child pipe: %d\n", p1);
+    //    printf("Child pipe: %d\n", p1);
+
+        while(read(fd2[sub_num][0], buffer, sizeof(buffer))) {
+          printf("Reading %s\n", buffer);
+        }
 
       }
 

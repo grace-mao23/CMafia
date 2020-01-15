@@ -82,7 +82,7 @@ void taken_setup(int *taken) {
 int lowest_available(int *taken) { //finds the closest available fd
     int i = 1;
     for (; i < sizeof(taken); i++) {
-        printf("%d\n", taken[i]);
+      //  printf("%d\n", taken[i]);
         if (!taken[i]) {
             return i;
         }
