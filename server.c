@@ -40,6 +40,9 @@ int main() {
           printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
           fgets(buffer, sizeof(buffer), stdin);
           printf("You answered: %s!\n", buffer);
+          if (strcmp(buffer, "yes")) {
+            printf("You said yes!");
+          }
         }
 
       } else { // subserver
