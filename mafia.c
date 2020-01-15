@@ -208,207 +208,234 @@ int game_start = 0;
 int num_players, num_day, type_night, num_night; //type night is for the roles, while num night is how many nights have passed
 int night;
 
+#include "networking.c"
+
+// LATER SHOULD BE MOVED TO MAFIA.C
+
 int main() {
-    srand(time(NULL));
-    while (!game_start) {
-        printf("\\Mafia$ Waiting for players to join...");
-        while (num_players < 5) {
-            update_players(); // PLAYERS JOIN
-            sleep(1);
+    int sd_conn, game_start = 0;
+    char buffer[BUFFER_SIZE] = "not yet";
+
+    sd_conn = client_setup(TEST_IP);
+
+    if (sd_conn >= 0) {
+        printf("Waiting for players to join...\n");
+
+        while(read(sd_conn, buffer, sizeof(buffer))&&game_start==0) {
+            if (strcmp(buffer, "Start\n") == 0) {
+                game_start = 1;
+                strcpy(buffer, "Game Started");
+                printf("\n\n\nLET'S BEGIN!\n\n\n");
+            }
         }
-        printf("\n\\Mafia$ %d players in game, start? (y/n)", num_players);
-        char buffer[1000];
-        fgets(buffer, 1000, stdin);
-        if (strcmp(buffer, "y") == 0) {
-            printf("\\Mafia$ Enter Username: ");
-            fgets(buffer, 1000, stdin);
-            buffer[strlen(buffer) - 1] = '\0';
-            printf("Your Username is: %s\n", buffer);
-            usernames(&buffer);
-            printf("\\Mafia$ Waiting for other players...");
-            while (num_players != len_double(players)) {
+        srand(time(NULL));
+        while (!game_start) {
+            printf("\\Mafia$ Waiting for players to join...");
+            while (num_players < 5) {
+                update_players(); // PLAYERS JOIN
                 sleep(1);
             }
-            printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
-            printf("\\Mafia$ Generating Role...\n");
-            genRoles();
-            if (getRole(username) == 0) {
-                printf("Your Role: Civilian\n");
-            } else if (getRole(username) == 1) {
-                printf("Your Role: Mafia\n");
-            } else if (getRole(username) == 2) {
-                printf("Your Role: Detective\n");
-            } else {
-                printf("Your Role: Nurse\n");
-            }
-            game_start = 1;
-            night = 0;
-            num_day = 1;
-            num_night = 1;
-            type_night = 0;
-            votes = malloc(num_players * (sizeof(int) + 1));
-            for (int i = 0; i < num_players; i++) {
-                votes[i] = 0;
-            }
-            votes[num_players] = NULL;
-            mafiaNum(num_players);
-            detectiveNum(num_players);
-            nurseNum(num_players);
-            startSpecial();
-            m_turn->index=0;
-            d_turn->index=0;
-            n_turn->index=0;
-            mdone=0;
-            ndone=0;
-            ddone=0;
-        }
-    }
-    while (!game_over) {
-        if (!night) { //daytime
-            printf("It's Daytime!\n", );
-            if (num_day == 1) {
-                printf("Welcome to Mafia!\n");
-                sleep(2);
-                printf("The night will begin shortly...\n");
-            } else if (num_day == 1) {
-                if (victim != NULL) {
-                    printf("%s has died!\n", victim);
-                    if (strcmp(username,victim) == 0) {
-                        game_over = true;
-                    } else {
-                        printf("You have 5 minutes to discuss.\n"); //George's Timer
-                    }
-                } else {
-                    printf("Nobody Died!\n");
+            printf("\n\\Mafia$ %d players in game, start? (y/n)", num_players);
+            char buffer[1000];
+            fgets(buffer, 1000, stdin);
+            if (strcmp(buffer, "y") == 0) {
+                printf("\\Mafia$ Enter Username: ");
+                fgets(buffer, 1000, stdin);
+                buffer[strlen(buffer) - 1] = '\0';
+                printf("Your Username is: %s\n", buffer);
+                usernames(&buffer);
+                printf("\\Mafia$ Waiting for other players...");
+                while (num_players != len_double(players)) {
+                    sleep(1);
                 }
-                num_day = 2;
-            } else if (num_day == 2) {
-              //chatbox
-            } else {
-
-              //voting
+                printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
+                printf("\\Mafia$ Generating Role...\n");
+                genRoles();
+                if (getRole(username) == 0) {
+                    printf("Your Role: Civilian\n");
+                } else if (getRole(username) == 1) {
+                    printf("Your Role: Mafia\n");
+                } else if (getRole(username) == 2) {
+                    printf("Your Role: Detective\n");
+                } else {
+                    printf("Your Role: Nurse\n");
+                }
+                game_start = 1;
+                night = 0;
+                num_day = 1;
+                num_night = 1;
+                type_night = 0;
+                votes = malloc(num_players * (sizeof(int) + 1));
+                for (int i = 0; i < num_players; i++) {
+                    votes[i] = 0;
+                }
+                votes[num_players] = NULL;
+                mafiaNum(num_players);
+                detectiveNum(num_players);
+                nurseNum(num_players);
+                startSpecial();
+                m_turn->index=0;
+                d_turn->index=0;
+                n_turn->index=0;
+                mdone=0;
+                ndone=0;
+                ddone=0;
             }
-        } else { //nighttime
-            if (type_night == 0) {
-                printf("Waiting for Mafia\n");
-                if (strcmp(username, m_turn->member[m_turn->index]) == 0) {
-                    printf("Here are all of your victims\n", to_string(players));
-                    printf("\\Vote for your victim: ");
-                    fgets(buffer, 1000, stdin);
-                    buffer[strlen(buffer)-1] = '\0';
-                    while (!valid(&buffer)) { //function to see if its valid victim
-                        printf("\nYou have voted for an invalid victim.\n Here are all of your victims\n", to_string(players));
+        }
+        while (!game_over) {
+            if (!night) { //daytime
+                printf("It's Daytime!\n", );
+                if (num_day == 1) {
+                    printf("Welcome to Mafia!\n");
+                    sleep(2);
+                    printf("The night will begin shortly...\n");
+                } else if (num_day == 1) {
+                    if (victim != NULL) {
+                        printf("%s has died!\n", victim);
+                        if (strcmp(username,victim) == 0) {
+                            game_over = true;
+                        } else {
+                            printf("You have 5 minutes to discuss.\n"); //George's Timer
+                        }
+                    } else {
+                        printf("Nobody Died!\n");
+                    }
+                    num_day = 2;
+                } else if (num_day == 2) {
+                  //chatbox
+                } else {
+
+                  //voting
+                }
+            } else { //nighttime
+                if (type_night == 0) {
+                    printf("Waiting for Mafia\n");
+                    if (strcmp(username, m_turn->member[m_turn->index]) == 0) {
+                        printf("Here are all of your victims\n", to_string(players));
                         printf("\\Vote for your victim: ");
                         fgets(buffer, 1000, stdin);
-                        buffer[strlen(buffer) - 1] = '\0';
+                        buffer[strlen(buffer)-1] = '\0';
+                        while (!valid(&buffer)) { //function to see if its valid victim
+                            printf("\nYou have voted for an invalid victim.\n Here are all of your victims\n", to_string(players));
+                            printf("\\Vote for your victim: ");
+                            fgets(buffer, 1000, stdin);
+                            buffer[strlen(buffer) - 1] = '\0';
+                        }
+                        printf("\nYou have selected to kill: %s\n", buffer);
+                        strcpy(victim, buffer);
+                        m_turn->index++;
                     }
-                    printf("\nYou have selected to kill: %s\n", buffer);
-                    strcpy(victim, buffer);
-                    m_turn->index++;
-                }
-            } else if (type_night == 1) {
-                printf("Waiting for Detective\n");
-                if (strcmp(username, d_turn->member[d_turn->index]) == 0) {
-                    printf("Here are all of your suspects: %s\n", to_string(players));
-                    printf("\\Choose to investigate a suspects: ");
-                    fgets(buffer, 1000, stdin);
-                    buffer[strlen(buffer) - 1] = '\0';
-                    while (!valid(&buffer)) { //function to see if its valid victim
-                        printf("\nYou have chosen an invalid suspect.\n Here are all of your suspects: %s\n", to_string(players));
+                } else if (type_night == 1) {
+                    printf("Waiting for Detective\n");
+                    if (strcmp(username, d_turn->member[d_turn->index]) == 0) {
+                        printf("Here are all of your suspects: %s\n", to_string(players));
                         printf("\\Choose to investigate a suspects: ");
                         fgets(buffer, 1000, stdin);
                         buffer[strlen(buffer) - 1] = '\0';
+                        while (!valid(&buffer)) { //function to see if its valid victim
+                            printf("\nYou have chosen an invalid suspect.\n Here are all of your suspects: %s\n", to_string(players));
+                            printf("\\Choose to investigate a suspects: ");
+                            fgets(buffer, 1000, stdin);
+                            buffer[strlen(buffer) - 1] = '\0';
+                        }
+                        printf("\nYou have chosen to investigate: %s\n", buffer);
+                        sleep(2);
+                        if (getRole(buffer) == 0) {
+                            printf("%s's identity is: Civilian\n", buffer);
+                        } else if (getRole(buffer) == 1) {
+                            printf("%s's identity is: Mafia\n", buffer);
+                        } else if (getRole(buffer) == 2) {
+                            printf("%s's identity is: Detective\n", buffer);
+                        } else {
+                            printf("%s's identity is: Nurse\n", buffer);
+                        }
                     }
-                    printf("\nYou have chosen to investigate: %s\n", buffer);
-                    sleep(2);
-                    if (getRole(buffer) == 0) {
-                        printf("%s's identity is: Civilian\n", buffer);
-                    } else if (getRole(buffer) == 1) {
-                        printf("%s's identity is: Mafia\n", buffer);
-                    } else if (getRole(buffer) == 2) {
-                        printf("%s's identity is: Detective\n", buffer);
-                    } else {
-                        printf("%s's identity is: Nurse\n", buffer);
+                    d_turn->index++;
+                } else {
+                    printf("Waiting for Nurse\n");
+                    if (strcmp(username, n_turn->member[n_turn->index]) == 0) {
+                        printf("Here are all of your patients: %s\n", to_string(players));
+                        printf("\\Choose to save a patients: ");
+                        fgets(buffer, 1000, stdin);
+                        buffer[strlen(buffer) - 1] = '\0';
+                        while (!valid(&buffer)) { //function to see if its valid victim
+                            printf("\nYou have voted for an invalid victim.\n Here are all of your patients: %s\n", to_string(players));
+                            printf("\\Choose to save a patient: ");
+                            fgets(buffer, 1000, stdin);
+                            buffer[strlen(buffer)-1] = '\0';
+                        }
+                        printf("\nYou have chosent to save: %s\n", buffer);
+                        if (strcmp(victim, buffer) == 0) {
+                            victim = NULL;
+                        }
+                        n_turn->index++;
                     }
+                }
+                m_turn->index++;
+                num_night=2;
+            } /*else if (num_night == 1) {
+                printf("Waiting for Detective\n");
+                if(strcmp(username,d_turn->member[d_turn->index])==0){
+                  printf("Here are all of your suspects: %s\n", to_string(players));
+                  printf("\\Choose to investigate a suspects: ");
+                  fgets(buffer, 1000, stdin);
+                  buffer[strlen(buffer)-1]='\0';
+                  while(!valid(&buffer)){ //function to see if its valid victim
+                    printf("\nYou have chosen an invalid suspect.\n Here are all of your suspects: %s\n", to_string(players));
+                    printf("\\Choose to investigate a suspects: ");
+                    fgets(buffer, 1000, stdin);
+                    buffer[strlen(buffer)-1]='\0';
+                  }
+                  printf("\nYou have chosen to investiage: %s\n", buffer);
+                  if(getRole(buffer)==0){
+                    printf("%s's identity is: Civilian\n",buffer);
+                  }else if(getRole(buffer)==1){
+                    printf("%s's identity is: Mafia\n",buffer);
+                  }else if(getRole(buffer)==2){
+                    printf("%s's identity is: Detective\n",buffer);
+                  }else{
+                    printf("%s's identity is: Nurse\n",buffer);
+                  }
+                }
+                while (!ddone) {
+                  sleep(1);
                 }
                 d_turn->index++;
-            } else {
+                num_night=3;
+              }
+              else{
                 printf("Waiting for Nurse\n");
-                if (strcmp(username, n_turn->member[n_turn->index]) == 0) {
-                    printf("Here are all of your patients: %s\n", to_string(players));
-                    printf("\\Choose to save a patients: ");
+                if(strcmp(username,n_turn->member[n_turn->index])==0){
+                  printf("Here are all of your patients: %s\n", to_string(players));
+                  printf("\\Choose to save a patients: ");
+                  fgets(buffer, 1000, stdin);
+                  buffer[strlen(buffer)-1]='\0';
+                  while(!valid(&buffer)){ //function to see if its valid victim
+                    printf("\nYou have voted for an invalid victim.\n Here are all of your patients: %s\n", to_string(players));
+                    printf("\\Choose to save a patient: ");
                     fgets(buffer, 1000, stdin);
-                    buffer[strlen(buffer) - 1] = '\0';
-                    while (!valid(&buffer)) { //function to see if its valid victim
-                        printf("\nYou have voted for an invalid victim.\n Here are all of your patients: %s\n", to_string(players));
-                        printf("\\Choose to save a patient: ");
-                        fgets(buffer, 1000, stdin);
-                        buffer[strlen(buffer)-1] = '\0';
-                    }
-                    printf("\nYou have chosent to save: %s\n", buffer);
-                    if (strcmp(victim, buffer) == 0) {
-                        victim = NULL;
-                    }
-                    n_turn->index++;
+                    buffer[strlen(buffer)-1]='\0';
+                  }
+                  printf("\nYou have chosent to save: %s\n", buffer);
+                  if(strcmp(victim,buffer)==0){
+                    victim=NULL;
+                  }
+                }else{
+                  while (!ddone) {
+                    sleep(1);
+                  }
                 }
-            }
-            m_turn->index++;
-            num_night=2;
-        } /*else if (num_night == 1) {
-            printf("Waiting for Detective\n");
-            if(strcmp(username,d_turn->member[d_turn->index])==0){
-              printf("Here are all of your suspects: %s\n", to_string(players));
-              printf("\\Choose to investigate a suspects: ");
-              fgets(buffer, 1000, stdin);
-              buffer[strlen(buffer)-1]='\0';
-              while(!valid(&buffer)){ //function to see if its valid victim
-                printf("\nYou have chosen an invalid suspect.\n Here are all of your suspects: %s\n", to_string(players));
-                printf("\\Choose to investigate a suspects: ");
-                fgets(buffer, 1000, stdin);
-                buffer[strlen(buffer)-1]='\0';
+                n_turn->index++;
+                num_night=1;
               }
-              printf("\nYou have chosen to investiage: %s\n", buffer);
-              if(getRole(buffer)==0){
-                printf("%s's identity is: Civilian\n",buffer);
-              }else if(getRole(buffer)==1){
-                printf("%s's identity is: Mafia\n",buffer);
-              }else if(getRole(buffer)==2){
-                printf("%s's identity is: Detective\n",buffer);
-              }else{
-                printf("%s's identity is: Nurse\n",buffer);
-              }
-            }
-            while (!ddone) {
-              sleep(1);
-            }
-            d_turn->index++;
-            num_night=3;
-          }
-          else{
-            printf("Waiting for Nurse\n");
-            if(strcmp(username,n_turn->member[n_turn->index])==0){
-              printf("Here are all of your patients: %s\n", to_string(players));
-              printf("\\Choose to save a patients: ");
-              fgets(buffer, 1000, stdin);
-              buffer[strlen(buffer)-1]='\0';
-              while(!valid(&buffer)){ //function to see if its valid victim
-                printf("\nYou have voted for an invalid victim.\n Here are all of your patients: %s\n", to_string(players));
-                printf("\\Choose to save a patient: ");
-                fgets(buffer, 1000, stdin);
-                buffer[strlen(buffer)-1]='\0';
-              }
-              printf("\nYou have chosent to save: %s\n", buffer);
-              if(strcmp(victim,buffer)==0){
-                victim=NULL;
-              }
-            }else{
-              while (!ddone) {
-                sleep(1);
-              }
-            }
-            n_turn->index++;
-            num_night=1;
-          }
-      }*/
+          }*/
+        }
+        //printf("enter data: ");
+        //fgets(buffer, sizeof(buffer), stdin);
+        //*strchr(buffer, '\n') = 0;
+        //write(sd_conn, buffer, sizeof(buffer));
+        //read(sd_conn, buffer, sizeof(buffer));
+        //printf("here: %s", buffer);
     }
+    return 0;
 }
