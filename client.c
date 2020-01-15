@@ -12,7 +12,7 @@ int main() {
         printf("Waiting for players to join...\n");
 
         while(read(sd_conn, buffer, sizeof(buffer))) {
-            if (strcmp(buffer, "Start") == 0) {
+            if (strcmp(buffer, "Start\n") == 0) {
                 game_start = 1;
                 strcpy(buffer, "Game Started");
                 printf("\n\n\nLET'S BEGIN!\n\n\n");
