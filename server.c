@@ -76,6 +76,8 @@ int main() {
         fcntl(fd1[sub_num][1], F_SETFL, flag2); */
     //    printf("Child pipe: %d\n", p1);
       //  close(fd2[sub_num][1]);
+        int flag = fcntl(fd2[sub_num][0], F_GETFL, 0);
+        printf("Non blocking? %d!\n", flag & O_NONBLOCK);
 
         int r = read(fd2[sub_num][0], buffer, sizeof(buffer));
         printf("Just read\n");
