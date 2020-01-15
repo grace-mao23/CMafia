@@ -267,24 +267,24 @@ int main() {
         if (!night) { //daytime
             printf("It's Daytime!\n", );
             if (num_day == 1) {
-              printf("Welcome to Mafia!\n");
-              sleep(2);
-              printf("The night will begin shortly...\n");
-          } else {
-              if(victim!=NULL){
-                printf("%s has died!\n",victim);
-                if(strcmp(username,victim)==0){
-                  game_over=true;
-                }else{
-                  printf("You have 5 minutes to discuss.\n"); //George's Timer
+                printf("Welcome to Mafia!\n");
+                sleep(2);
+                printf("The night will begin shortly...\n");
+            } else if (num_day == 1) {
+                if (victim != NULL) {
+                    printf("%s has died!\n", victim);
+                    if (strcmp(username,victim) == 0) {
+                        game_over = true;
+                    } else {
+                        printf("You have 5 minutes to discuss.\n"); //George's Timer
+                    }
+                } else {
+                    printf("Nobody Died!\n");
                 }
-              }else{
-                printf("Nobody Died!\n");
-              }
-              num_day=2
-            } else if(num_day==2){
+                num_day = 2;
+            } else if (num_day == 2) {
               //chatbox
-            }else{
+            } else {
 
               //voting
             }
@@ -354,7 +354,7 @@ int main() {
             }
             m_turn->index++;
             num_night=2;
-          }else if(num_night==1){
+        } /*else if (num_night == 1) {
             printf("Waiting for Detective\n");
             if(strcmp(username,d_turn->member[d_turn->index])==0){
               printf("Here are all of your suspects: %s\n", to_string(players));
@@ -409,6 +409,6 @@ int main() {
             n_turn->index++;
             num_night=1;
           }
-        }
+      }*/
     }
 }
