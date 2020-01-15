@@ -28,7 +28,7 @@ int main() {
         sleep(1); // time for subserver to pipe
       //  printf("I'm the parent!\n");
 
-        close(fd1[sub_num][1]);
+      //  close(fd1[sub_num][1]);
 
         fd2[sub_num][0] = fd1[sub_num][1];
         fd2[sub_num][1] = fd1[sub_num][0];
@@ -75,7 +75,7 @@ int main() {
         fcntl(fd1[sub_num][0], F_SETFL, flag1);
         fcntl(fd1[sub_num][1], F_SETFL, flag2); */
     //    printf("Child pipe: %d\n", p1);
-        close(fd2[sub_num][1]);
+      //  close(fd2[sub_num][1]);
 
         int r = read(fd2[sub_num][0], buffer, sizeof(buffer));
         printf("Just read\n");
