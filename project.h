@@ -9,6 +9,7 @@
 #include <netdb.h>
 #include <string.h>
 #include <errno.h>
+#include <fcntl.h>
 
 #define PORT "42069"
 #define TEST_IP "127.0.0.1"
