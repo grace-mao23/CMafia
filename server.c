@@ -53,8 +53,8 @@ int main() {
             int i = 1;
             for (; i < 13; i++) {
               //printf("wassup\n");
-              write(fd2[i][1], buffer, sizeof(buffer));
-              //printf("hi\n");
+              int w = write(fd2[i][1], buffer, sizeof(buffer));
+              printf("%d\n", w);
             }
           } else if (strcmp(buffer, "no\n") == 0) {
             checkin += 3;
