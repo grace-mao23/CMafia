@@ -78,7 +78,7 @@ int detectiveNum(int users) {
     } else if (users > 7) {
         detective = 2;
     } else {
-        dectecive = 1;
+        detective = 1;
     }
     det = detective;
     printf("Total Detective(s): %d\n", detective);
@@ -116,7 +116,7 @@ int genRoles() {
     }
 }
 
-int usernames(char *new[1000]){
+int usernames(char *new){
     int i = 0;
     strcpy(username, new);
     printf("Players in Game:");
@@ -207,7 +207,6 @@ int game_start = 0;
 int num_players, num_day, type_night, num_night; //type night is for the roles, while num night is how many nights have passed
 int night;
 
-#include "networking.c"
 
 // LATER SHOULD BE MOVED TO MAFIA.C
 
@@ -283,7 +282,7 @@ int main() {
         }
         while (!game_over) {
             if (!night) { //daytime
-                printf("It's Daytime!\n", );
+                printf("It's Daytime!\n");
                 if (num_day == 1) {
                     printf("Welcome to Mafia!\n");
                     sleep(2);
