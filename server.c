@@ -39,7 +39,8 @@ int main() {
         if (sub_num >= checkin) {
           printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
           fgets(buffer, sizeof(buffer), stdin);
-          printf("You answered: %s!\n", buffer);
+          printf("%d\n", strcmp(buffer, "yes"));
+          printf("%d\n", strcmp(buffer, "yes\n"));
         }
 
       } else { // subserver
