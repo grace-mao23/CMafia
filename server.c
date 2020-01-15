@@ -1,3 +1,4 @@
+#include "networking.c"
 int main() {
     int inplay = 1;
     int game_start = 0;
@@ -73,3 +74,4 @@ int main() {
 }
 close(sd);
 return 0;
+}

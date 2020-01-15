@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include "networking.c"
+#include <string.h>
 //Amanda's Code
 char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
@@ -13,7 +15,7 @@ char *victim;
 typedef struct turns {
     char **member;
     int index;
-}
+};
 struct turns m_turn;
 struct turns n_turn;
 struct turns d_turn;
@@ -85,10 +87,10 @@ int detectiveNum(int users) {
 //gonna needa set village = length(players)
 //need to initialize turns to 0
 int genRoles() {
-    total = village;
-    m = mafia
-    d = det
-    n = nur
+    int total = village;
+    int m = maf;
+    int d = det;
+    int n = nur;
     roles = malloc(total *sizeof(int));
     //need to be freed
     unsigned int r;
@@ -96,32 +98,29 @@ int genRoles() {
         r = srand(time(0)) % total;
         if (r < m) {
             roles[i] = 1;
-            m_turn->member[m_turn->index] = players[i];
-            m_turn->index++;
+            m_turn.member[m_turn.index] = players[i];
+            m_turn.index++;
             m--;
         } else if (r < m + d) {
             roles[i] = 2;
-            d_turn->member[m_turn->index] = players[i];
-            d_turn->index++;
+            d_turn.member[m_turn.index] = players[i];
+            d_turn.index++;
             d--;
         } else {
             roles[i]=0;
-            n_turn->member[m_turn->index] = players[i];
-            n_turn->index++;
+            n_turn.member[m_turn.index] = players[i];
+            n_turn.index++;
             n--;
         }
         total--;
     }
 }
 
-void assignTurns() {
-    struct turns m_turn
-}
-int usernames(char *new){
+int usernames(char *new[1000]){
     int i = 0;
     strcpy(username, new);
     printf("Players in Game:");
-    for (i = 0; i < players[i] != NULL; i++) {
+    for (i = 0; players[i] != NULL; i++) {
         printf("%s, ", players[i]);
     }
     strcpy(players[i], new);
@@ -138,19 +137,19 @@ int getRole(char *check) {
 }
 
 void startSpecial() {
-    m_turn->index = 0;
-    d_turn->index = 0;
-    n_turn->index = 0;
+    m_turn.index = 0;
+    d_turn.index = 0;
+    n_turn.index = 0;
     for (size_t i = 0; players[i] != NULL; i++) {
         if (roles[i] == 1){
-            m_turn[member]->[m_turn->index];
-            m_turn->index++;
+            m_turn.member[m_turn.index]=players[i];
+            m_turn.index++;
         } else if (roles[i] == 2) {
-            d_turn[member]->[m_turn->index];
-            d_turn->index++;
+            d_turn.member[m_turn.index]=players[i];
+            d_turn.index++;
         } else if (roles[i] == 3) {
-            n_turn[member]->[m_turn->index];
-            n_turn->index++;
+            n_turn.member[m_turn.index]=players[i];
+            n_turn.index++;
         }
     }
 }
@@ -274,9 +273,9 @@ int main() {
                 detectiveNum(num_players);
                 nurseNum(num_players);
                 startSpecial();
-                m_turn->index=0;
-                d_turn->index=0;
-                n_turn->index=0;
+                m_turn.index=0;
+                d_turn.index=0;
+                n_turn.index=0;
                 mdone=0;
                 ndone=0;
                 ddone=0;
@@ -293,7 +292,7 @@ int main() {
                     if (victim != NULL) {
                         printf("%s has died!\n", victim);
                         if (strcmp(username,victim) == 0) {
-                            game_over = true;
+                            game_over = 1;
                         } else {
                             printf("You have 5 minutes to discuss.\n"); //George's Timer
                         }
@@ -310,24 +309,24 @@ int main() {
             } else { //nighttime
                 if (type_night == 0) {
                     printf("Waiting for Mafia\n");
-                    if (strcmp(username, m_turn->member[m_turn->index]) == 0) {
-                        printf("Here are all of your victims\n", to_string(players));
+                    if (strcmp(username, m_turn.member[m_turn.index]) == 0) {
+                        printf("Here are all of your victims: %s\n", to_string(players));
                         printf("\\Vote for your victim: ");
                         fgets(buffer, 1000, stdin);
                         buffer[strlen(buffer)-1] = '\0';
                         while (!valid(&buffer)) { //function to see if its valid victim
-                            printf("\nYou have voted for an invalid victim.\n Here are all of your victims\n", to_string(players));
+                            printf("\nYou have voted for an invalid victim.%s\n Here are all of your victims\n", to_string(players));
                             printf("\\Vote for your victim: ");
                             fgets(buffer, 1000, stdin);
                             buffer[strlen(buffer) - 1] = '\0';
                         }
                         printf("\nYou have selected to kill: %s\n", buffer);
                         strcpy(victim, buffer);
-                        m_turn->index++;
+                        m_turn.index++;
                     }
                 } else if (type_night == 1) {
                     printf("Waiting for Detective\n");
-                    if (strcmp(username, d_turn->member[d_turn->index]) == 0) {
+                    if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
                         printf("Here are all of your suspects: %s\n", to_string(players));
                         printf("\\Choose to investigate a suspects: ");
                         fgets(buffer, 1000, stdin);
@@ -350,10 +349,10 @@ int main() {
                             printf("%s's identity is: Nurse\n", buffer);
                         }
                     }
-                    d_turn->index++;
+                    d_turn.index++;
                 } else {
                     printf("Waiting for Nurse\n");
-                    if (strcmp(username, n_turn->member[n_turn->index]) == 0) {
+                    if (strcmp(username, n_turn.member[n_turn.index]) == 0) {
                         printf("Here are all of your patients: %s\n", to_string(players));
                         printf("\\Choose to save a patients: ");
                         fgets(buffer, 1000, stdin);
@@ -368,14 +367,14 @@ int main() {
                         if (strcmp(victim, buffer) == 0) {
                             victim = NULL;
                         }
-                        n_turn->index++;
+                        n_turn.index++;
                     }
                 }
-                m_turn->index++;
+                m_turn.index++;
                 num_night=2;
             } /*else if (num_night == 1) {
                 printf("Waiting for Detective\n");
-                if(strcmp(username,d_turn->member[d_turn->index])==0){
+                if(strcmp(username,d_turn.member[d_turn.index])==0){
                   printf("Here are all of your suspects: %s\n", to_string(players));
                   printf("\\Choose to investigate a suspects: ");
                   fgets(buffer, 1000, stdin);
@@ -400,12 +399,12 @@ int main() {
                 while (!ddone) {
                   sleep(1);
                 }
-                d_turn->index++;
+                d_turn.index++;
                 num_night=3;
               }
               else{
                 printf("Waiting for Nurse\n");
-                if(strcmp(username,n_turn->member[n_turn->index])==0){
+                if(strcmp(username,n_turn.member[n_turn.index])==0){
                   printf("Here are all of your patients: %s\n", to_string(players));
                   printf("\\Choose to save a patients: ");
                   fgets(buffer, 1000, stdin);
@@ -425,7 +424,7 @@ int main() {
                     sleep(1);
                   }
                 }
-                n_turn->index++;
+                n_turn.index++;
                 num_night=1;
               }
           }*/
