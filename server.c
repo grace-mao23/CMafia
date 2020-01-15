@@ -5,12 +5,12 @@ int main() {
 
     int taken[13]; // which fd slots are taken already
     taken_setup(taken); // the first one is taken by the server
-    int sub_num, inplay;
+    int sub_num, inplay, game_start;
     int checkin = 2;
     char buffer[BUFFER_SIZE] = "";
 
     int fd1[13][2]; // host - reading        subserver - writing
-    int fd2[13][2]; // subserver - reading   host -writing
+    int fd2[13][2]; // subserver - reading   host - writing
     fd1[0][0] = 0;
     fd1[0][1] = 0;
     fd2[0][0] = 0;
@@ -39,8 +39,19 @@ int main() {
         if (sub_num >= checkin) {
           printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
           fgets(buffer, sizeof(buffer), stdin);
-          printf("%d\n", strcmp(buffer, "yes"));
-          printf("%d\n", strcmp(buffer, "yes\n"));
+          if (strcmp(buffer, "no")) {
+            checkin+=3;
+          } else if (strcmp(buffer, "yes")) {
+            strcpy(buffer, "Start");
+            printf("Game begins!\n");
+            game_start = 1;
+            int i = 1;
+            for (; i < 13; i++) {
+            //  printf("wassup\n");
+              write(fd2[i][1], buffer, sizeof(buffer));
+            //  printf("hi\n");
+            }
+          }
         }
 
       } else { // subserver
