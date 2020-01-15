@@ -33,8 +33,12 @@ int main() {
         fd2[sub_num][0] = fd1[sub_num][1];
         fd2[sub_num][1] = fd1[sub_num][0];
         int p2 = pipe(fd2[sub_num]);
-        fcntl(fd2[sub_num][0], F_SETFL, ~O_NONBLOCK);
-        fcntl(fd2[sub_num][1], F_SETFL, ~O_NONBLOCK);
+        int flag3 = fcntl(fd2[sub_num][0], F_GETFL, 0);
+        int flag4 = fcntl(fd2[sub_num][1], F_GETFL, 0);
+        flag3 &= ~O_NONBLOCK;
+        flag4 &= ~O_NONBLOCK;
+        fcntl(fd2[sub_num][0], F_SETFL, flag3);
+        fcntl(fd2[sub_num][1], F_SETFL, flag4);
       //  printf("Parent pipe: %d\n", p2);
 
         printf("Parent speaking: sub_num is %d\n", sub_num);
@@ -64,8 +68,12 @@ int main() {
         fd1[sub_num][0] = getppid();
         fd1[sub_num][1] = getpid();
         int p1 = pipe(fd1[sub_num]);
-        fcntl(fd1[sub_num][0], F_SETFL, ~O_NONBLOCK);
-        fcntl(fd1[sub_num][1], F_SETFL, ~O_NONBLOCK);
+        int flag1 = fcntl(fd1[sub_num][0], F_GETFL, 0);
+        int flag2 = fcntl(fd1[sub_num][1], F_GETFL, 0);
+        flag1 &= ~O_NONBLOCK;
+        flag2 &= ~O_NONBLOCK;
+        fcntl(fd1[sub_num][0], F_SETFL, flag1);
+        fcntl(fd1[sub_num][1], F_SETFL, flag2);
     //    printf("Child pipe: %d\n", p1);
         close(fd2[sub_num][1]);
 
