@@ -6,6 +6,7 @@ int main() {
     int taken[13]; // which fd slots are taken already
     taken_setup(taken); // the first one is taken by the server
     int sub_num, inplay;
+    int checkin = 2;
     char buffer[BUFFER_SIZE] = "";
 
     int fd1[13][2]; // host - reading        subserver - writing
@@ -32,6 +33,12 @@ int main() {
         fd2[sub_num][1] = fd1[sub_num][0];
         int p2 = pipe(fd2[sub_num]);
       //  printf("Parent pipe: %d\n", p2);
+
+        if (sub_num >= checkin) {
+          printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
+          fgets(buffer, sizeof(buffer), stdin);
+          printf("You answered: %s!\n", buffer);
+        }
 
       } else { // subserver
     //    printf("I'm the child!\n");
