@@ -17,79 +17,73 @@ int main() {
     fd2[0][1] = 0;
 
     while (inplay != 0) {
-      int client = server_connect(sd); // client is the client socket descriptor
-      printf("%d: client connected\n", client);
-      sub_num = lowest_available(taken);
-      taken[sub_num] = 1;
-  //    printf("The lowest available is %d\n", sub_num);
-      int f = fork();
-      if (f) { // parent
-        close(client);
-        sleep(1); // time for subserver to pipe
-      //  printf("I'm the parent!\n");
+        int client = server_connect(sd); // client is the client socket descriptor
+        printf("%d: client connected\n", client);
+        sub_num = lowest_available(taken);
+        taken[sub_num] = 1;
+    //    printf("The lowest available is %d\n", sub_num);
+        int f = fork();
+        if (f) { // parent
+            close(client);
+            sleep(1); // time for subserver to pipe
+        //    printf("I'm the parent!\n");
+        //    close(fd1[sub_num][1]);
 
-      //  close(fd1[sub_num][1]);
+            fd2[sub_num][0] = fd1[sub_num][1];
+            fd2[sub_num][1] = fd1[sub_num][0];
+            int p2 = pipe(fd2[sub_num]);
+        /*    int flag3 = fcntl(fd2[sub_num][0], F_GETFL, 0);
+            int flag4 = fcntl(fd2[sub_num][1], F_GETFL, 0);
+            flag3 &= ~O_NONBLOCK;
+            flag4 &= ~O_NONBLOCK;
+            fcntl(fd2[sub_num][0], F_SETFL, flag3);
+            fcntl(fd2[sub_num][1], F_SETFL, flag4); */
+        //    printf("Parent pipe: %d\n", p2);
 
-        fd2[sub_num][0] = fd1[sub_num][1];
-        fd2[sub_num][1] = fd1[sub_num][0];
-        int p2 = pipe(fd2[sub_num]);
-      /*  int flag3 = fcntl(fd2[sub_num][0], F_GETFL, 0);
-        int flag4 = fcntl(fd2[sub_num][1], F_GETFL, 0);
-        flag3 &= ~O_NONBLOCK;
-        flag4 &= ~O_NONBLOCK;
-        fcntl(fd2[sub_num][0], F_SETFL, flag3);
-        fcntl(fd2[sub_num][1], F_SETFL, flag4); */
-      //  printf("Parent pipe: %d\n", p2);
-
-        printf("Parent speaking: sub_num is %d\n", sub_num);
-        if (sub_num >= checkin) {
-          printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
-          fgets(buffer, sizeof(buffer), stdin);
-          printf("You answered: %s!\n", buffer);
-          if (strcmp(buffer, "yes\n") == 0) {
-            strcpy(buffer, "Start\n");
-            printf("Game begins!\n");
-            game_start = 1;
-            int i = 1;
-            for (; i < 13; i++) {
-              //printf("wassup\n");
-              int w = write(fd2[i][1], buffer, sizeof(buffer));
-              printf("%i %d\n", i, w);
+            printf("Parent speaking: sub_num is %d\n", sub_num);
+            if (sub_num >= checkin) {
+                printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
+                fgets(buffer, sizeof(buffer), stdin);
+                printf("You answered: %s!\n", buffer);
+                if (strcmp(buffer, "yes\n") == 0) {
+                    strcpy(buffer, "Start\n");
+                    printf("Game begins!\n");
+                    game_start = 1;
+                    int i = 1;
+                    for (; i < 13; i++) {
+                    //    printf("wassup\n");
+                        int w = write(fd2[i][1], buffer, sizeof(buffer));
+                        printf("%i %d\n", i, w);
+                    }
+                } else if (strcmp(buffer, "no\n") == 0) {
+                    checkin += 3;
+                }
             }
-          } else if (strcmp(buffer, "no\n") == 0) {
-            checkin += 3;
-          }
+        } else { // subserver
+        //    printf("I'm the child!\n");
 
+            fd1[sub_num][0] = getppid();
+            fd1[sub_num][1] = getpid();
+            int p1 = pipe(fd1[sub_num]);
+        /*    int flag1 = fcntl(fd1[sub_num][0], F_GETFL, 0);
+            int flag2 = fcntl(fd1[sub_num][1], F_GETFL, 0);
+            flag1 &= ~O_NONBLOCK;
+            flag2 &= ~O_NONBLOCK;
+            fcntl(fd1[sub_num][0], F_SETFL, flag1);
+            fcntl(fd1[sub_num][1], F_SETFL, flag2); */
+        //    printf("Child pipe: %d\n", p1);
+        //    close(fd2[sub_num][1]);
+        //    int flag = fcntl(fd2[sub_num][0], F_GETFL, 0);
+        //    printf("Non blocking? %d!\n", flag & O_NONBLOCK);
+
+            while (!game_start) {
+                int r = read(fd2[sub_num][0], buffer, sizeof(buffer));
+            //    printf("Just read\n");
+                while (r > 0) {
+                    printf("Reading %s!!\n", buffer);
+                }
+            }
         }
-
-      } else { // subserver
-    //    printf("I'm the child!\n");
-
-        fd1[sub_num][0] = getppid();
-        fd1[sub_num][1] = getpid();
-        int p1 = pipe(fd1[sub_num]);
-      /*  int flag1 = fcntl(fd1[sub_num][0], F_GETFL, 0);
-        int flag2 = fcntl(fd1[sub_num][1], F_GETFL, 0);
-        flag1 &= ~O_NONBLOCK;
-        flag2 &= ~O_NONBLOCK;
-        fcntl(fd1[sub_num][0], F_SETFL, flag1);
-        fcntl(fd1[sub_num][1], F_SETFL, flag2); */
-    //    printf("Child pipe: %d\n", p1);
-      //  close(fd2[sub_num][1]);
-    //    int flag = fcntl(fd2[sub_num][0], F_GETFL, 0);
-      //  printf("Non blocking? %d!\n", flag & O_NONBLOCK);
-
-        while (!game_start) {
-          int r = read(fd2[sub_num][0], buffer, sizeof(buffer));
-        //  printf("Just read\n");
-          while(r > 0) {
-            printf("Reading %s!!\n", buffer);
-          }
-        }
-
-
-      }
-
     }
 /*    int inplay = 1;
     int game_start = 0;
