@@ -6,7 +6,7 @@ int main() {
     int taken[13]; // which fd slots are taken already
     taken_setup(taken); // the first one is taken by the server
     int sub_num, inplay;
-    char buffer[BUFFER_SIZE];
+    char buffer[BUFFER_SIZE] = "";
 
     int fd1[13][2]; // host - reading        subserver - writing
     int fd2[13][2]; // subserver - reading   host -writing
@@ -26,6 +26,8 @@ int main() {
         sleep(1); // time for subserver to pipe
       //  printf("I'm the parent!\n");
 
+        close(fd1[sub_num][1]);
+
         fd2[sub_num][0] = fd1[sub_num][1];
         fd2[sub_num][1] = fd1[sub_num][0];
         int p2 = pipe(fd2[sub_num]);
@@ -38,9 +40,10 @@ int main() {
         fd1[sub_num][1] = getpid();
         int p1 = pipe(fd1[sub_num]);
     //    printf("Child pipe: %d\n", p1);
+        close(fd2[sub_num][1]);
 
         while(read(fd2[sub_num][0], buffer, sizeof(buffer))) {
-          printf("Reading %s\n", buffer);
+          printf("Reading %s!!\n", buffer);
         }
 
       }
