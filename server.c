@@ -34,6 +34,7 @@ int main() {
         int p2 = pipe(fd2[sub_num]);
       //  printf("Parent pipe: %d\n", p2);
 
+        printf("Parent speaking: sub_num is %d\n", sub_num);
         if (sub_num >= checkin) {
           printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
           fgets(buffer, sizeof(buffer), stdin);
