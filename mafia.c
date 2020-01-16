@@ -260,8 +260,6 @@ int main() {
                 mdone=0;
                 ndone=0;
                 ddone=0;
-            }
-        }
         while (!game_over) {
             if (!night) { //daytime
                 printf("It's Daytime!\n");
