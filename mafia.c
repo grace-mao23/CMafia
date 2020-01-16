@@ -152,7 +152,7 @@ void startSpecial() {
 //George's Code
 int len_single(char *ary) {
     int count = 0;
-    for (count = 0; ary[count] != NULL; count++) {
+    for (count = 0; &ary[count] != NULL; count++) {
         //omg isn't this so cool!!! this actually works
     }
     return count;
@@ -167,7 +167,7 @@ char *to_string(char **ary) {
     }
     size -= 1;
     char *line = malloc(size *sizeof(char));
-    line[0] = NULL;
+    &line[0] = NULL;
     for (i = 0; i < len_double(ary); i++) {
         if (strcmp(ary[i], " ") != 0) { //" " means the player has died
             strcat(line, ary[i]);
@@ -262,7 +262,7 @@ int main() {
                 for (int i = 0; i < num_players; i++) {
                     votes[i] = 0;
                 }
-                votes[num_players] = NULL;
+                &votes[num_players] = NULL;
                 mafiaNum(num_players);
                 detectiveNum(num_players);
                 nurseNum(num_players);
