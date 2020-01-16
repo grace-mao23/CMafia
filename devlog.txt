@@ -1,14 +1,20 @@
 Grace -- 23:02 1-2-2020
-Coded the startings of the shell before the game begins, such as waiting for players to join and generating roles.
+Coded the beginnings of the shell before the game begins, such as waiting for players to join and generating roles.
 
 George -- 2:03 1-3-2020
 Added some more helpful functions and variables, such as turning a list of players into a readable string format and keeping track of the number of days and votes. Also further developed the initialization of the game by setting everything to 0 and ending all arrays and strings with NULL.
 
 Grace -- 22:33 1-7-2020
-Added the required functions and lines and code in order to create subservers that interact with clients. Also created the required pipes to have the servers interact with subservers.
+Added the required functions and lines and code in order to create sub-servers that interact with clients. Also created the required pipes to have the servers interact with subservers.
 
 George -- 23:59 1-7-2020
 Added onto the pipes by creating a counter that helps keep track of number of people on the server. It also manages the fd's used in pipes.
 
 George -- 15:30 1-13-2020
 Added a function which removed a character from a list of strings. In addition, started creating the networking code needed for announcing who died the previous night.
+
+Grace -- 15:25 1-16-2020
+Finally fixed the pipes between the sub-servers and the server with the help of Mr. DW.
+
+Amanda -- 18:38 1-16-2020
+Fixed the bugs that occurred when copying pasting the code into the correct pipes
