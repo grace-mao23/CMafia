@@ -5,5 +5,6 @@ all: server.c mafia.c spectate.c
 
 clean:
 	rm server
-	rm client
+	rm mafia
+	rm spectate
 	rm *.o
