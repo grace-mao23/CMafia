@@ -1,14 +1,7 @@
-ifeq ($(type), server)
-	type = server
-endif
-
-ifeq ($(type), client)
-	type = client
-endif
-
-all: server.c client.c
+all: server.c mafia.c spectate.c
 	gcc server.c -o server
-	gcc client.c -o client
+	gcc mafia.c -o mafia
+	gcc spectate.c -o spectate
 
 clean:
 	rm server
