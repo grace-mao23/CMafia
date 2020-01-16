@@ -89,3 +89,10 @@ int lowest_available(int *taken) { //finds the closest available fd
     }
     return -1;
 }
+
+void error_check(int i, char *s) {
+    if ( i < 0 ) {
+        printf("[%s] error %d: %s\n", s, errno, strerror(errno) );
+        exit(1);
+    }
+}
