@@ -222,25 +222,12 @@ int main() {
             }
         }
         srand(time(NULL));
-        while (!game_start) {
-            printf("\\Mafia$ Waiting for players to join...");
-            while (num_players < 5) {
-                //update_players(); // PLAYERS JOIN
-                sleep(1);
-            }
-            printf("\n\\Mafia$ %d players in game, start? (y/n)", num_players);
-            char buffer[1000];
-            fgets(buffer, 1000, stdin);
-            if (strcmp(buffer, "y") == 0) {
                 printf("\\Mafia$ Enter Username: ");
                 fgets(buffer, 1000, stdin);
                 buffer[strlen(buffer) - 1] = '\0';
                 printf("Your Username is: %s\n", buffer);
                 usernames(buffer);
                 printf("\\Mafia$ Waiting for other players...");
-                while (num_players != len_double(players)) {
-                    sleep(1);
-                }
                 printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
                 printf("\\Mafia$ Generating Role...\n");
                 genRoles();
@@ -273,8 +260,6 @@ int main() {
                 mdone=0;
                 ndone=0;
                 ddone=0;
-            }
-        }
         while (!game_over) {
             if (!night) { //daytime
                 printf("It's Daytime!\n");
