@@ -26,5 +26,13 @@ void error_check(int i, char *s) {
         exit(1);
     }
 }
+
+union semun {
+    int val;
+    struct semid_ds *buf;
+    unsigned short *array;
+    struct seminfo *__buf;
+};
+
 void taken_setup(int *taken);
 int lowest_available(int *taken);

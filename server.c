@@ -43,35 +43,32 @@ int main() {
                     }
                 }
             }
-          } else {
-       printf("Waiting for players to join...\n");
-
-       while (read(fd2[sub_num][0], buffer, sizeof(buffer))) {
-           printf("[%s]\n",buffer);
-           if (strcmp(buffer, "Start\n") == 0) {
-               printf("asdfa\n");
-               write(client, buffer, sizeof(buffer));
-               strcpy(buffer, "Game Started");
-           }
-       }
-
-       //WILL WORK ON LATER
-       int quitted = 0;
-
-       while (read(client, buffer, sizeof(buffer)) && !quitted) {
-           if (buffer[0] == 'n') { //when the nurse tells server who is being saved
-               int night = buffer[1] - '0'; //format of buffer: [n or m][night number][person]
-           }
-           if (buffer[0] == 'q') { //this quitting is when you want to quit before the game starts
-               quitted = 1;
-               write(fd1[sub_num][0], "q", sizeof("q"));
-           }
-       }
-       close(client);
-       exit(0);
-       //WILL WORK ON LATER
-   }
-}
-close(sd);
-return 0;
+        } else {
+            printf("Waiting for players to join...\n");
+            while (read(fd2[sub_num][0], buffer, sizeof(buffer))) {
+                printf("[%s]\n",buffer);
+                if (strcmp(buffer, "Start\n") == 0) {
+                    printf("asdfa\n");
+                    write(client, buffer, sizeof(buffer));
+                    strcpy(buffer, "Game Started");
+                }
+            }
+            //WILL WORK ON LATER
+            int quitted = 0;
+            while (read(client, buffer, sizeof(buffer)) && !quitted) {
+                if (buffer[0] == 'n') { //when the nurse tells server who is being saved
+                    int night = buffer[1] - '0'; //format of buffer: [n or m][night number][person]
+                }
+                if (buffer[0] == 'q') { //this quitting is when you want to quit before the game starts
+                    quitted = 1;
+                    write(fd1[sub_num][0], "q", sizeof("q"));
+                }
+            }
+            close(client);
+            exit(0);
+            //WILL WORK ON LATER
+        }
+    }
+    close(sd);
+    return 0;
 }
