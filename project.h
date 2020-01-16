@@ -10,6 +10,7 @@
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <time.h>
 
 #define PORT "42069"
 #define TEST_IP "127.0.0.1"

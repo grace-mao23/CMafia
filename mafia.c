@@ -1,10 +1,5 @@
 //Team: Grace Mao Amanda Zheng George Zhou (Team Gag)
-#include <time.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
 #include "networking.c"
-#include <string.h>
 //Amanda's Code
 char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
