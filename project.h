@@ -22,13 +22,3 @@ int lowest_available(int *taken);
 #define TEST_IP "127.0.0.1"
 #define BUFFER_SIZE 1024
 #define INPLAY 0
-
-union semun {
-    int val;
-    struct semid_ds *buf;
-    unsigned short *array;
-    struct seminfo *__buf;
-};
-#define SHMEM_KEY 2132
-#define SEM_KEY 32432
-#define SIZE 1000
