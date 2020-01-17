@@ -121,12 +121,12 @@ void usernames(char *new) {
   //  printf("huh?\n");
   //  printf("%s\n", new);
     strcpy(username, new);
-    //printf("Players: %s\n", players[i]);
+    printf("Players: %s\n", players[i]);
   //  printf("Players in Game:");
-    for (i = 0; players[i] != NULL; i++) {
+  //  for (i = 0; players[i] != NULL; i++) {
       //  printf("%d!\n", i);
-        printf("%s, ", players[i]);
-    }
+    //    printf("%s, ", players[i]);
+  //  }
     strcpy(players[i], new);
     printf("up to\n");
     printf("%s\n", new);
