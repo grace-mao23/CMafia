@@ -117,7 +117,7 @@ void usernames(char *new) {
     printf("huh?\n");
     printf("%s\n", new);
     strcpy(username, new);
-    printf("Players in Game:");
+    printf("Players in Game:\n");
     for (i = 0; players[i] != NULL; i++) {
         printf("%d!\n", i);
         printf("%s, ", players[i]);
