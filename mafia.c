@@ -102,7 +102,7 @@ void genRoles() {
             d_turn.index++;
             d--;
         } else {
-            roles[i]=0;
+            roles[i] = 0;
             n_turn.member[m_turn.index] = players[i];
             n_turn.index++;
             n--;

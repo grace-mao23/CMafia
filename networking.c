@@ -82,7 +82,6 @@ void taken_setup(int *taken) {
 int lowest_available(int *taken) { //finds the closest available fd
     int i = 1;
     for (; i < sizeof(taken); i++) {
-      //  printf("%d\n", taken[i]);
         if (!taken[i]) {
             return i;
         }
@@ -91,7 +90,7 @@ int lowest_available(int *taken) { //finds the closest available fd
 }
 
 void error_check(int i, char *s) {
-    if ( i < 0 ) {
+    if (i < 0) {
         printf("[%s] error %d: %s\n", s, errno, strerror(errno) );
         exit(1);
     }
