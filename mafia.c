@@ -214,8 +214,8 @@ int main() {
     if (sd_conn >= 0) {
         printf("Waiting for players to join...\n");
 
-        while(read(sd_conn, buffer, sizeof(buffer)) && game_start == 0) {
-            printf("checking");
+        while(game_start == 0 && read(sd_conn, buffer, sizeof(buffer))) {
+            //printf("checking");
             if (strcmp(buffer, "Start\n") == 0) {
                 game_start = 1;
                 strcpy(buffer, "Game Started");
