@@ -112,7 +112,7 @@ void genRoles() {
 }
 
 void usernames(char *new) {
-    players = malloc(20 * sizeof(char *));
+    players = (char**)malloc(20 * sizeof(char *));
     username = malloc(sizeof(char) * 50);
     int i = 0;
   //  printf("huh?\n");
@@ -124,7 +124,6 @@ void usernames(char *new) {
       //  printf("%d!\n", i);
         printf("%s, ", players[i]);
     }
-    printf("Are we here?\n");
     strcpy(players[i], new);
     printf("up to\n");
     printf("%s\n", new);
