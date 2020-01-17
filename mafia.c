@@ -5,7 +5,7 @@ char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
 int *votes;
 int maf, nur, det, village, num_day,num_night,mdone,ddone,ndone;
-char username[BUFFER_SIZE] = "none";
+char *username;
 char *victim;
 struct turns {
     char **member;
@@ -111,7 +111,8 @@ void genRoles() {
     }
 }
 
-void usernames(char new[BUFFER_SIZE]) {
+void usernames(char *new) {
+    username = malloc(sizeof(char) * 50);
     int i = 0;
     printf("huh?\n");
     printf("%s\n", username);
