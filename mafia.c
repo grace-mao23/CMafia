@@ -5,7 +5,7 @@ char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
 int *votes;
 int maf, nur, det, village, num_day,num_night,mdone,ddone,ndone;
-char * username;
+char *username;
 char *victim;
 struct turns {
     char **member;
@@ -112,13 +112,20 @@ void genRoles() {
 }
 
 void usernames(char *new) {
+    players = calloc(12, 20 * sizeof(char *));
+    username = malloc(sizeof(char) * 50);
     int i = 0;
+  //  printf("huh?\n");
+  //  printf("%s\n", new);
     strcpy(username, new);
-    printf("Players in Game:");
+    printf("Players: %s\n", players[i]);
+  //  printf("Players in Game:");
     for (i = 0; players[i] != NULL; i++) {
+      //  printf("%d!\n", i);
         printf("%s, ", players[i]);
     }
     strcpy(players[i], new);
+    printf("up to\n");
     printf("%s\n", new);
 }
 
@@ -214,13 +221,15 @@ int main() {
     if (sd_conn >= 0) {
         printf("Waiting for players to join...\n");
 
-        while(read(sd_conn, buffer, sizeof(buffer))&&game_start==0) {
+        while(game_start == 0 && read(sd_conn, buffer, sizeof(buffer))) {
+            //printf("checking");
             if (strcmp(buffer, "Start\n") == 0) {
                 game_start = 1;
                 strcpy(buffer, "Game Started");
                 printf("\n\n\nLET'S BEGIN!\n\n\n");
             }
         }
+
         srand(time(NULL));
         printf("\\Mafia$ Enter Username: ");
         fgets(buffer, 1000, stdin);
