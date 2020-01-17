@@ -115,7 +115,6 @@ void usernames(char *new) {
     username = malloc(sizeof(char) * 50);
     int i = 0;
     printf("huh?\n");
-    printf("%s\n", username);
     strcpy(username, new);
     printf("Players in Game:");
     for (i = 0; players[i] != NULL; i++) {
