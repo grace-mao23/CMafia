@@ -222,44 +222,44 @@ int main() {
             }
         }
         srand(time(NULL));
-                printf("\\Mafia$ Enter Username: ");
-                fgets(buffer, 1000, stdin);
-                buffer[strlen(buffer) - 1] = '\0';
-                printf("Your Username is: %s\n", buffer);
-                usernames(buffer);
-                printf("\\Mafia$ Waiting for other players...");
-                printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
-                printf("\\Mafia$ Generating Role...\n");
-                genRoles();
-                if (getRole(username) == 0) {
-                    printf("Your Role: Civilian\n");
-                } else if (getRole(username) == 1) {
-                    printf("Your Role: Mafia\n");
-                } else if (getRole(username) == 2) {
-                    printf("Your Role: Detective\n");
-                } else {
-                    printf("Your Role: Nurse\n");
-                }
-                game_start = 1;
-                night = 0;
-                num_day = 1;
-                num_night = 1;
-                type_night = 0;
-                votes = malloc(num_players * (sizeof(int) + 1));
-                for (int i = 0; i < num_players; i++) {
-                    votes[i] = 0;
-                }
-                votes[num_players] = 0;
-                mafiaNum(num_players);
-                detectiveNum(num_players);
-                nurseNum(num_players);
-                startSpecial();
-                m_turn.index=0;
-                d_turn.index=0;
-                n_turn.index=0;
-                mdone=0;
-                ndone=0;
-                ddone=0;
+        printf("\\Mafia$ Enter Username: ");
+        fgets(buffer, 1000, stdin);
+        buffer[strlen(buffer) - 1] = '\0';
+        printf("Your Username is: %s\n", buffer);
+        usernames(buffer);
+        printf("\\Mafia$ Waiting for other players...");
+        printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
+        printf("\\Mafia$ Generating Role...\n");
+        genRoles();
+        if (getRole(username) == 0) {
+            printf("Your Role: Civilian\n");
+        } else if (getRole(username) == 1) {
+            printf("Your Role: Mafia\n");
+        } else if (getRole(username) == 2) {
+            printf("Your Role: Detective\n");
+        } else {
+            printf("Your Role: Nurse\n");
+        }
+        game_start = 1;
+        night = 0;
+        num_day = 1;
+        num_night = 1;
+        type_night = 0;
+        votes = malloc(num_players * (sizeof(int) + 1));
+        for (int i = 0; i < num_players; i++) {
+            votes[i] = 0;
+        }
+        votes[num_players] = 0;
+        mafiaNum(num_players);
+        detectiveNum(num_players);
+        nurseNum(num_players);
+        startSpecial();
+        m_turn.index = 0;
+        d_turn.index = 0;
+        n_turn.index=0;
+        mdone = 0;
+        ndone = 0;
+        ddone = 0;
         while (!game_over) {
             if (!night) { //daytime
                 printf("It's Daytime!\n");
