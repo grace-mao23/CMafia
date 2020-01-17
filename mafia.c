@@ -5,7 +5,7 @@ char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
 int *votes;
 int maf, nur, det, village, num_day,num_night,mdone,ddone,ndone;
-char * username;
+char username[BUFFER_SIZE];
 char *victim;
 struct turns {
     char **member;
