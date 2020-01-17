@@ -113,12 +113,15 @@ void genRoles() {
 
 void usernames(char *new) {
     int i = 0;
+    printf("huh?\n");
     strcpy(username, new);
     printf("Players in Game:");
     for (i = 0; players[i] != NULL; i++) {
+        printf("%d!\n", i);
         printf("%s, ", players[i]);
     }
     strcpy(players[i], new);
+    printf("up to\n");
     printf("%s\n", new);
 }
 
