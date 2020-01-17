@@ -115,6 +115,9 @@ void usernames(char *new) {
     players = (char**)malloc(20 * sizeof(char *));
     username = malloc(sizeof(char) * 50);
     int i = 0;
+    for (i = 0; i < 12; i++) {
+        players[i] = (char*) malloc(20*sizeof(char)); //2 is for the letter and null terminator
+    }
   //  printf("huh?\n");
   //  printf("%s\n", new);
     strcpy(username, new);
