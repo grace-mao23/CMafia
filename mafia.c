@@ -214,23 +214,25 @@ int main() {
     if (sd_conn >= 0) {
         printf("Waiting for players to join...\n");
 
-        while(read(sd_conn, buffer, sizeof(buffer))&&game_start==0) {
+        while(read(sd_conn, buffer, sizeof(buffer)) && game_start == 0) {
+            printf("checking");
             if (strcmp(buffer, "Start\n") == 0) {
                 game_start = 1;
                 strcpy(buffer, "Game Started");
                 printf("\n\n\nLET'S BEGIN!\n\n\n");
             }
         }
+
         srand(time(NULL));
-                printf("\\Mafia$ Enter Username: ");
-                fgets(buffer, 1000, stdin);
-                buffer[strlen(buffer) - 1] = '\0';
-                printf("Your Username is: %s\n", buffer);
-                usernames(buffer);
-                printf("\\Mafia$ Waiting for other players...");
-                printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
-                printf("\\Mafia$ Generating Role...\n");
-                genRoles();
+        printf("\\Mafia$ Enter Username: ");
+        fgets(buffer, 1000, stdin);
+        buffer[strlen(buffer) - 1] = '\0';
+        printf("Your Username is: %s\n", buffer);
+        usernames(buffer);
+        printf("\\Mafia$ Waiting for other players...");
+        printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
+        printf("\\Mafia$ Generating Role...\n");
+        genRoles();
                 if (getRole(username) == 0) {
                     printf("Your Role: Civilian\n");
                 } else if (getRole(username) == 1) {
