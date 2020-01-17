@@ -5,7 +5,7 @@ char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
 int *votes;
 int maf, nur, det, village, num_day,num_night,mdone,ddone,ndone;
-char username[BUFFER_SIZE];
+char username[BUFFER_SIZE] = "none";
 char *victim;
 struct turns {
     char **member;
@@ -114,6 +114,7 @@ void genRoles() {
 void usernames(char new[BUFFER_SIZE]) {
     int i = 0;
     printf("huh?\n");
+    printf("%s\n", username);
     strcpy(username, new);
     printf("Players in Game:");
     for (i = 0; players[i] != NULL; i++) {
