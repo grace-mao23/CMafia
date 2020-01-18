@@ -31,18 +31,12 @@ int len_double(char **ary) {
 //number of people based off of users (number of players)
 int mafiaNum(int users) {
     int mafia = 0;
-    if (users > 17) {
-        mafia = 7;
-    } else if (users > 13) {
-        mafia = 6;
-    } else if (users > 9) {
-        mafia = 5;
-    } else if (users > 7) {
-        mafia = 4;
-    } else if (users > 5) {
+    if (users > 8) {
         mafia = 3;
-    } else {
+    } else if (users > 6) {
         mafia = 2;
+    } else {
+        mafia = 1;
     }
     maf = mafia;
     printf("Total Mafia Members: %d\n", mafia);
@@ -52,16 +46,10 @@ int mafiaNum(int users) {
 //number of nurse based off of users (number of players)
 int nurseNum(int users) {
     int nurse = 0;
-    if (users > 17) {
-        nurse = 4;
-    } else if (users > 13) {
-        nurse = 3;
-    } else if (users > 7) {
+    if (users > 7) {
         nurse = 2;
-    } else if (users > 5) {
-        nurse = 1;
     } else {
-        nurse = 0;
+        nurse = 1;
     }
     nur = nurse;
     printf("Total Number of Nurse(s): %d\n", nurse);
@@ -71,11 +59,7 @@ int nurseNum(int users) {
 //number of dectecive based off of users (number of players)
 int detectiveNum(int users) {
     int detective;
-    if (users > 13) {
-        detective = 4;
-    } else if (users > 9) {
-        detective = 3;
-    } else if (users > 7) {
+    if (users > 10) {
         detective = 2;
     } else {
         detective = 1;
@@ -90,8 +74,21 @@ void genRoles() {
     int m = maf;
     int d = det;
     int n = nur;
-    roles = malloc(total *sizeof(int));
-    //need to be freed
+    m_turn.member=calloc(m,sizeof(char*));
+    n_turn.member=calloc(d,sizeof(char*));
+    d_turn.member=calloc(n,sizeof(char*));
+    for (size_t i = 0; i < m; i++) {
+      m_turn.member=malloc(sizeof(char)*1000);
+      strcpy(m_turn.member,"\0");
+    }
+    for (size_t i = 0; i < n; i++) {
+      n_turn.member=malloc(sizeof(char)*1000);
+      strcpy(n_turn.member,"\0");
+    }
+    for (size_t i = 0; i < d; i++) {
+      d_turn.member=malloc(sizeof(char)*1000);
+      strcpy(d_turn.member,"\0");
+    }
     unsigned int r;
     for (size_t i = 0; i < num_players; i++) {
         r = rand() % total;
@@ -102,12 +99,12 @@ void genRoles() {
             m--;
         } else if (r < m + d) {
             roles[i] = 2;
-            d_turn.member[m_turn.index] = players[i];
+            d_turn.member[d_turn.index] = players[i];
             d_turn.index++;
             d--;
         } else {
             roles[i] = 0;
-            n_turn.member[m_turn.index] = players[i];
+            n_turn.member[n_turn.index] = players[i];
             n_turn.index++;
             n--;
         }
@@ -118,13 +115,12 @@ void genRoles() {
 void usernames(char *new) {
     int i = 0;
     strcpy(username, new);
-    printf("Players: %s\n", players[i]);
-  //  printf("Players in Game:");
+    printf("Players in Game:");
     for (i = 0; players[i] != NULL; i++) {
         printf("[[%s]], ", players[i]);
     }
-    printf("\n");
     strcpy(players[i], new);
+    printf("[[%s]]\n",players[i]);
 }
 
 int getRole(char *check) {
@@ -218,7 +214,8 @@ int main() {
     roles=calloc(12,sizeof(int));
     for (size_t i = 0; i < 12; i++) {
       players[i]=malloc(sizeof(char)*1000);
-      players[i]=0;
+      strcpy(players[i],"\0");
+      roles[i]=-1;
     }
     if (sd_conn >= 0) {
         printf("Waiting for players to join...\n");
@@ -238,9 +235,11 @@ int main() {
             buffer[strlen(buffer) - 1] = '\0';
             printf("Your Username is: %s\n", buffer);
             usernames(buffer);
+            printf("\\Mafia$ Waiting for other players...");
           }
+          //we need everyones computer to be updated as one computer gets one usernames
+          //
         }
-        printf("\\Mafia$ Waiting for other players...");
         printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
         printf("\\Mafia$ Generating Role...\n");
         genRoles();
