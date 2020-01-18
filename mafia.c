@@ -4,9 +4,14 @@
 char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
 int *votes;
-int maf, nur, det, village, num_day,num_night,mdone,ddone,ndone;
+int maf, nur, det, mdone, ddone, ndone, num_players;
 char * username;
 char *victim;
+int game_over = 0;
+int game_start = 0;
+int num_players, num_day, type_night, num_night; //type night is for the roles, while num night is how many nights have passed
+int night;
+
 struct turns {
     char **member;
     int index;
@@ -79,17 +84,16 @@ int detectiveNum(int users) {
     printf("Total Detective(s): %d\n", detective);
     return detective;
 }
-//gonna needa set village = length(players)
 //need to initialize turns to 0
 void genRoles() {
-    int total = village;
+    int total = num_players;
     int m = maf;
     int d = det;
     int n = nur;
     roles = malloc(total *sizeof(int));
     //need to be freed
     unsigned int r;
-    for (size_t i = 0; i < village; i++) {
+    for (size_t i = 0; i < num_players; i++) {
         r = rand() % total;
         if (r < m) {
             roles[i] = 1;
@@ -113,13 +117,15 @@ void genRoles() {
 
 void usernames(char *new) {
     int i = 0;
+    username=malloc(sizeof(char *));
     strcpy(username, new);
     printf("Players in Game:");
     for (i = 0; players[i] != NULL; i++) {
-        printf("%s, ", players[i]);
+        printf("[[%s]], ", players[i]);
     }
+    printf("\n");
+    players[i]=malloc(sizeof(char *)*1000)
     strcpy(players[i], new);
-    printf("%s\n", new);
 }
 
 int getRole(char *check) {
@@ -197,23 +203,24 @@ int remove_name(char **ary, char *name) {
 // num_players attainable through length of users later
 // OR maybe game start when num_players equals length of char ** with usernames
 // going with assumption that at least 5 people needed, will change later
-int game_over = 0;
-int game_start = 0;
-int num_players, num_day, type_night, num_night; //type night is for the roles, while num night is how many nights have passed
-int night;
-
 
 // LATER SHOULD BE MOVED TO MAFIA.C
 
 int main() {
     int sd_conn, game_start = 0;
     char buffer[BUFFER_SIZE] = "not yet";
-
+    num_players=0;
+    num_night=0;
+    num_day=0;
     sd_conn = client_setup(TEST_IP);
-
+    players=calloc(12,sizeof(char*));
+    roles=calloc(12,sizeof(int));
+    for (size_t i = 0; i < 12; i++) {
+      players[i]=malloc(sizeof(char)*1000);
+      players[i]=0;
+    }
     if (sd_conn >= 0) {
         printf("Waiting for players to join...\n");
-
         while(read(sd_conn, buffer, sizeof(buffer))&&game_start==0) {
             if (strcmp(buffer, "Start\n") == 0) {
                 game_start = 1;

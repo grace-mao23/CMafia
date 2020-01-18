@@ -37,9 +37,7 @@ int main() {
                     game_start = 1;
                     int i = 0;
                     for (; i < 12; i++) {
-                        printf("wassup\n");
                         write(fd2[i][1], buffer, sizeof(buffer));
-                        printf("hi\n");
                     }
                 }
             }
