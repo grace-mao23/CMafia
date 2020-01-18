@@ -116,34 +116,15 @@ void genRoles() {
 }
 
 void usernames(char *new) {
-    players = calloc(12, 20 * sizeof(char *));
-    username = malloc(sizeof(char) * 50);
     int i = 0;
-<<<<<<< HEAD
-    username=malloc(sizeof(char *));
-=======
-  //  printf("huh?\n");
-  //  printf("%s\n", new);
->>>>>>> c4a0a1f205c6b841e7ed8860ec40b0a34b5fb47a
     strcpy(username, new);
     printf("Players: %s\n", players[i]);
   //  printf("Players in Game:");
     for (i = 0; players[i] != NULL; i++) {
-<<<<<<< HEAD
         printf("[[%s]], ", players[i]);
-=======
-      //  printf("%d!\n", i);
-        printf("%s, ", players[i]);
->>>>>>> c4a0a1f205c6b841e7ed8860ec40b0a34b5fb47a
     }
     printf("\n");
-    players[i]=malloc(sizeof(char *)*1000)
     strcpy(players[i], new);
-<<<<<<< HEAD
-=======
-    printf("up to\n");
-    printf("%s\n", new);
->>>>>>> c4a0a1f205c6b841e7ed8860ec40b0a34b5fb47a
 }
 
 int getRole(char *check) {
@@ -239,13 +220,7 @@ int main() {
     }
     if (sd_conn >= 0) {
         printf("Waiting for players to join...\n");
-<<<<<<< HEAD
-        while(read(sd_conn, buffer, sizeof(buffer))&&game_start==0) {
-=======
-
         while(game_start == 0 && read(sd_conn, buffer, sizeof(buffer))) {
-            //printf("checking");
->>>>>>> c4a0a1f205c6b841e7ed8860ec40b0a34b5fb47a
             if (strcmp(buffer, "Start\n") == 0) {
                 game_start = 1;
                 strcpy(buffer, "Game Started");
