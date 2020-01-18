@@ -211,6 +211,8 @@ int main() {
     num_players=0;
     num_night=0;
     num_day=0;
+    username=malloc(sizeof(char)* 1000);
+    username=0;
     sd_conn = client_setup(TEST_IP);
     players=calloc(12,sizeof(char*));
     roles=calloc(12,sizeof(int));
@@ -229,11 +231,15 @@ int main() {
         }
 
         srand(time(NULL));
-        printf("\\Mafia$ Enter Username: ");
-        fgets(buffer, 1000, stdin);
-        buffer[strlen(buffer) - 1] = '\0';
-        printf("Your Username is: %s\n", buffer);
-        usernames(buffer);
+        while(len_double(players)!=num_players){
+          if(username!=NULL){
+            printf("\\Mafia$ Enter Username: ");
+            fgets(buffer, 1000, stdin);
+            buffer[strlen(buffer) - 1] = '\0';
+            printf("Your Username is: %s\n", buffer);
+            usernames(buffer);
+          }
+        }
         printf("\\Mafia$ Waiting for other players...");
         printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
         printf("\\Mafia$ Generating Role...\n");
