@@ -79,15 +79,15 @@ void genRoles() {
     d_turn.member=calloc(n,sizeof(char*));
     for (size_t i = 0; i < m; i++) {
       m_turn.member=malloc(sizeof(char)*1000);
-      strcpy(m_turn.member,"\0");
+      strcpy(m_turn.member[i],"\0");
     }
     for (size_t i = 0; i < n; i++) {
       n_turn.member=malloc(sizeof(char)*1000);
-      strcpy(n_turn.member,"\0");
+      strcpy(n_turn.member[i],"\0");
     }
     for (size_t i = 0; i < d; i++) {
       d_turn.member=malloc(sizeof(char)*1000);
-      strcpy(d_turn.member,"\0");
+      strcpy(d_turn.member[i],"\0");
     }
     unsigned int r;
     for (size_t i = 0; i < num_players; i++) {
