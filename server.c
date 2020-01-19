@@ -50,8 +50,10 @@ int main() {
                     int i = 0;
                     for (; i < 12; i++) {
                         write(fd2[i][1], buffer, sizeof(buffer));
-                        //strcpy(buffer,"")
-                        //write(fd2[i][1],buffer,sizeof(buffer));
+                        char numP=sub_num-96;
+                        strcpy(buffer,"Num");
+                        strncat(buffer,&numP,1);
+                        write(fd2[i][1],buffer,sizeof(buffer));
                     }
                 }
             }
@@ -63,7 +65,11 @@ int main() {
                     printf("asdfa\n");
                     write(client, buffer, sizeof(buffer));
                     strcpy(buffer, "Game Started");
+                }else if(strlen(buffer)==4&&'N'==buffer[0]){
+                  printf("number of players: %d\n",buffer[1]);
+                  write(client,buffer,sizeof(buffer));
                 }
+
             }
             //WILL WORK ON LATER
             int quitted = 0;

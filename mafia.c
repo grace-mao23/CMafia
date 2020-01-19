@@ -209,7 +209,7 @@ int main() {
     num_night=0;
     num_day=0;
     username=malloc(sizeof(char)* 1000);
-    username=0;
+    strcpy(username,"\0");
     sd_conn = client_setup(TEST_IP);
     players=calloc(12,sizeof(char*));
     roles=calloc(12,sizeof(int));
@@ -225,6 +225,9 @@ int main() {
                 game_start = 1;
                 strcpy(buffer, "Game Started");
                 printf("\n\n\nLET'S BEGIN!\n\n\n");
+            }else if(strlen(buffer)==4&&buffer[0]=='N'){
+              num_players=0;
+              printf("players in game: %d\n",num_players);
             }
         }
 
