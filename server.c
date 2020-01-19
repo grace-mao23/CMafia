@@ -3,7 +3,6 @@
 int main() {
     int inplay = 1;
     int game_start = 0;
-
     int sd, f, client, sub_num = 0;
     int taken[13]; //boolean of numbers saying which fd's are taken already;
     taken_setup(taken);
@@ -50,12 +49,23 @@ int main() {
                     int i = 0;
                     for (; i < 12; i++) {
                         write(fd2[i][1], buffer, sizeof(buffer));
-                        char numP=sub_num-96;
-                        printf("numP: %d\n",numP);
+                        char numP=sub_num+96;
                         strcpy(buffer,"Num");
                         strncat(buffer,&numP,1);
                         write(fd2[i][1],buffer,sizeof(buffer));
                     }
+                }
+                char username[1000];
+                for (size_t i = 0; i < 12; i++) {
+                  while(read(fd1[i][0],buffer,sizeof(buffer))){
+                    if(buffer[0]=='U'){
+                      for (size_t j = 0; j < count; j++) {
+                        if(i!=j){
+                          write(fd2[i][1],buffer,sizeof(buffer));
+                        }
+                      }
+                    }
+                  }
                 }
             }
         } else {
@@ -63,11 +73,11 @@ int main() {
             while (read(fd2[sub_num][0], buffer, sizeof(buffer))) {
                 printf("[%s]\n",buffer);
                 if (strcmp(buffer, "Start\n") == 0) {
-                    printf("asdfa\n");
                     write(client, buffer, sizeof(buffer));
                     strcpy(buffer, "Game Started");
                 }else if(strlen(buffer)==4&&'N'==buffer[0]){
-                  printf("number of players: %d\n",buffer[1]);
+                  write(client,buffer,sizeof(buffer));
+                }else if(buffer[0]=='U'){
                   write(client,buffer,sizeof(buffer));
                 }
 
@@ -76,11 +86,14 @@ int main() {
             int quitted = 0;
             while (read(client, buffer, sizeof(buffer)) && !quitted) {
                 if (buffer[0] == 'n') { //when the nurse tells server who is being saved
-                    int night = buffer[1] - '0'; //format of buffer: [n or m][night number][person]
+                  int night = buffer[1] - '0'; //format of buffer: [n or m][night number][person]
                 }
                 if (buffer[0] == 'q') { //this quitting is when you want to quit before the game starts
-                    quitted = 1;
-                    write(fd1[sub_num][0], "q", sizeof("q"));
+                  quitted = 1;
+                  write(fd1[sub_num][0], "q", sizeof("q")); //isn't this for reading
+                }
+                if(buffer[0]=='U'){
+                  write(fd1[sub_num][1],buffer,sizeof(buffer));
                 }
             }
             close(client);

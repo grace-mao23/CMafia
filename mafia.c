@@ -226,24 +226,33 @@ int main() {
                 strcpy(buffer, "Game Started");
                 printf("\n\n\nLET'S BEGIN!\n\n\n");
             }else if(strlen(buffer)==4&&buffer[0]=='N'){
-              num_players=0;
-              printf("players in game: %d\n",num_players);
+              num_players=buffer[3]-96;
             }
         }
 
         srand(time(NULL));
-        //while(len_double(players)!=num_players){
-        //  if(strcmp(username,"\0")!=0){
+        while(len_double(players)!=num_players){
+          while(read(sd_conn,buffer,sizeof(buffer))){
+            if(buffer[0]=='U'){
+              for (size_t i = 1; i < strlen(buffer); i++) {
+                players[num_players][i-1]=buffer[i];
+              }
+            }
+          }
+          if(strcmp(username,"\0")!=0){
             printf("\\Mafia$ Enter Username: ");
             fgets(buffer, 1000, stdin);
             buffer[strlen(buffer) - 1] = '\0';
             printf("Your Username is: %s\n", buffer);
             usernames(buffer);
             printf("\\Mafia$ Waiting for other players...");
-          //}
-          //we need everyones computer to be updated as one computer gets one usernames
-          //
-        //}
+            strcpy(buffer,"U");
+            strncat(buffer,username,strlen(username));
+            printf("Copied over %s\n", buffer);
+            write(sd_conn,buffer,sizeof(buffer));
+          }
+
+        }
         printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
         printf("\\Mafia$ Generating Role...\n");
         genRoles();
