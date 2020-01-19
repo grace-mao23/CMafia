@@ -116,8 +116,9 @@ void usernames(char *new) {
     int i = 0;
     strcpy(username, new);
     printf("Players in Game:");
-    for (i = 0; players[i] != NULL; i++) {
+    while (strcmp(players[i],"\0")!= 0) {
         printf("[[%s]], ", players[i]);
+        i++;
     }
     strcpy(players[i], new);
     printf("[[%s]]\n",players[i]);
@@ -228,18 +229,18 @@ int main() {
         }
 
         srand(time(NULL));
-        while(len_double(players)!=num_players){
-          if(username!=NULL){
+        //while(len_double(players)!=num_players){
+        //  if(strcmp(username,"\0")!=0){
             printf("\\Mafia$ Enter Username: ");
             fgets(buffer, 1000, stdin);
             buffer[strlen(buffer) - 1] = '\0';
             printf("Your Username is: %s\n", buffer);
             usernames(buffer);
             printf("\\Mafia$ Waiting for other players...");
-          }
+          //}
           //we need everyones computer to be updated as one computer gets one usernames
           //
-        }
+        //}
         printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
         printf("\\Mafia$ Generating Role...\n");
         genRoles();

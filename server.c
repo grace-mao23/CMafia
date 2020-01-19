@@ -9,6 +9,17 @@ int main() {
     taken_setup(taken);
     int fd1[13][2]; // host reading from subserver
     int fd2[13][2]; // host writing to subserver
+
+    //parent -> use fd2[i][1] write to subserver write function
+    //forked ->fd2[sub_num][0] (subserver reads from server) read function
+    //parent fd1[i][0] server read from subserver read function
+    //forked fd1[sub_num][1]  subserver writes to server write function
+
+
+    //sever writes to all subserver using fd2[i][1] "N*num*"   server.c
+    //subserver in while loop checks to see servers, check if buffer: buffer[0]=='N' server.c
+    //send buffer to clients use write (client, buffer,buffer)  mafia.c
+    //if buffer[0]=='N' set num_players=parsed number at the end  mafia.c
     sd = server_setup();
     int checkin = 2; // when to prompt host // chenge to 6
     char *buffer_p = 0; // buffer pointer
@@ -39,6 +50,8 @@ int main() {
                     int i = 0;
                     for (; i < 12; i++) {
                         write(fd2[i][1], buffer, sizeof(buffer));
+                        //strcpy(buffer,"")
+                        //write(fd2[i][1],buffer,sizeof(buffer));
                     }
                 }
             }
