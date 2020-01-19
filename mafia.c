@@ -192,6 +192,19 @@ int remove_name(char **ary, char *name) {
     return 0;
 }
 
+char **parse_args(char *line, char *del) {
+    char *token;
+    char **tokens;
+    tokens = malloc(sizeof(char*) * 10);
+    int i = 0;
+    while (line != NULL) {
+        token = strsep(&line, del);
+        tokens[i] = token;
+        i++;
+    }
+    tokens[i] = 0;
+    return tokens;
+}
 //=================================================================================================================
 //Grace's Code
 
@@ -235,9 +248,8 @@ int main() {
           while(read(sd_conn,buffer,sizeof(buffer))){
             printf("Reading other playeres info\n");
             if(buffer[0]=='U'){
-              for (size_t i = 1; i < strlen(buffer); i++) {
-                players[num_players][i-1]=buffer[i];
-              }
+              buffer[0]=',';
+              players=parse_args(buffer,",");
             }
           }
           if(strcmp(username,"\0")!=0){

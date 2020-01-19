@@ -8,7 +8,12 @@ int main() {
     taken_setup(taken);
     int fd1[13][2]; // host reading from subserver
     int fd2[13][2]; // host writing to subserver
-
+    char ** players;
+    players=calloc(12,sizeof(char*));
+    for (size_t i = 0; i < 12; i++) {
+      players[i]=malloc(sizeof(char)*1000);
+      strcpy(players[i],"\0");
+    }
     //parent -> use fd2[i][1] write to subserver write function
     //forked ->fd2[sub_num][0] (subserver reads from server) read function
     //parent fd1[i][0] server read from subserver read function
@@ -47,25 +52,34 @@ int main() {
                     printf("Game begins!\n");
                     game_start = 1;
                     int i = 0;
-                    for (; i < 12; i++) {
+                    for (; i <= sub_num; i++) {
                         char numP=sub_num+96;
                         strcpy(buffer,"Num");
                         strncat(buffer,&numP,1);
                         write(fd2[i][1],buffer,sizeof(buffer));
                     }
-                }else if(buffer_p[0]=='U'){
-                  char username[1000];
-                  for (size_t i = 0; i < 12; i++) {
-                    printf("So far %s\n",buffer );
-                    for (size_t j = 0; j < 12; j++) {
-                      if(i!=j){
-                        write(fd2[i][1],buffer,sizeof(buffer));
-                        printf("wrote to subserver from server part 2\n");
+                    int j=0;
+                    for(i=0;i<=sub_num; i++){
+                      read(fd1[i][0],buffer,sizeof(buffer));
+                      if(buffer[0]=='U'){
+                        while(strcmp(players[0]!="\0")){
+                          j++;
+                        }
+                        for (i = 1; i < strlen(buffer); i++) {
+                          players[j][i-1]=buffer[i];
+                        }
                       }
+                    }
+                    strcpy(buffer,"\0");
+                    strcpy(buffer,"U");
+                    for (size_t a = 0; a <= sub_num; a++) {
+                      buffer+=players[sub_num]+",";
+                    }
+                    for (i = 0; i < 12; i++) {
+                        write(fd2[i][1],buffer,sizeof(buffer));
                     }
                   }
                 }
-            }
         } else {
             printf("Waiting for players to join...\n");
             while (read(fd2[sub_num][0], buffer, sizeof(buffer))) {
