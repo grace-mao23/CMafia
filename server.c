@@ -51,6 +51,7 @@ int main() {
                     for (; i < 12; i++) {
                         write(fd2[i][1], buffer, sizeof(buffer));
                         char numP=sub_num-96;
+                        printf("numP: %d\n",numP);
                         strcpy(buffer,"Num");
                         strncat(buffer,&numP,1);
                         write(fd2[i][1],buffer,sizeof(buffer));
