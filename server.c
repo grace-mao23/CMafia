@@ -53,18 +53,14 @@ int main() {
                         strncat(buffer,&numP,1);
                         write(fd2[i][1],buffer,sizeof(buffer));
                     }
-                }
-                char username[1000];
-                for (size_t i = 0; i < 12; i++) {
-                  while(read(fd1[i][0],buffer,sizeof(buffer))){
-                    printf("read it\n");
-                    if(buffer[0]=='U'){
-                      printf("So far %s\n",buffer );
-                      for (size_t j = 0; j < 12; j++) {
-                        if(i!=j){
-                          write(fd2[i][1],buffer,sizeof(buffer));
-                          printf("wrote to subserver from server part 2\n");
-                        }
+                }else if(buffer_p[0]=='U'){
+                  char username[1000];
+                  for (size_t i = 0; i < 12; i++) {
+                    printf("So far %s\n",buffer );
+                    for (size_t j = 0; j < 12; j++) {
+                      if(i!=j){
+                        write(fd2[i][1],buffer,sizeof(buffer));
+                        printf("wrote to subserver from server part 2\n");
                       }
                     }
                   }
