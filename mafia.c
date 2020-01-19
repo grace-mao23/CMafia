@@ -74,20 +74,20 @@ void genRoles() {
     int m = maf;
     int d = det;
     int n = nur;
-    m_turn.member=calloc(m,sizeof(char*));
-    n_turn.member=calloc(d,sizeof(char*));
-    d_turn.member=calloc(n,sizeof(char*));
+    m_turn.member = calloc(m, sizeof(char*));
+    n_turn.member = calloc(d, sizeof(char*));
+    d_turn.member = calloc(n, sizeof(char*));
     for (size_t i = 0; i < m; i++) {
-        m_turn.member=malloc(sizeof(char)*1000);
-        strcpy(m_turn.member[i],"\0");
+        m_turn.member = malloc(sizeof(char)*1000);
+        strcpy(m_turn.member[i], "\0");
     }
     for (size_t i = 0; i < n; i++) {
-        n_turn.member=malloc(sizeof(char)*1000);
-        strcpy(n_turn.member[i],"\0");
+        n_turn.member = malloc(sizeof(char)*1000);
+        strcpy(n_turn.member[i], "\0");
     }
     for (size_t i = 0; i < d; i++) {
-        d_turn.member=malloc(sizeof(char)*1000);
-        strcpy(d_turn.member[i],"\0");
+        d_turn.member = malloc(sizeof(char)*1000);
+        strcpy(d_turn.member[i], "\0");
     }
     unsigned int r;
     for (size_t i = 0; i < num_players; i++) {
@@ -127,13 +127,13 @@ void startSpecial() {
     n_turn.index = 0;
     for (size_t i = 0; players[i] != NULL; i++) {
         if (roles[i] == 1){
-            m_turn.member[m_turn.index]=players[i];
+            m_turn.member[m_turn.index] = players[i];
             m_turn.index++;
         } else if (roles[i] == 2) {
-            d_turn.member[m_turn.index]=players[i];
+            d_turn.member[m_turn.index] = players[i];
             d_turn.index++;
         } else if (roles[i] == 3) {
-            n_turn.member[m_turn.index]=players[i];
+            n_turn.member[m_turn.index] = players[i];
             n_turn.index++;
         }
     }
@@ -206,18 +206,18 @@ char **parse_args(char *line, char *del) {
 int main() {
     int sd_conn, game_start = 0;
     char buffer[BUFFER_SIZE] = "not yet";
-    num_players=0;
-    num_night=0;
-    num_day=0;
-    username=malloc(sizeof(char)* 1000);
-    strcpy(username,"\0");
+    num_players = 0;
+    num_night = 0;
+    num_day = 0;
+    username = malloc(sizeof(char) * 1000);
+    strcpy(username, "\0");
     sd_conn = client_setup(TEST_IP);
-    players=calloc(12,sizeof(char*));
-    roles=calloc(12,sizeof(int));
+    players = calloc(12, sizeof(char*));
+    roles = calloc(12, sizeof(int));
     for (size_t i = 0; i < 12; i++) {
-        players[i]=malloc(sizeof(char)*1000);
-        strcpy(players[i],"\0");
-        roles[i]=-1;
+        players[i] = malloc(sizeof(char) * 1000);
+        strcpy(players[i], "\0");
+        roles[i] = -1;
     }
     if (sd_conn >= 0) {
         printf("Waiting for players to join...\n");
@@ -227,22 +227,22 @@ int main() {
                 strcpy(buffer, "Game Started");
                 printf("\n\n\nLET'S BEGIN!\n\n\n");
             } else if ((strlen(buffer) == 4) && (buffer[0] == 'N')) {
-              num_players = buffer[3] - 96;
+                num_players = buffer[3] - 96;
             }
         }
         srand(time(NULL));
-        if (strcmp(username,"\0") == 0) {
+        if (strcmp(username, "\0") == 0) {
             printf("\\Mafia$ Enter Username: ");
             fgets(buffer, 1000, stdin);
             buffer[strlen(buffer) - 1] = '\0';
             printf("Your Username is: %s\n", buffer);
-            strcpy(username,buffer);
+            strcpy(username, buffer);
             printf("\\Mafia$ Waiting for other players...\n");
-            strcpy(buffer,"\0");
-            strcpy(buffer,"U");
-            strncat(buffer,username,strlen(username));
+            strcpy(buffer, "\0");
+            strcpy(buffer, "U");
+            strncat(buffer, username, strlen(username));
             printf("Copied over %s\n", buffer);
-            write(sd_conn,buffer,sizeof(buffer));
+            write(sd_conn, buffer, sizeof(buffer));
         }
         while (read(sd_conn, buffer, sizeof(buffer))) {
             printf("readint other palyers inof  %s\n", buffer);
@@ -279,7 +279,7 @@ int main() {
         startSpecial();
         m_turn.index = 0;
         d_turn.index = 0;
-        n_turn.index=0;
+        n_turn.index = 0;
         mdone = 0;
         ndone = 0;
         ddone = 0;
@@ -293,7 +293,7 @@ int main() {
                 } else if (num_day == 1) {
                     if (victim != NULL) {
                         printf("%s has died!\n", victim);
-                        if (strcmp(username,victim) == 0) {
+                        if (strcmp(username, victim) == 0) {
                             game_over = 1;
                         } else {
                             printf("You have 5 minutes to discuss.\n"); //George's Timer
@@ -315,7 +315,7 @@ int main() {
                         printf("Here are all of your victims: %s\n", to_string(players));
                         printf("\\Vote for your victim: ");
                         fgets(buffer, 1000, stdin);
-                        buffer[strlen(buffer)-1] = '\0';
+                        buffer[strlen(buffer) - 1] = '\0';
                         /*while (!valid(&buffer)) { //function to see if its valid victim
                             printf("\nYou have voted for an invalid victim.%s\n Here are all of your victims\n", to_string(players));
                             printf("\\Vote for your victim: ");
