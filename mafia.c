@@ -233,6 +233,7 @@ int main() {
         srand(time(NULL));
         while(len_double(players)!=num_players){
           while(read(sd_conn,buffer,sizeof(buffer))){
+            printf("Reading other playeres info\n");
             if(buffer[0]=='U'){
               for (size_t i = 1; i < strlen(buffer); i++) {
                 players[num_players][i-1]=buffer[i];

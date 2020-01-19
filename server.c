@@ -48,7 +48,6 @@ int main() {
                     game_start = 1;
                     int i = 0;
                     for (; i < 12; i++) {
-                        write(fd2[i][1], buffer, sizeof(buffer));
                         char numP=sub_num+96;
                         strcpy(buffer,"Num");
                         strncat(buffer,&numP,1);
@@ -58,10 +57,13 @@ int main() {
                 char username[1000];
                 for (size_t i = 0; i < 12; i++) {
                   while(read(fd1[i][0],buffer,sizeof(buffer))){
+                    printf("read it\n");
                     if(buffer[0]=='U'){
-                      for (size_t j = 0; j < count; j++) {
+                      printf("So far %s\n",buffer );
+                      for (size_t j = 0; j < 12; j++) {
                         if(i!=j){
                           write(fd2[i][1],buffer,sizeof(buffer));
+                          printf("wrote to subserver from server part 2\n");
                         }
                       }
                     }
@@ -71,14 +73,15 @@ int main() {
         } else {
             printf("Waiting for players to join...\n");
             while (read(fd2[sub_num][0], buffer, sizeof(buffer))) {
-                printf("[%s]\n",buffer);
                 if (strcmp(buffer, "Start\n") == 0) {
                     write(client, buffer, sizeof(buffer));
                     strcpy(buffer, "Game Started");
                 }else if(strlen(buffer)==4&&'N'==buffer[0]){
                   write(client,buffer,sizeof(buffer));
                 }else if(buffer[0]=='U'){
+                  printf("Read from server part 2\n" );
                   write(client,buffer,sizeof(buffer));
+                  printf("wrote to client part 2\n");
                 }
 
             }
@@ -94,6 +97,7 @@ int main() {
                 }
                 if(buffer[0]=='U'){
                   write(fd1[sub_num][1],buffer,sizeof(buffer));
+                  printf("subserver writes to server\n")
                 }
             }
             close(client);
