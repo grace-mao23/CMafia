@@ -9,10 +9,10 @@ int main() {
     int fd1[13][2]; // host reading from subserver
     int fd2[13][2]; // host writing to subserver
     char ** players;
-    players=calloc(12,sizeof(char*));
+    players = calloc(12, sizeof(char*));
     for (size_t i = 0; i < 12; i++) {
-      players[i]=malloc(sizeof(char)*1000);
-      strcpy(players[i],"\0");
+        players[i] = malloc(sizeof(char) * 1000);
+        strcpy(players[i], "\0");
     }
     //parent -> use fd2[i][1] write to subserver write function
     //forked ->fd2[sub_num][0] (subserver reads from server) read function
@@ -39,7 +39,6 @@ int main() {
         if (f) { // parent
             close(client);
             sleep(1); // give time for creation of pipe
-
             if (sub_num >= checkin) {
                 printf("%d players in the game. Ready to start? (yes/no) ", sub_num);
                 buffer_p = fgets(buffer, sizeof(buffer), stdin);
@@ -52,76 +51,71 @@ int main() {
                     printf("Game begins!\n");
                     game_start = 1;
                     int i = 0;
-		    for(;i<=sub_num;i++){
-		    	write(fd2[i][1],buffer,sizeof(buffer));
-		    }
-                    for (i=0; i <= sub_num; i++) {
-                        char numP=sub_num+96;
-                        strcpy(buffer,"Num");
-                        strncat(buffer,&numP,1);
-                        write(fd2[i][1],buffer,sizeof(buffer));
+                    for (; i <= sub_num; i++) {
+                        write(fd2[i][1], buffer, sizeof(buffer));
                     }
-                    int j=0;
-                    printf("george is a bad advice giver\n");
-		    sleep(1);
-		    printf("george has wierd passwords\n");
-                    for(i=0;i<=sub_num; i++){
-                      read(fd1[i][0],buffer,sizeof(buffer));
-		      printf("server received %s\n",buffer);
-                      if(buffer[0]=='U'){
-                        while(strcmp(players[0],"\0")!=0){
-                          j++;
-                        }
-                        for (i = 1; i < strlen(buffer); i++) {
-                          players[j][i-1]=buffer[i];
-                        }
-                      }
+                    for (i = 0; i <= sub_num; i++) {
+                        char numP = sub_num + 96;
+                        strcpy(buffer, "Num");
+                        strncat(buffer, &numP, 1);
+                        write(fd2[i][1], buffer, sizeof(buffer));
                     }
-                    strcpy(buffer,"\0");
-                    strcpy(buffer,"U");
+                    int j = 0;
+                    printf("george is a bad advice giver\n");sleep(1);
+                    printf("george has wierd passwords\n");
+                    for (i = 0; i <= sub_num; i++) {
+                        read(fd1[i][0], buffer, sizeof(buffer));
+                        printf("server received %s\n", buffer);
+                        if (buffer[0] == 'U') {
+                            while(strcmp(players[0], "\0") != 0) {
+                                j++;
+                            }
+                            for (i = 1; i < strlen(buffer); i++) {
+                                players[j][i - 1] = buffer[i];
+                            }
+                        }
+                    }
+                    strcpy(buffer, "\0");
+                    strcpy(buffer, "U");
                     for (size_t a = 0; a <= sub_num; a++) {
-		      strcat(players[sub_num],",");
-                      strcat(buffer,players[sub_num]);
+                        strcat(players[sub_num], ",");
+                        strcat(buffer, players[sub_num]);
                     }
                     for (i = 0; i < 12; i++) {
-                        write(fd2[i][1],buffer,sizeof(buffer));
+                        write(fd2[i][1], buffer, sizeof(buffer));
                     }
-                  }
                 }
+            }
         } else {
             printf("Waiting for players to join...\n");
             while (read(fd2[sub_num][0], buffer, sizeof(buffer))) {
                 if (strcmp(buffer, "Start\n") == 0) {
                     write(client, buffer, sizeof(buffer));
                     strcpy(buffer, "Game Started");
-                }else if(strlen(buffer)==4&&'N'==buffer[0]){
-                  write(client,buffer,sizeof(buffer));
-                }else if(buffer[0]=='U'){
-                  printf("Read from server part 2\n" );
-                  write(client,buffer,sizeof(buffer));
-                  printf("wrote to client part 2\n");
+                } else if ((strlen(buffer) == 4) && ('N' == buffer[0])) {
+                    write(client, buffer, sizeof(buffer));
+                } else if (buffer[0] == 'U') {
+                    printf("Read from server part 2\n");
+                    write(client, buffer, sizeof(buffer));
+                    printf("wrote to client part 2\n");
                 }
-
             }
             //WILL WORK ON LATER
             int quitted = 0;
             while (read(client, buffer, sizeof(buffer)) && !quitted) {
-		printf("%c\n",buffer[0]);
+                printf("%c\n", buffer[0]);
                 if (buffer[0] == 'n') { //when the nurse tells server who is being saved
-                  int night = buffer[1] - '0'; //format of buffer: [n or m][night number][person]
-                }
-                if (buffer[0] == 'q') { //this quitting is when you want to quit before the game starts
-                  quitted = 1;
-                  write(fd1[sub_num][0], "q", sizeof("q")); //isn't this for reading
-                }
-                if(buffer[0]=='U'){
-                  write(fd1[sub_num][1],buffer,sizeof(buffer));
-                  printf("subserver writes to server\n");
+                    int night = buffer[1] - '0'; //format of buffer: [n or m][night number][person]
+                } else if (buffer[0] == 'q') { //this quitting is when you want to quit before the game starts
+                    quitted = 1;
+                    write(fd1[sub_num][0], "q", sizeof("q")); //isn't this for reading
+                } else if (buffer[0] == 'U') {
+                    write(fd1[sub_num][1], buffer, sizeof(buffer));
+                    printf("subserver writes to server\n");
                 }
             }
             close(client);
             exit(0);
-            //WILL WORK ON LATER
         }
     }
     close(sd);
