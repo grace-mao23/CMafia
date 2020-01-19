@@ -226,8 +226,8 @@ int main() {
                 game_start = 1;
                 strcpy(buffer, "Game Started");
                 printf("\n\n\nLET'S BEGIN!\n\n\n");
-            }else if(strlen(buffer)==4&&buffer[0]=='N'){
-              num_players=buffer[3]-96;
+            }else if(strlen(buffer) == 4 && buffer[0]=='N'){
+                num_players=buffer[3] - 96;
             }
         }
 
@@ -237,13 +237,13 @@ int main() {
           fgets(buffer, 1000, stdin);
           buffer[strlen(buffer) - 1] = '\0';
           printf("Your Username is: %s\n", buffer);
-          strcpy(username,buffer);
+          strcpy(username, buffer);
           printf("\\Mafia$ Waiting for other players...\n");
-	  strcpy(buffer,"\0");
+	        strcpy(buffer,"\0");
           strcpy(buffer,"U");
           strncat(buffer,username,strlen(username));
           printf("Copied over %s\n", buffer);
-          write(sd_conn,buffer,sizeof(buffer));
+          write(sd_conn,buffer,sizeof(buffer)); // client sends username to subserver
         }
 	while(read(sd_conn,buffer,sizeof(buffer))){
 	  printf("readint other palyers inof  %s\n",buffer);

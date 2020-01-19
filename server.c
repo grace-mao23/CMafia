@@ -61,7 +61,8 @@ int main() {
                         write(fd2[i][1], buffer, sizeof(buffer));
                     }
                     int j = 0;
-                    printf("george is a bad advice giver\n");sleep(1);
+                    printf("george is a bad advice giver\n");
+                    sleep(1);
                     printf("george has wierd passwords\n");
                     for (i = 0; i <= sub_num; i++) {
                         read(fd1[i][0], buffer, sizeof(buffer));
@@ -87,6 +88,7 @@ int main() {
                 }
             }
         } else {
+            int quitted = -1;
             printf("Waiting for players to join...\n");
             while (read(fd2[sub_num][0], buffer, sizeof(buffer))) {
                 if (strcmp(buffer, "Start\n") == 0) {
@@ -101,7 +103,7 @@ int main() {
                 }
             }
             //WILL WORK ON LATER
-            int quitted = 0;
+            quitted = 0;
             while (read(client, buffer, sizeof(buffer)) && !quitted) {
                 printf("%c\n", buffer[0]);
                 if (buffer[0] == 'n') { //when the nurse tells server who is being saved
