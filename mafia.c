@@ -78,16 +78,16 @@ void genRoles() {
     n_turn.member=calloc(d,sizeof(char*));
     d_turn.member=calloc(n,sizeof(char*));
     for (size_t i = 0; i < m; i++) {
-      m_turn.member=malloc(sizeof(char)*1000);
-      strcpy(m_turn.member[i],"\0");
+        m_turn.member=malloc(sizeof(char)*1000);
+        strcpy(m_turn.member[i],"\0");
     }
     for (size_t i = 0; i < n; i++) {
-      n_turn.member=malloc(sizeof(char)*1000);
-      strcpy(n_turn.member[i],"\0");
+        n_turn.member=malloc(sizeof(char)*1000);
+        strcpy(n_turn.member[i],"\0");
     }
     for (size_t i = 0; i < d; i++) {
-      d_turn.member=malloc(sizeof(char)*1000);
-      strcpy(d_turn.member[i],"\0");
+        d_turn.member=malloc(sizeof(char)*1000);
+        strcpy(d_turn.member[i],"\0");
     }
     unsigned int r;
     for (size_t i = 0; i < num_players; i++) {
@@ -215,9 +215,9 @@ int main() {
     players=calloc(12,sizeof(char*));
     roles=calloc(12,sizeof(int));
     for (size_t i = 0; i < 12; i++) {
-      players[i]=malloc(sizeof(char)*1000);
-      strcpy(players[i],"\0");
-      roles[i]=-1;
+        players[i]=malloc(sizeof(char)*1000);
+        strcpy(players[i],"\0");
+        roles[i]=-1;
     }
     if (sd_conn >= 0) {
         printf("Waiting for players to join...\n");
@@ -226,32 +226,31 @@ int main() {
                 game_start = 1;
                 strcpy(buffer, "Game Started");
                 printf("\n\n\nLET'S BEGIN!\n\n\n");
-            }else if(strlen(buffer) == 4 && buffer[0]=='N'){
-                num_players=buffer[3] - 96;
+            } else if ((strlen(buffer) == 4) && (buffer[0] == 'N')) {
+              num_players = buffer[3] - 96;
             }
         }
-
         srand(time(NULL));
-        if(strcmp(username,"\0")==0){
-          printf("\\Mafia$ Enter Username: ");
-          fgets(buffer, 1000, stdin);
-          buffer[strlen(buffer) - 1] = '\0';
-          printf("Your Username is: %s\n", buffer);
-          strcpy(username, buffer);
-          printf("\\Mafia$ Waiting for other players...\n");
-	        strcpy(buffer,"\0");
-          strcpy(buffer,"U");
-          strncat(buffer,username,strlen(username));
-          printf("Copied over %s\n", buffer);
-          write(sd_conn,buffer,sizeof(buffer)); // client sends username to subserver
+        if (strcmp(username,"\0") == 0) {
+            printf("\\Mafia$ Enter Username: ");
+            fgets(buffer, 1000, stdin);
+            buffer[strlen(buffer) - 1] = '\0';
+            printf("Your Username is: %s\n", buffer);
+            strcpy(username,buffer);
+            printf("\\Mafia$ Waiting for other players...\n");
+            strcpy(buffer,"\0");
+            strcpy(buffer,"U");
+            strncat(buffer,username,strlen(username));
+            printf("Copied over %s\n", buffer);
+            write(sd_conn,buffer,sizeof(buffer));
         }
-	while(read(sd_conn,buffer,sizeof(buffer))){
-	  printf("readint other palyers inof  %s\n",buffer);
-	  if(buffer[0]=='U'){
-	    buffer[0]=',';
-	    players=(parse_args(buffer,","));
-	  }
-	}
+        while (read(sd_conn, buffer, sizeof(buffer))) {
+            printf("readint other palyers inof  %s\n", buffer);
+            if (buffer[0] == 'U') {
+                buffer[0] = ',';
+                players = parse_args(buffer, ",");
+            }
+        }
         printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
         printf("\\Mafia$ Generating Role...\n");
         genRoles();
@@ -374,7 +373,7 @@ int main() {
                     }
                 }
                 m_turn.index++;
-                num_night=2;
+                num_night = 2;
             }
         }
     }
