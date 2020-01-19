@@ -112,18 +112,6 @@ void genRoles() {
     }
 }
 
-void usernames(char *new) {
-    int i = 0;
-    strcpy(username, new);
-    printf("Players in Game:");
-    while (strcmp(players[i],"\0")!= 0) {
-        printf("[[%s]], ", players[i]);
-        i++;
-    }
-    strcpy(players[i], new);
-    printf("[[%s]]\n",players[i]);
-}
-
 int getRole(char *check) {
     for (size_t i = 0; players[i] != NULL; i++) {
         if (strcmp(players[i], check) == 0) {
@@ -244,28 +232,26 @@ int main() {
         }
 
         srand(time(NULL));
-        while(len_double(players)!=num_players){
-          while(read(sd_conn,buffer,sizeof(buffer))){
-            printf("Reading other playeres info\n");
-            if(buffer[0]=='U'){
-              buffer[0]=',';
-              players=parse_args(buffer,",");
-            }
-          }
-          if(strcmp(username,"\0")!=0){
-            printf("\\Mafia$ Enter Username: ");
-            fgets(buffer, 1000, stdin);
-            buffer[strlen(buffer) - 1] = '\0';
-            printf("Your Username is: %s\n", buffer);
-            usernames(buffer);
-            printf("\\Mafia$ Waiting for other players...");
-            strcpy(buffer,"U");
-            strncat(buffer,username,strlen(username));
-            printf("Copied over %s\n", buffer);
-            write(sd_conn,buffer,sizeof(buffer));
-          }
-
+        if(strcmp(username,"\0")==0){
+          printf("\\Mafia$ Enter Username: ");
+          fgets(buffer, 1000, stdin);
+          buffer[strlen(buffer) - 1] = '\0';
+          printf("Your Username is: %s\n", buffer);
+          strcpy(username,buffer);
+          printf("\\Mafia$ Waiting for other players...\n");
+	  strcpy(buffer,"\0");
+          strcpy(buffer,"U");
+          strncat(buffer,username,strlen(username));
+          printf("Copied over %s\n", buffer);
+          write(sd_conn,buffer,sizeof(buffer));
         }
+	while(read(sd_conn,buffer,sizeof(buffer))){
+	  printf("readint other palyers inof  %s\n",buffer);
+	  if(buffer[0]=='U'){
+	    buffer[0]=',';
+	    players=(parse_args(buffer,","));
+	  }
+	}
         printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
         printf("\\Mafia$ Generating Role...\n");
         genRoles();

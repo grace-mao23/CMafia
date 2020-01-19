@@ -52,17 +52,24 @@ int main() {
                     printf("Game begins!\n");
                     game_start = 1;
                     int i = 0;
-                    for (; i <= sub_num; i++) {
+		    for(;i<=sub_num;i++){
+		    	write(fd2[i][1],buffer,sizeof(buffer));
+		    }
+                    for (i=0; i <= sub_num; i++) {
                         char numP=sub_num+96;
                         strcpy(buffer,"Num");
                         strncat(buffer,&numP,1);
                         write(fd2[i][1],buffer,sizeof(buffer));
                     }
                     int j=0;
+                    printf("george is a bad advice giver\n");
+		    sleep(1);
+		    printf("george has wierd passwords\n");
                     for(i=0;i<=sub_num; i++){
                       read(fd1[i][0],buffer,sizeof(buffer));
+		      printf("server received %s\n",buffer);
                       if(buffer[0]=='U'){
-                        while(strcmp(players[0]!="\0")){
+                        while(strcmp(players[0],"\0")!=0){
                           j++;
                         }
                         for (i = 1; i < strlen(buffer); i++) {
@@ -73,7 +80,8 @@ int main() {
                     strcpy(buffer,"\0");
                     strcpy(buffer,"U");
                     for (size_t a = 0; a <= sub_num; a++) {
-                      buffer+=players[sub_num]+",";
+		      strcat(players[sub_num],",");
+                      strcat(buffer,players[sub_num]);
                     }
                     for (i = 0; i < 12; i++) {
                         write(fd2[i][1],buffer,sizeof(buffer));
@@ -98,6 +106,7 @@ int main() {
             //WILL WORK ON LATER
             int quitted = 0;
             while (read(client, buffer, sizeof(buffer)) && !quitted) {
+		printf("%c\n",buffer[0]);
                 if (buffer[0] == 'n') { //when the nurse tells server who is being saved
                   int night = buffer[1] - '0'; //format of buffer: [n or m][night number][person]
                 }
@@ -107,7 +116,7 @@ int main() {
                 }
                 if(buffer[0]=='U'){
                   write(fd1[sub_num][1],buffer,sizeof(buffer));
-                  printf("subserver writes to server\n")
+                  printf("subserver writes to server\n");
                 }
             }
             close(client);
