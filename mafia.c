@@ -376,7 +376,7 @@ int main() {
                         write(sd_conn, victim, sizeof(victim));
                         m_turn.index++;
                     } else {
-                        strcpy(game_buffer), "done");
+                        strcpy(game_buffer, "done");
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                     }
                     read(sd_conn, game_buffer, sizeof(game_buffer));// block until server sends signal
@@ -389,7 +389,7 @@ int main() {
                     if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
                         printf("Here are all of your suspects: %s\n", to_string(players));
                         printf("\\Choose to investigate a suspect: ");
-                        fgets(game_buffer), 1000, stdin);
+                        fgets(game_buffer, 1000, stdin);
                         game_buffer[strlen(game_buffer) - 1] = '\0';
                         /*while (!valid(&buffer)) { //function to see if its valid victim
                             printf("\nYou have chosen an invalid suspect.\n Here are all of your suspects: %s\n", to_string(players));
