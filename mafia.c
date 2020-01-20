@@ -204,7 +204,7 @@ char **parse_args(char *line, char *del) {
 // LATER SHOULD BE MOVED TO MAFIA.C
 
 int main() {
-    int sd_conn, game_start = 0;
+    int sd_conn, game_start = -1;
     char buffer[BUFFER_SIZE] = "not yet";
     num_players = 0;
     num_night = 0;
@@ -221,34 +221,40 @@ int main() {
     }
     if (sd_conn >= 0) {
         printf("Waiting for players to join...\n");
-        while(game_start == 0 && read(sd_conn, buffer, sizeof(buffer))) {
+        while (game_start == -1 && read(sd_conn, buffer, sizeof(buffer))) {
+            // client reads from subserver
             if (strcmp(buffer, "Start\n") == 0) {
-                game_start = 1;
+                // client reads Start from subserver
                 strcpy(buffer, "Game Started");
-                printf("\n\n\nLET'S BEGIN!\n\n\n");
             } else if ((strlen(buffer) == 4) && (buffer[0] == 'N')) {
+                // client reads number of players from subserver
                 num_players = buffer[3] - 96;
+                game_start = 0;
+                printf("\n\n\nLET'S BEGIN!\n\n\n");
             }
         }
         srand(time(NULL));
         if (strcmp(username, "\0") == 0) {
             printf("\\Mafia$ Enter Username: ");
-            fgets(buffer, 1000, stdin);
+            fgets(buffer, 1000, stdin); // reads username from stdin
             buffer[strlen(buffer) - 1] = '\0';
             printf("Your Username is: %s\n", buffer);
-            strcpy(username, buffer);
+            strcpy(username, buffer); // username copied
             printf("\\Mafia$ Waiting for other players...\n");
             strcpy(buffer, "\0");
             strcpy(buffer, "U");
             strncat(buffer, username, strlen(username));
-            printf("Copied over %s\n", buffer);
+            printf("Copied over %s\n", buffer); // buffer becomes U + <username>
             write(sd_conn, buffer, sizeof(buffer));
+            // client writes username to subserver
         }
-        while (read(sd_conn, buffer, sizeof(buffer))) {
+        while (game_start == 0 && read(sd_conn, buffer, sizeof(buffer))) {
+            // client reads list of usernames from subserver
             printf("readint other palyers inof  %s\n", buffer);
             if (buffer[0] == 'U') {
                 buffer[0] = ',';
                 players = parse_args(buffer, ",");
+                game_start = 1;
             }
         }
         printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
