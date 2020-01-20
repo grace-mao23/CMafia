@@ -235,7 +235,7 @@ void parse_int(char *line) {
 
 int valid(char *name) {
     int i = 0;
-    for (; i < len_double(players); i++) {
+    for (; i < num_players; i++) {
         if (strcmp(players[i], name) == 0) {
             return 1;
         }
@@ -379,7 +379,9 @@ int main() {
                         print_players();
                         printf("\\Vote for your victim: ");
                         fgets(victim, 1000, stdin);
-                        victim[strlen(victim)] = '\0';
+                        victim[strlen(victim) - 1] = '\0';
+                        printf("%s\n", victim);
+                        printf("valid: %d\n", valid(victim));
                         while (!valid(victim)) { //function to see if its valid victim
                             printf("\nYou have voted for an invalid victim.%s\n Here are all of your victims\n", to_string(players));
                             printf("\\Vote for your victim: ");
@@ -390,7 +392,7 @@ int main() {
                         write(sd_conn, victim, sizeof(victim));
                         m_turn.index++;
                         if(m_turn.index==maf){
-                          m_turn.index==0;
+                          m_turn.index=0;
                         }
                     } else {
                         strcpy(game_buffer, "done");
@@ -435,7 +437,7 @@ int main() {
                     read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
                     d_turn.index++;
                     if(d_turn.index==maf){
-                      d_turn.index==0;
+                      d_turn.index=0;
                     }
                     type_night++;
                 }

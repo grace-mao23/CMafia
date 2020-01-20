@@ -173,11 +173,11 @@ int main() {
                     strcpy(buffer, "\0");
                     strcpy(buffer, "U");
                     int a = 0;// which username slot we are on
-                    for (a = 0; a < sub_num; a++) {
+                    for (a = 0; a <= sub_num; a++) {
                         strcat(players[a], ",");
                         strcat(buffer, players[a]);
                     }
-                    for (i = 1; i < 13; i++) {
+                    for (i = 1; i <= sub_num; i++) {
                         write(fd2[i][1], buffer, sizeof(buffer));
                         // host writes list of players to EACH subserver
                     }
@@ -187,24 +187,25 @@ int main() {
                         read(fd1[i][0], buffer, sizeof(buffer));
                         if (strcmp(buffer, "done") != 0) {
                             strcpy(victim, buffer); // sent by mafia
+                            printf("%s\n", victim);
                         }
                     }
                   //  printf("Host: victim is %s\n", victim);
-                    for (i = 1; i < 13; i++) { // host writes the signal to each subserver
+                    for (i = 1; i <= sub_num; i++) { // host writes the signal to each subserver
                         strcpy(buffer, "mafia done");
                         write(fd2[i][1], buffer, sizeof(buffer));
                     }
 
-                    for (i = 1; i < 13; i++) {
+                    for (i = 1; i <= sub_num; i++) {
                         read(fd1[i][0], buffer, sizeof(buffer));
                     }
 
-                    for (i = 1; i < 13; i++) {
+                    for (i = 1; i <= sub_num; i++) {
                         strcpy(buffer, "detective done");
                         write(fd2[i][1], buffer, sizeof(buffer));
                     }
 
-                    for (i = 1; i < 13; i++) {
+                    for (i = 1; i <= sub_num; i++) {
                         read(fd1[i][0], buffer, sizeof(buffer));
                         if (strcmp(buffer, "done") != 0) {
                             strcpy(saved, buffer);
@@ -212,15 +213,15 @@ int main() {
                     }
                     if (strcmp(victim, saved) == 0) { //if victim and saved are the same, then no one dies
                         strcpy(buffer, "");
-                        for (i = 1; i < 13; i++) {
+                        for (i = 1; i <= sub_num; i++) {
                             write(fd2[i][1], victim, sizeof(victim));
                         }
                     } else {
-                        for (i = 1; i < 13; i++) {
+                        for (i = 1; i <= sub_num; i++) {
                             write(fd2[i][1], victim, sizeof(victim));
                         }
                     }
-                    for (i = 1; i < 13; i++) { //check to see if client with subserver died
+                    for (i = 1; i <= sub_num; i++) { //check to see if client with subserver died
                         read(fd1[i][0], buffer, sizeof(buffer));
                         if (strcmp(buffer, "died") == 0) {
                             close(fd1[i][0]);
