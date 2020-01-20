@@ -15,7 +15,7 @@ int main() {
         strcpy(players[i], "\0");
     }
     //parent -> use fd2[i][1] write to subserver write function
-    //forked ->fd2[sub_num][0] (subserver reads from server) read function
+    //forked ->fd2[sub_num][0] (subserver reads from server read function
     //parent fd1[i][0] server read from subserver read function
     //forked fd1[sub_num][1]  subserver writes to server write function
 
