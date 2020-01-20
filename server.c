@@ -1,5 +1,80 @@
 #include "networking.c"
 
+int maf=0;
+int nur=0;
+int det=0;
+int mafiaNum(int users) {
+    int mafia = 0;
+    if (users > 8) {
+        mafia = 3;
+    } else if (users > 6) {
+        mafia = 2;
+    } else {
+        mafia = 1;
+    }
+    maf = mafia;
+    printf("Total Mafia Members: %d\n", mafia);
+    return mafia;
+}
+
+//number of nurse based off of users (number of players)
+int nurseNum(int users) {
+    int nurse = 0;
+    if (users > 7) {
+        nurse = 2;
+    } else if (users > 2) {
+        nurse = 1;
+    } else {
+      nurse = 0;
+    }
+    nur = nurse;
+    printf("Total Number of Nurse(s): %d\n", nurse);
+    return nurse;
+}
+
+//number of dectecive based off of users (number of players)
+int detectiveNum(int users) {
+    int detective;
+    if (users > 10) {
+        detective = 2;
+    } else {
+        detective = 1;
+    }
+    det = detective;
+    printf("Total Detective(s): %d\n", detective);
+    return detective;
+}
+//need to initialize turns to 0
+char * genRoles() {
+    char * string=malloc(sizeof(char) * 1000);
+    char *assign = calloc(num_players, sizeof(char *));
+    int total = num_players;
+    for (size_t i = 0; i < maf; i++) {
+        assign[i]=malloc(sizeof(char) * 1000);
+        strcpy(assign[i], "1");
+    }
+    for (size_t i = 0; i < det; i++) {
+        strcpy(assign[maf+i], "2");
+    }
+    for (size_t i = 0; i < nur; i++) {
+        strcpy(assign[maf+det+i], "3");
+    }
+    for (size_t i = maf + nur + det; i < num_players; i++) {
+        strcpy(assign[i],"0");
+    }
+    for (size_t i = 0; i < num_players; i++) {
+        int index = rand() % total;
+        strcat(string, assign[index]);
+        strcat(string,",");
+        total--;
+        char * temp=malloc(sizeof(char) * 10);
+        temp = assign[total];
+        assign[total] = assign[index];
+        assign[index] = temp;
+    }
+    printf("%s\n",string );
+    return string;
+}
 int main() {
     int inplay = 1;
     int game_start = 0;
@@ -73,6 +148,10 @@ int main() {
                         write(fd2[i][1], buffer, sizeof(buffer));
                         // host writes number of players to subserver
                     }
+                    mafiaNum();
+                    nurseNum();
+                    detectiveNum();
+                    genRoles();
                     int j = 0;
                     sleep(1);
                     for (i = 1; i <= sub_num; i++) { // i is the subserver number

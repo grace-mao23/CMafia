@@ -82,36 +82,18 @@ void printint(int *list) {
 void genRoles() {
     int *assign = calloc(num_players, sizeof(int));
     int total = num_players;
-    m_turn.member = calloc(maf, sizeof(char*));
-    d_turn.member = calloc(det, sizeof(char*));
-    n_turn.member = calloc(nur, sizeof(char*));
-    m_turn.index = 0;
-    d_turn.index = 0;
-    n_turn.index = 0;
     for (size_t i = 0; i < maf; i++) {
-        m_turn.member[m_turn.index] = malloc(sizeof(char) * 1000);
-        m_turn.index++;
-        strcpy(m_turn.member[i], "\0");
         assign[i] = 1;
     }
     for (size_t i = 0; i < det; i++) {
-        d_turn.member[d_turn.index] = malloc(sizeof(char) * 1000);
-        d_turn.index++;
-        strcpy(d_turn.member[i], "\0");
         assign[maf + i] = 2;
     }
     for (size_t i = 0; i < nur; i++) {
-        n_turn.member[n_turn.index] = malloc(sizeof(char) * 1000);
-        n_turn.index++;
-        strcpy(n_turn.member[i], "\0");
         assign[maf + det + i] = 3;
     }
     for (size_t i = maf + nur + det; i < num_players; i++) {
         assign[i]=0;
     }
-    m_turn.index = 0;
-    d_turn.index = 0;
-    n_turn.index = 0;
     unsigned int r;
     printf("woah\n");
     printint(assign);
@@ -121,16 +103,10 @@ void genRoles() {
         printf("r = %d\n", r);
         if (r == 1) {
             roles[i] = 1;
-            m_turn.member[m_turn.index] = players[i];
-            m_turn.index++;
         } else if (r == 2) {
             roles[i] = 2;
-            d_turn.member[d_turn.index] = players[i];
-            d_turn.index++;
         } else if(r == 3) {
             roles[i] = 3;
-            n_turn.member[n_turn.index] = players[i];
-            n_turn.index++;
         } else {
           roles[i] = 0;
         }
@@ -141,7 +117,44 @@ void genRoles() {
     }
     printint(roles);
 }
-
+void startSpecial() {
+    m_turn.member = calloc(maf, sizeof(char*));
+    d_turn.member = calloc(det, sizeof(char*));
+    n_turn.member = calloc(nur, sizeof(char*));
+    m_turn.index = 0;
+    d_turn.index = 0;
+    n_turn.index = 0;
+    for (size_t i = 0; i < maf; i++) {
+        m_turn.member[m_turn.index] = malloc(sizeof(char) * 1000);
+        m_turn.index++;
+        strcpy(m_turn.member[i], "\0");
+    }
+    for (size_t i = 0; i < det; i++) {
+        d_turn.member[d_turn.index] = malloc(sizeof(char) * 1000);
+        d_turn.index++;
+        strcpy(d_turn.member[i], "\0");
+    }
+    for (size_t i = 0; i < nur; i++) {
+        n_turn.member[n_turn.index] = malloc(sizeof(char) * 1000);
+        n_turn.index++;
+        strcpy(n_turn.member[i], "\0");
+    }
+    for (size_t i = 0; strcmp(players[i],"\0")!=0; i++) {
+        if (roles[i] == 1){
+            m_turn.member[m_turn.index] = players[i];
+            m_turn.index++;
+        } else if (roles[i] == 2) {
+            d_turn.member[m_turn.index] = players[i];
+            d_turn.index++;
+        } else if (roles[i] == 3) {
+            n_turn.member[m_turn.index] = players[i];
+            n_turn.index++;
+        }
+    }
+    m_turn.index = 0;
+    d_turn.index = 0;
+    n_turn.index = 0;
+}
 int getRole(char *check) {
     for (size_t i = 0; i < num_players; i++) {
         if (strcmp(players[i], check) == 0) {
