@@ -157,7 +157,7 @@ int main() {
                     // subserver reads username from client
                     write(fd1[sub_num][1], buffer, sizeof(buffer));
                     // subserver writes username to host
-                    moed = -1;
+                    mode = -1;
                 }
             }
             while (mode == -1 && read(fd2[sub_num][0], buffer, sizeof(buffer))) {

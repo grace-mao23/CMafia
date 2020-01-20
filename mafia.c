@@ -310,7 +310,7 @@ int main() {
         game_start = 1;
         night = 1;
         num_day = 1;
-        type_day = 0;
+        int type_day = 0;
         num_night = 1;
         type_night = 0;
         votes = calloc(num_players, sizeof(int));
