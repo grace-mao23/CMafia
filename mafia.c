@@ -323,10 +323,10 @@ int main() {
         mdone = 0;
         ndone = 0;
         ddone = 0;
-        printf("all mafs\n");
-        for (int i = 0; i < maf; i++){
-            printf("%s\n", m_turn.member[i]);
-        }
+        //printf("all mafs\n");
+        //for (int i = 0; i < maf; i++){
+          //  printf("%s\n", m_turn.member[i]);
+      //  }
         while (!game_over) {
             if (!night) { //daytime
                 printf("It's Daytime!\n");
@@ -355,8 +355,8 @@ int main() {
             } else { //nighttime
                 if (type_night == 0) {
                     printf("Waiting for Mafia\n");
-                    printf("voting right now %s\n", m_turn.member[m_turn.index]);
-                    printf("askdjfa\n");
+                  //  printf("voting right now %s\n", m_turn.member[m_turn.index]);
+                  //  printf("askdjfa\n");
                     if (strcmp(username, m_turn.member[m_turn.index]) == 0) {
                       //  printf("ajkdf\n");
                         printf("Here are all of your victims: \n");
@@ -379,13 +379,14 @@ int main() {
                     }
                     read(sd_conn, buffer, sizeof(buffer));// block until server sends signal
                     type_night++;
-                    printf("\n\n\nNext\n\n\n");
+                  //  printf("\n\n\nNext\n\n\n");
                 }
                 if (type_night == 1) {
                     printf("Waiting for Detective\n");
+                    printf("%s, %s!\n", username, d_turn.member[d_turn.index]);
                     if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
                         printf("Here are all of your suspects: %s\n", to_string(players));
-                        printf("\\Choose to investigate a suspects: ");
+                        printf("\\Choose to investigate a suspect: ");
                         fgets(buffer, 1000, stdin);
                         buffer[strlen(buffer) - 1] = '\0';
                         /*while (!valid(&buffer)) { //function to see if its valid victim
