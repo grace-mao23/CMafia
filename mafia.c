@@ -102,11 +102,13 @@ void genRoles() {
             d_turn.member[d_turn.index] = players[i];
             d_turn.index++;
             d--;
-        } else {
-            roles[i] = 0;
+        } else if(r<m+d+n) {
+            roles[i] = 3;
             n_turn.member[n_turn.index] = players[i];
             n_turn.index++;
             n--;
+        }else{
+          roles[i]=0;
         }
         total--;
     }
@@ -263,7 +265,7 @@ int main() {
         while (game_start == 0 && read(sd_conn, buffer, sizeof(buffer))) {
             // client reads list of usernames from subserver
               if (buffer[0] == 'U') {
-	        memmove(buffer,buffer+1,strlen(buffer));	    
+	        memmove(buffer,buffer+1,strlen(buffer));
                 players = parse_args(buffer, ",");
                 game_start = 1;
             }
