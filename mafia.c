@@ -305,18 +305,16 @@ int main() {
                 players = parse_args(buffer, ",");
                 game_start = 1;
             }
-        }
-        print_players();
-        printf("\\Mafia$ Generating Role...\n\n");
-        while (game_start == 0 && read(sd_conn, buffer, sizeof(buffer))) {
-            // client reads list of usernames from subserver
             if (buffer[0] == 'R') {
+                printf("\\Mafia$ Generating Role...\n\n");
                 memmove(buffer, buffer + 1,strlen(buffer));
                 parse_int(buffer);
                 printint(roles);
                 startSpecial();
             }
         }
+        print_players();
+
         mafiaNum(num_players);
         detectiveNum(num_players);
         nurseNum(num_players);
