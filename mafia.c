@@ -283,7 +283,7 @@ int main() {
             printf("Your Role: Civilian\n");
         } else if (roles[getRole(username)] == 1) {
             printf("Your Role: Mafia\n");
-        } else if (roles[getRole(username) == 2]) {
+        } else if (roles[getRole(username)] == 2) {
             printf("Your Role: Detective\n");
         } else {
             printf("Your Role: Nurse\n");
@@ -353,8 +353,8 @@ int main() {
                         printf("\nYou have selected to kill: %s\n", victim);
                         write(sd_conn, victim, sizeof(victim));
                         m_turn.index++;
-                        if(m_turn.index==maf){
-                          m_turn.index=0;
+                        if (m_turn.index == maf) {
+                            m_turn.index = 0;
                         }
                     } else {
                         strcpy(game_buffer, "done");
@@ -366,10 +366,9 @@ int main() {
                 }
                 if (type_night == 1) {
                     printf("Waiting for Detective\n");
-                    printf("%s, %s!\n", username, d_turn.member[d_turn.index]);
-                    printf("%d\n", strcmp(username, d_turn.member[d_turn.index]));
                     if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
-                        printf("Here are all of your suspects: %s\n", to_string(players));
+                        printf("Here are all of your suspects: ");
+                        print_players();
                         printf("\\Choose to investigate a suspect: ");
                         fgets(game_buffer, 1000, stdin);
                         game_buffer[strlen(game_buffer) - 1] = '\0';
@@ -381,11 +380,11 @@ int main() {
                         }
                         printf("\nYou have chosen to investigate: %s\n", game_buffer);
                         sleep(2);
-                        if (getRole(game_buffer) == 0) {
+                        if (roles[getRole(game_buffer)] == 0) {
                             printf("%s's identity is: Civilian\n", game_buffer);
-                        } else if (getRole(game_buffer) == 1) {
+                        } else if (roles[getRole(game_buffer)] == 1) {
                             printf("%s's identity is: Mafia\n", game_buffer);
-                        } else if (getRole(game_buffer) == 2) {
+                        } else if (roles[getRole(game_buffer)] == 2) {
                             printf("%s's identity is: Detective\n", game_buffer);
                         } else {
                             printf("%s's identity is: Nurse\n", game_buffer);
@@ -398,15 +397,22 @@ int main() {
                     }
                     read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
                     d_turn.index++;
-                    if(d_turn.index==det){
-                      d_turn.index=0;
+                    if (d_turn.index == det) {
+                        d_turn.index = 0;
                     }
                     type_night++;
                 }
                 if (type_night == 2) {
                     printf("Waiting for Nurse\n");
+                    printf("print players: ");
+                    print_players();
+                    printf("printing roles: ");
+                    printint(roles);
+                    printf("%s, %s!\n", username, n_turn.member[n_turn.index]);
+                    printf("%d\n", strcmp(username, n_turn.member[n_turn.index]));
                     if (strcmp(username, n_turn.member[n_turn.index]) == 0) {
-                        printf("Here are all of your patients: %s\n", to_string(players));
+                        printf("Here are all of your patients: ");
+                        print_players();
                         printf("\\Choose to save a patients: ");
                         fgets(game_buffer, 1000, stdin);
                         game_buffer[strlen(game_buffer) - 1] = '\0';
@@ -416,19 +422,21 @@ int main() {
                             fgets(buffer, 1000, stdin);
                             buffer[strlen(buffer)-1] = '\0';
                         }
-                        printf("\nYou have chosent to save: %s\n", game_buffer);
+                        printf("\nYou have chosen to save: %s\n", game_buffer);
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                         n_turn.index++;
-                        if(n_turn.index==nur){
-                          n_turn.index=0;
+                        if (n_turn.index == nur) {
+                            n_turn.index = 0;
                         }
                     } else {
                         strcpy(game_buffer, "done");
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                     }
+                    type_night = 0;
                 }
                 num_night++;
                 read(sd_conn, game_buffer, sizeof(game_buffer));
+                printf("did id\n");
                 if (strcmp(game_buffer, username) == 0) { //checking to see if he dead
                     printf("Unfortunately, you have DIED\n");
                     strcmp(game_buffer, "died");

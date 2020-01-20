@@ -63,8 +63,8 @@ char * genRoles(int total) {
     }
     for (size_t i = 0; i < players; i++) {
         int index = rand() % total;
-        strncat(string, &assign[index],1);
-        strcat(string,",");
+        strncat(string, &assign[index], 1);
+        strcat(string, ",");
         total--;
         char temp = assign[total];
         assign[total] = assign[index];
@@ -83,6 +83,7 @@ int main() {
     char *victim;
     char *saved;
     char **players;
+    srand(time(NULL));
 
     victim = malloc(sizeof(char) * 1000);
     saved = malloc(sizeof(char) * 1000);
@@ -280,11 +281,16 @@ int main() {
                 mode = 2;
             }
 
-            while (mode == 2 && read(fd2[sub_num][0], buffer, sizeof(buffer))) { //server sending who the dead person is
-                write(client, buffer, sizeof(buffer));
-                mode = 3; //i really love how we just have unnecessary while loops and we just stick to them -george
+            while (mode == 2 && read(client, buffer, sizeof(buffer))) {
+                write(fd1[sub_num][1], buffer, sizeof(buffer));
+                mode = 3;
             }
-            while (mode == 3 && read(client, buffer, sizeof(buffer))) { //check to see if client has died ingame
+
+            while (mode == 3 && read(fd2[sub_num][0], buffer, sizeof(buffer))) { //server sending who the dead person is
+                write(client, buffer, sizeof(buffer));
+                mode = 4; //i really love how we just have unnecessary while loops and we just stick to them -george
+            }
+            while (mode == 4 && read(client, buffer, sizeof(buffer))) { //check to see if client has died ingame
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
                 if (strcmp(buffer, "died") == 0) {
                     close(client);
@@ -294,25 +300,8 @@ int main() {
                     close(sd);
                     return 0;
                 }
-                mode = 4;
+                mode = 5;
             }
-            //WILL WORK ON LATER
-            /*int quitted = 0; // may not need
-            while (!quitted && read(client, buffer, sizeof(buffer))) {
-                printf("%c\n", buffer[0]);
-                if (buffer[0] == 'n') { //when the nurse tells server who is being saved
-                    int night = buffer[1] - '0'; //format of buffer: [n or m][night number][person]
-                } else if (buffer[0] == 'q') { //this quitting is when you want to quit before the game starts
-                    quitted = 1;
-                    write(fd1[sub_num][0], "q", sizeof("q")); //isn't this for reading
-                } else if (buffer[0] == 'U') {
-                    write(fd1[sub_num][1], buffer, sizeof(buffer));
-                } else if (strcmp(buffer, "done") == 0) {
-                    printf("received by subserver\n");
-                    write(fd1[sub_num][0], buffer, sizeof(buffer));
-                    printf("writing to server %s\n", buffer);
-                }
-            }*/
             close(client);
             exit(0);
         }
