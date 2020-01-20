@@ -73,16 +73,16 @@ int main() {
                     sleep(1);
                     printf("george has wierd passwords\n");
                     printf("Host: subnum %d\n", sub_num);
-                    for (i = 1; i <= sub_num; i++) {
+                    for (i = 1; i <= sub_num; i++) { // i is the subserver number
                         read(fd1[i][0], buffer, sizeof(buffer));
                         // host reads username from EACH subserver
                         printf("Host: received %s from %d\n", buffer, i);
                         if (buffer[0] == 'U') {
-                          //  while(strcmp(players[0], "\0") == 0) {
-                            //    j++;
-                          //  }
+                            while(strcmp(players[0], "\0") == 0) {
+                                j++;
+                            } // j is the username slot number
                             int k = 0;
-                            for (k = 1; i < strlen(buffer); k++) {
+                            for (k = 1; k < strlen(buffer); k++) { // k is the character number
                                 players[j][k - 1] = buffer[k];
                             }
                             printf("Host: username is %s\n", players[j]);
@@ -123,7 +123,7 @@ int main() {
                 printf("Subserver: Read username\n");
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
                 // subserver writes username to host
-                printf("Subserver: Wrote username to subserver\n");
+                printf("Subserver: Wrote username to host\n");
                 quitted = -1;
               }
             }
