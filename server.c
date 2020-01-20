@@ -70,7 +70,6 @@ char * genRoles(int total) {
         assign[total] = assign[index];
         assign[index] = temp;
     }
-    printf("%s\n",string );
     return string;
 }
 int main() {
@@ -161,7 +160,6 @@ int main() {
                     sleep(1);
                     for (i = 1; i <= sub_num; i++) { // i is the subserver number
                         read(fd1[i][0], buffer, sizeof(buffer));
-                        printf("%s\n",buffer);
                         // host reads username from EACH subserver
                         if (buffer[0] == 'U') {
                             int k = 0;

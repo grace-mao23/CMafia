@@ -79,44 +79,6 @@ void printint(int *list) {
     printf("\n");
 }
 //need to initialize turns to 0
-void genRoles() {
-    int *assign = calloc(num_players, sizeof(int));
-    int total = num_players;
-    for (size_t i = 0; i < maf; i++) {
-        assign[i] = 1;
-    }
-    for (size_t i = 0; i < det; i++) {
-        assign[maf + i] = 2;
-    }
-    for (size_t i = 0; i < nur; i++) {
-        assign[maf + det + i] = 3;
-    }
-    for (size_t i = maf + nur + det; i < num_players; i++) {
-        assign[i]=0;
-    }
-    unsigned int r;
-    printf("woah\n");
-    printint(assign);
-    for (size_t i = 0; i < num_players; i++) {
-        int index = rand() % total;
-        r = assign[index];
-        printf("r = %d\n", r);
-        if (r == 1) {
-            roles[i] = 1;
-        } else if (r == 2) {
-            roles[i] = 2;
-        } else if(r == 3) {
-            roles[i] = 3;
-        } else {
-          roles[i] = 0;
-        }
-        total--;
-        int temp = assign[total];
-        assign[total] = assign[r];
-        assign[r] = assign[total];
-    }
-    printint(roles);
-}
 void startSpecial() {
     m_turn.member = calloc(maf, sizeof(char*));
     d_turn.member = calloc(det, sizeof(char*));
@@ -195,9 +157,9 @@ void print_players() {
     for (size_t i = 0; i < num_players; i++) {
         printf("%s",players[i]);
         if (i != num_players - 1) {
-            printf(",");
+            printf(", ");
         } else {
-            printf("\n");
+            printf("\n\n");
         }
     }
 }
@@ -306,7 +268,7 @@ int main() {
                 printf("\\Mafia$ Generating Role...\n\n");
                 memmove(buffer, buffer + 1,strlen(buffer));
                 parse_int(buffer);
-                printint(roles);
+                //printint(roles);
             }
         }
         print_players();
@@ -315,7 +277,7 @@ int main() {
         detectiveNum(num_players);
         nurseNum(num_players);
         startSpecial();//has to be after these three functions aboce
-        printint(roles);
+      //  printint(roles);
         printf("\n");
         if (roles[getRole(username)] == 0) {
             printf("Your Role: Civilian\n");
