@@ -48,8 +48,10 @@ int nurseNum(int users) {
     int nurse = 0;
     if (users > 7) {
         nurse = 2;
-    } else {
+    } else if(users>2) {
         nurse = 1;
+    }else{
+      nurse=0;
     }
     nur = nurse;
     printf("Total Number of Nurse(s): %d\n", nurse);
@@ -68,34 +70,54 @@ int detectiveNum(int users) {
     printf("Total Detective(s): %d\n", detective);
     return detective;
 }
+char * printint( int * list){
+  printf("starting to print\n\n");
+  for(size_t i=0;i<num_players;i++){
+    printf("%d,",list[i]);
+  }
+  printf("\n");
+}
 //need to initialize turns to 0
 void genRoles() {
     int * assign=calloc(num_players,sizeof(int));
     int total=num_players;
-    m_turn.member = calloc(m, sizeof(char*));
-    n_turn.member = calloc(d, sizeof(char*));
-    d_turn.member = calloc(n, sizeof(char*));
+    printf("adsfjaidofjadf\n");
+    m_turn.member = calloc(maf, sizeof(char*));
+    d_turn.member = calloc(det, sizeof(char*));
+    n_turn.member = calloc(nur, sizeof(char*));
+    m_turn.index=0;
+    d_turn.index=0;
+    n_turn.index-0;
+    printf("askldjfadkjfie\n");
     for (size_t i = 0; i < maf; i++) {
-        m_turn.member = malloc(sizeof(char)*1000);
+        m_turn.member[m_turn.index] = malloc(sizeof(char)*1000);
+	m_turn.index++;
         strcpy(m_turn.member[i], "\0");
         assign[i]=1;
+	printf("mafia\n");
     }
     for (size_t i = 0; i < det; i++) {
-        d_turn.member = malloc(sizeof(char)*1000);
+        d_turn.member[d_turn.index] = malloc(sizeof(char)*1000);
+	d_turn.index++;
         strcpy(d_turn.member[i], "\0");
         assign[maf+i]=2;
+	printf("det\n");
     }
     for (size_t i = 0; i < nur; i++) {
-        n_turn.member = malloc(sizeof(char)*1000);
+        n_turn.member[n_turn.index] = malloc(sizeof(char)*1000);
+	n_turn.index++;
         strcpy(n_turn.member[i], "\0");
         assign[maf+det+i]=3;
+	printf("nurse\n");
     }
     for (size_t i = maf+nur+det; i < num_players; i++) {
       assign[i]=0;
+      printf("civilian\n");
     }
+    printint(assign);
     unsigned int r;
     for (size_t i = 0; i < num_players; i++) {
-        printf("i=%d\n",i );
+        printf("i=%ld\n",i );
         int index=rand() % total;
         printf("index=%d\n",index );
         r = assign[index];
@@ -103,19 +125,21 @@ void genRoles() {
             roles[i] = 1;
             m_turn.member[m_turn.index] = players[i];
             m_turn.index++;
-            m--;
+            printf("assigning role maf\n"); 
         } else if (r ==2) {
             roles[i] = 2;
             d_turn.member[d_turn.index] = players[i];
             d_turn.index++;
-            d--;
+            printf("assigning role det\n");
         } else if(r==3) {
             roles[i] = 3;
             n_turn.member[n_turn.index] = players[i];
             n_turn.index++;
-            n--;
+	    printf("assigning role nur\n");
+            
         }else{
           roles[i]=0;
+	  printf("assigning role civ\n");
         }
         total--;
         printf("change: %d\n",total );
@@ -123,6 +147,8 @@ void genRoles() {
         assign[total]=assign[r];
         assign[r]=assign[total];
     }
+    printint(roles);
+    printf("roles done\n");
 }
 
 int getRole(char *check) {
@@ -282,7 +308,10 @@ int main() {
             }
         }
 	print_players();
-        printf("\\Mafia$ Generating Role...\n");
+  	printf("\\Mafia$ Generating Role...\n");
+	mafiaNum(num_players);
+	detectiveNum(num_players);
+	nurseNum(num_players);
         genRoles();
         if (getRole(username) == 0) {
             printf("Your Role: Civilian\n");
