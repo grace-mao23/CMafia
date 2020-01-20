@@ -45,10 +45,9 @@ int detectiveNum(int users) {
     return detective;
 }
 //need to initialize turns to 0
-char * genRoles() {
+char * genRoles(int total) {
     char * string=malloc(sizeof(char) * 1000);
-    char *assign = malloc(sub_num * sizeof(char));
-    int total = sub_num;
+    char *assign = malloc(total * sizeof(char));
     for (size_t i = 0; i < maf; i++) {
         assign[i]= '1';
     }
@@ -58,16 +57,15 @@ char * genRoles() {
     for (size_t i = 0; i < nur; i++) {
         assign[maf+det+i]= '3';
     }
-    for (size_t i = maf + nur + det; i < sub_num; i++) {
+    for (size_t i = maf + nur + det; i < total; i++) {
         assign[i]='0';
     }
     for (size_t i = 0; i < sub_num; i++) {
         int index = rand() % total;
-        strcat(string, assign[index]);
+        strncat(string, &assign[index],1);
         strcat(string,",");
         total--;
-        char temp=malloc(sizeof(char) * 1);
-        temp = assign[total];
+        char temp = assign[total];
         assign[total] = assign[index];
         assign[index] = temp;
     }
@@ -150,7 +148,7 @@ int main() {
                     mafiaNum(sub_num);
                     nurseNum(sub_num);
                     detectiveNum(sub_num);
-                    genRoles();
+                    genRoles(sub_num);
                     int j = 0;
                     sleep(1);
                     for (i = 1; i <= sub_num; i++) { // i is the subserver number
