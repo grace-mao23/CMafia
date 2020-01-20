@@ -15,7 +15,7 @@ int main() {
         strcpy(players[i], "\0");
     }
     //parent -> use fd2[i][1] write to subserver write function
-    //forked ->fd2[sub_num][0] (subserver reads from server) read function
+    //forked ->fd2[sub_num][0] (subserver reads from server read function
     //parent fd1[i][0] server read from subserver read function
     //forked fd1[sub_num][1]  subserver writes to server write function
 
@@ -130,7 +130,7 @@ int main() {
                 write(client, buffer, sizeof(buffer));
                 // subserver writes the list of usernames to client
                 printf("Subserver: Wrote list of usernames to client\n");
-                quitted == 0;
+                quitted = 0;
               }
             }
             //WILL WORK ON LATER
