@@ -46,6 +46,7 @@ int detectiveNum(int users) {
 }
 //need to initialize turns to 0
 char * genRoles(int total) {
+    int players=total;
     char * string=malloc(sizeof(char) * 1000);
     char *assign = malloc(total * sizeof(char));
     for (size_t i = 0; i < maf; i++) {
@@ -60,7 +61,7 @@ char * genRoles(int total) {
     for (size_t i = maf + nur + det; i < total; i++) {
         assign[i]='0';
     }
-    for (size_t i = 0; i < sub_num; i++) {
+    for (size_t i = 0; i < players; i++) {
         int index = rand() % total;
         strncat(string, &assign[index],1);
         strcat(string,",");
@@ -148,7 +149,14 @@ int main() {
                     mafiaNum(sub_num);
                     nurseNum(sub_num);
                     detectiveNum(sub_num);
-                    genRoles(sub_num);
+                    strcpy(buffer,"\0");
+                    strcpy(buffer,"R");
+                    strcat(buffer,genRoles(sub_num));
+                    for (i = 1; i <= sub_num; i++) {
+                        write(fd2[i][1], buffer, sizeof(buffer));
+                        // host writes number of players to subserver
+                    }
+                    strcpy(buffer,"\0");
                     int j = 0;
                     sleep(1);
                     for (i = 1; i <= sub_num; i++) { // i is the subserver number
@@ -252,6 +260,8 @@ int main() {
                     write(client, buffer, sizeof(buffer));
                     // subserver writes the list of usernames to client
                     mode = 0;
+                }else if(buffer[0]=='R'){
+                  write(client, buffer, sizeof(buffer));
                 }
             }
             while (mode == 0 && read(client, buffer, sizeof(buffer))) { //subserver sending victim/saved/done

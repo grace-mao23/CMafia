@@ -230,6 +230,12 @@ char **parse_args(char *line, char *del) {
     return tokens;
 }
 
+char **parse_int(char *line) {
+    for (size_t i = 0; i < num_players; i++) {
+      roles[i]=line[2*i]-48;
+    }
+}
+
 int valid(char *name) {
     int i = 0;
     for (; i < len_double(players); i++) {
@@ -302,13 +308,22 @@ int main() {
         }
         print_players();
         printf("\\Mafia$ Generating Role...\n\n");
+        while (game_start == 0 && read(sd_conn, buffer, sizeof(buffer))) {
+            // client reads list of usernames from subserver
+            if (buffer[0] == 'R') {
+                memmove(buffer, buffer + 1,strlen(buffer));
+                parse_int(buffer);
+                printint(roles);
+                startSpecial();
+            }
+        }
         mafiaNum(num_players);
         detectiveNum(num_players);
         nurseNum(num_players);
         printf("\n");
-        genRoles();
         printf("what\n");
         printint(roles);
+
         printf("getrole %d\n",getRole(username));
         if (roles[getRole(username)] == 0) {
             printf("Your Role: Civilian\n");
