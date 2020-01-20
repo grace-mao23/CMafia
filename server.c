@@ -105,6 +105,7 @@ int main() {
                             strcpy(victim, buffer); // sent by mafia
                         }
                     }
+                    printf("Host: victim is %s\n", victim);
                     for (i = 1; i < 13; i++) { // host writes the signal to each subserver
                         strcpy(buffer, "mafia done");
                         write(fd2[i][1], buffer, sizeof(buffer));
@@ -169,8 +170,11 @@ int main() {
                 }
             }
             while (mode == 0 && read(client, buffer, sizeof(buffer))) { //subserver sending victim/saved/done
+                printf("Subserver: received from client\n");
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
+                printf("Subserver: wrote to host\n");
                 read(fd2[sub_num][0], buffer, sizeof(buffer)); // subserver receives signal
+                printf("Subserver: received signal from host\n");
                 write(client, buffer, sizeof(buffer)); // subserver sends signal to client
                 mode = 1;
             }

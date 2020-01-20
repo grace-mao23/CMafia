@@ -358,12 +358,12 @@ int main() {
                     printf("voting right now %s\n", m_turn.member[m_turn.index]);
                     printf("askdjfa\n");
                     if (strcmp(username, m_turn.member[m_turn.index]) == 0) {
-                        printf("ajkdf\n");
+                      //  printf("ajkdf\n");
                         printf("Here are all of your victims: \n");
                         print_players();
                         printf("\\Vote for your victim: ");
-                        fgets(victim, 1000, stdin);
-                        victim[strlen(buffer) - 1] = '\0';
+                        int check_term = fgets(victim, 1000, stdin);
+                        victim[check_term] = '\0';
                         /*while (!valid(&buffer)) { //function to see if its valid victim
                             printf("\nYou have voted for an invalid victim.%s\n Here are all of your victims\n", to_string(players));
                             printf("\\Vote for your victim: ");
@@ -375,10 +375,11 @@ int main() {
                         m_turn.index++;
                     } else {
                         strcpy(buffer, "done");
-                        write(sd_conn, buffer, sizeof(buffer));   
+                        write(sd_conn, buffer, sizeof(buffer));
                     }
                     read(sd_conn, buffer, sizeof(buffer));// block until server sends signal
                     type_night++;
+                    printf("\n\n\nNext\n\n\n");
                 }
                 if (type_night == 1) {
                     printf("Waiting for Detective\n");
