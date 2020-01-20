@@ -94,10 +94,10 @@ int main() {
                     }
                     strcpy(buffer, "\0");
                     strcpy(buffer, "U");
-                    int a = 0;
-                    for (a = 0; a <= sub_num; a++) {
-                        strcat(players[sub_num], ",");
-                        strcat(buffer, players[sub_num]);
+                    int a = 0;// which username slot we are on
+                    for (a = 0; a < sub_num; a++) {
+                        strcat(players[a], ",");
+                        strcat(buffer, players[a]);
                         printf("A For Loop: %s\n", buffer);
                     }
                     for (i = 1; i < 12; i++) {
