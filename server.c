@@ -69,10 +69,7 @@ int main() {
                         // host writes number of players to subserver
                     }
                     //int j = 0;
-                    printf("george is a bad advice giver\n");
                     sleep(1);
-                    printf("george has wierd passwords\n");
-                    printf("Host: subnum %d\n", sub_num);
                     for (i = 1; i <= sub_num; i++) { // i is the subserver number
                         read(fd1[i][0], buffer, sizeof(buffer));
                         // host reads username from EACH subserver
@@ -88,7 +85,6 @@ int main() {
                                 players[i-1][k - 1] = buffer[k];
                             }
                           //  printf("C\n");
-                            printf("Host: username is %s\n", players[i-1]);
                             // copying usernames into players
                         }
                     }
@@ -98,11 +94,9 @@ int main() {
                     for (a = 0; a < sub_num; a++) {
                         strcat(players[a], ",");
                         strcat(buffer, players[a]);
-                        printf("A For Loop: %s\n", buffer);
                     }
                     for (i = 1; i < 12; i++) {
                         write(fd2[i][1], buffer, sizeof(buffer));
-                        printf("\n!!!!!!!!!!!!!!!\n");
                         // host writes list of players to EACH subserver
                     }
                 }
@@ -125,20 +119,16 @@ int main() {
             while (quitted == -2 && read(client, buffer, sizeof(buffer))) {
               if (buffer[0] == 'U') {
                 // subserver reads username from client
-                printf("Subserver: Read username\n");
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
                 // subserver writes username to host
-                printf("Subserver: Wrote username to host\n");
                 quitted = -1;
               }
             }
             while (quitted == -1 && read(fd2[sub_num][0], buffer, sizeof(buffer))) {
               // subserver reads the list of usernames
               if (buffer[0] == 'U') {
-                printf("Subserver: Got list of usernames %s\n", buffer);
                 write(client, buffer, sizeof(buffer));
                 // subserver writes the list of usernames to client
-                printf("Subserver: Wrote list of usernames to client\n");
                 quitted = 0;
               }
             }
@@ -153,7 +143,6 @@ int main() {
                     write(fd1[sub_num][0], "q", sizeof("q")); //isn't this for reading
                 } else if (buffer[0] == 'U') {
                     write(fd1[sub_num][1], buffer, sizeof(buffer));
-                    printf("subserver writes to server\n");
                 }
             }
             close(client);

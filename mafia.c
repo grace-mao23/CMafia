@@ -81,74 +81,57 @@ char * printint( int * list){
 void genRoles() {
     int * assign=calloc(num_players,sizeof(int));
     int total=num_players;
-    printf("adsfjaidofjadf\n");
     m_turn.member = calloc(maf, sizeof(char*));
     d_turn.member = calloc(det, sizeof(char*));
     n_turn.member = calloc(nur, sizeof(char*));
     m_turn.index=0;
     d_turn.index=0;
     n_turn.index-0;
-    printf("askldjfadkjfie\n");
     for (size_t i = 0; i < maf; i++) {
         m_turn.member[m_turn.index] = malloc(sizeof(char)*1000);
 	m_turn.index++;
         strcpy(m_turn.member[i], "\0");
         assign[i]=1;
-	printf("mafia\n");
     }
     for (size_t i = 0; i < det; i++) {
         d_turn.member[d_turn.index] = malloc(sizeof(char)*1000);
 	d_turn.index++;
         strcpy(d_turn.member[i], "\0");
         assign[maf+i]=2;
-	printf("det\n");
     }
     for (size_t i = 0; i < nur; i++) {
         n_turn.member[n_turn.index] = malloc(sizeof(char)*1000);
 	n_turn.index++;
         strcpy(n_turn.member[i], "\0");
         assign[maf+det+i]=3;
-	printf("nurse\n");
     }
     for (size_t i = maf+nur+det; i < num_players; i++) {
       assign[i]=0;
-      printf("civilian\n");
     }
-    printint(assign);
     unsigned int r;
     for (size_t i = 0; i < num_players; i++) {
-        printf("i=%ld\n",i );
         int index=rand() % total;
-        printf("index=%d\n",index );
         r = assign[index];
         if (r==1) {
             roles[i] = 1;
             m_turn.member[m_turn.index] = players[i];
             m_turn.index++;
-            printf("assigning role maf\n"); 
         } else if (r ==2) {
             roles[i] = 2;
             d_turn.member[d_turn.index] = players[i];
             d_turn.index++;
-            printf("assigning role det\n");
         } else if(r==3) {
             roles[i] = 3;
             n_turn.member[n_turn.index] = players[i];
             n_turn.index++;
-	    printf("assigning role nur\n");
-            
         }else{
           roles[i]=0;
-	  printf("assigning role civ\n");
         }
         total--;
-        printf("change: %d\n",total );
         int temp=assign[total];
         assign[total]=assign[r];
         assign[r]=assign[total];
     }
-    printint(roles);
-    printf("roles done\n");
 }
 
 int getRole(char *check) {
@@ -160,23 +143,6 @@ int getRole(char *check) {
     return -1;
 }
 
-void startSpecial() {
-    m_turn.index = 0;
-    d_turn.index = 0;
-    n_turn.index = 0;
-    for (size_t i = 0; players[i] != NULL; i++) {
-        if (roles[i] == 1){
-            m_turn.member[m_turn.index] = players[i];
-            m_turn.index++;
-        } else if (roles[i] == 2) {
-            d_turn.member[m_turn.index] = players[i];
-            d_turn.index++;
-        } else if (roles[i] == 3) {
-            n_turn.member[m_turn.index] = players[i];
-            n_turn.index++;
-        }
-    }
-}
 //=================================================================================================================
 //George's Code
 int len_single(char *ary) {
@@ -323,19 +289,14 @@ int main() {
             printf("Your Role: Nurse\n");
         }
         game_start = 1;
-        night = 0;
+        night = 1;
         num_day = 1;
         num_night = 1;
         type_night = 0;
-        votes = malloc(num_players * (sizeof(int) + 1));
+        votes = calloc(num_players, sizeof(int));
         for (int i = 0; i < num_players; i++) {
             votes[i] = 0;
         }
-        votes[num_players] = 0;
-        mafiaNum(num_players);
-        detectiveNum(num_players);
-        nurseNum(num_players);
-        startSpecial();
         m_turn.index = 0;
         d_turn.index = 0;
         n_turn.index = 0;
