@@ -48,10 +48,10 @@ int nurseNum(int users) {
     int nurse = 0;
     if (users > 7) {
         nurse = 2;
-    } else if(users>2) {
+    } else if (users > 2) {
         nurse = 1;
-    }else{
-      nurse=0;
+    } else {
+      nurse = 0;
     }
     nur = nurse;
     printf("Total Number of Nurse(s): %d\n", nurse);
@@ -70,73 +70,73 @@ int detectiveNum(int users) {
     printf("Total Detective(s): %d\n", detective);
     return detective;
 }
-char * printint( int * list){
-  printf("starting to print\n\n");
-  for(size_t i=0;i<num_players;i++){
-    printf("%d,",list[i]);
-  }
-  printf("\n");
+char * printint(int * list) {
+    printf("starting to print\n\n");
+    for(size_t i = 0; i < num_players; i++){
+        printf("%d,", list[i]);
+    }
+    printf("\n");
 }
 //need to initialize turns to 0
 void genRoles() {
-    int * assign=calloc(num_players,sizeof(int));
-    int total=num_players;
+    int *assign = calloc(num_players, sizeof(int));
+    int total = num_players;
     m_turn.member = calloc(maf, sizeof(char*));
     d_turn.member = calloc(det, sizeof(char*));
     n_turn.member = calloc(nur, sizeof(char*));
-    m_turn.index=0;
-    d_turn.index=0;
-    n_turn.index-0;
+    m_turn.index = 0;
+    d_turn.index = 0;
+    n_turn.index - 0;
     for (size_t i = 0; i < maf; i++) {
-        m_turn.member[m_turn.index] = malloc(sizeof(char)*1000);
-	m_turn.index++;
+        m_turn.member[m_turn.index] = malloc(sizeof(char) * 1000);
+        m_turn.index++;
         strcpy(m_turn.member[i], "\0");
-        assign[i]=1;
+        assign[i] = 1;
     }
     for (size_t i = 0; i < det; i++) {
-        d_turn.member[d_turn.index] = malloc(sizeof(char)*1000);
-	d_turn.index++;
+        d_turn.member[d_turn.index] = malloc(sizeof(char) * 1000);
+        d_turn.index++;
         strcpy(d_turn.member[i], "\0");
-        assign[maf+i]=2;
+        assign[maf + i] = 2;
     }
     for (size_t i = 0; i < nur; i++) {
-        n_turn.member[n_turn.index] = malloc(sizeof(char)*1000);
-	n_turn.index++;
+        n_turn.member[n_turn.index] = malloc(sizeof(char) * 1000);
+        n_turn.index++;
         strcpy(n_turn.member[i], "\0");
-        assign[maf+det+i]=3;
+        assign[maf + det + i] = 3;
     }
-    for (size_t i = maf+nur+det; i < num_players; i++) {
-      assign[i]=0;
+    for (size_t i = maf + nur + det; i < num_players; i++) {
+        assign[i]=0;
     }
-    m_turn.index=0;
-    d_turn.index=0;
-    n_turn.index=0;
+    m_turn.index = 0;
+    d_turn.index = 0;
+    n_turn.index = 0;
     unsigned int r;
     printf("woah\n");
     printint(assign);
     for (size_t i = 0; i < num_players; i++) {
-        int index=rand() % total;
+        int index = rand() % total;
         r = assign[index];
-	printf("r = %d\n",r);
-        if (r==1) {
+        printf("r = %d\n", r);
+        if (r == 1) {
             roles[i] = 1;
             m_turn.member[m_turn.index] = players[i];
             m_turn.index++;
-        } else if (r ==2) {
+        } else if (r == 2) {
             roles[i] = 2;
             d_turn.member[d_turn.index] = players[i];
             d_turn.index++;
-        } else if(r==3) {
+        } else if(r == 3) {
             roles[i] = 3;
             n_turn.member[n_turn.index] = players[i];
             n_turn.index++;
-        }else{
-          roles[i]=0;
+        } else {
+          roles[i] = 0;
         }
         total--;
-        int temp=assign[total];
-        assign[total]=assign[r];
-        assign[r]=assign[total];
+        int temp = assign[total];
+        assign[total] = assign[r];
+        assign[r] = assign[total];
     }
     printint(roles);
 }
@@ -179,16 +179,16 @@ char *to_string(char **ary) {
     return line;
 }
 
-char * print_players(){
-  printf("In Game: ");
-  for(size_t i=0; i<num_players;i++){
-    printf("%s",players[i]);
-    if(i!=num_players-1){
-      printf(",");
-    }else{
-      printf("\n");
+char * print_players() {
+    printf("In Game: ");
+    for (size_t i = 0; i < num_players; i++) {
+        printf("%s",players[i]);
+        if (i != num_players - 1) {
+            printf(",");
+        } else {
+            printf("\n");
+        }
     }
-  }
 }
 
 int remove_name(char **ary, char *name) {
@@ -240,7 +240,7 @@ int main() {
     num_night = 0;
     num_day = 0;
     username = malloc(sizeof(char) * 1000);
-    victim=malloc(sizeof(char)*1000);
+    victim = malloc(sizeof(char)*1000);
     strcpy(username, "\0");
     sd_conn = client_setup(TEST_IP);
     players = calloc(12, sizeof(char*));
@@ -274,28 +274,28 @@ int main() {
             printf("\\Mafia$ Waiting for other players...\n");
             strcpy(buffer, "\0");
             strcpy(buffer, "U");
-            strncat(buffer, username, strlen(username));          
+            strncat(buffer, username, strlen(username));
             write(sd_conn, buffer, sizeof(buffer));
             // client writes username to subserver
         }
         while (game_start == 0 && read(sd_conn, buffer, sizeof(buffer))) {
             // client reads list of usernames from subserver
-              if (buffer[0] == 'U') {
-	        memmove(buffer,buffer+1,strlen(buffer));
+            if (buffer[0] == 'U') {
+                memmove(buffer,buffer+1,strlen(buffer));
                 players = parse_args(buffer, ",");
                 game_start = 1;
             }
         }
-	print_players();
-  	printf("\\Mafia$ Generating Role...\n\n");
-	mafiaNum(num_players);
-	detectiveNum(num_players);
-	nurseNum(num_players);
-	printf("\n");
+        print_players();
+        printf("\\Mafia$ Generating Role...\n\n");
+        mafiaNum(num_players);
+        detectiveNum(num_players);
+        nurseNum(num_players);
+        printf("\n");
         genRoles();
-	printf("what\n");
-	printint(roles);
-	printf("getrole %d\n",getRole(username));
+        printf("what\n");
+        printint(roles);
+        printf("getrole %d\n",getRole(username));
         if (roles[getRole(username)] == 0) {
             printf("Your Role: Civilian\n");
         } else if (roles[getRole(username)] == 1) {
@@ -305,7 +305,7 @@ int main() {
         } else {
             printf("Your Role: Nurse\n");
         }
-	printf("\n");
+        printf("\n");
         game_start = 1;
         night = 1;
         num_day = 1;
@@ -321,10 +321,10 @@ int main() {
         mdone = 0;
         ndone = 0;
         ddone = 0;
-	printf("all mafs\n");
-	for(int i=0;i<maf;i++){
-	  printf("%s\n", m_turn.member[i]);
-	}
+        printf("all mafs\n");
+        for(int i = 0; i < maf; i++){
+            printf("%s\n", m_turn.member[i]);
+        }
         while (!game_over) {
             if (!night) { //daytime
                 printf("It's Daytime!\n");
@@ -353,12 +353,12 @@ int main() {
             } else { //nighttime
                 if (type_night == 0) {
                     printf("Waiting for Mafia\n");
-		    printf("voting right now %s\n",m_turn.member[m_turn.index]);
-		    printf("askdjfa\n");
+                    printf("voting right now %s\n", m_turn.member[m_turn.index]);
+                    printf("askdjfa\n");
                     if (strcmp(username, m_turn.member[m_turn.index]) == 0) {
                         printf("ajkdf\n");
-			printf("Here are all of your victims: \n");
-			print_players();
+                        printf("Here are all of your victims: \n");
+                        print_players();
                         printf("\\Vote for your victim: ");
                         fgets(buffer, 1000, stdin);
                         buffer[strlen(buffer) - 1] = '\0';
@@ -371,18 +371,17 @@ int main() {
                         printf("\nYou have selected to kill: %s\n", buffer);
                         strcpy(victim, buffer);
                         m_turn.index++;
-			strcpy(buffer,"done");
-		        write(sd_conn,buffer,sizeof(buffer));
-			printf("snet to subserver\n");
-		    }else{
-	             printf("reading\n");
-		     write(sd_conn,buffer,sizeof(buffer));
-		     read(sd_conn,buffer,sizeof(buffer));
-		     printf("got it\n");
-               	    }
-		      
-		  type_night++;  
-                  }if (type_night == 1) {
+                        strcpy(buffer, "done");
+                        write(sd_conn, buffer, sizeof(buffer));
+                        printf("snet to subserver\n");
+                    } else {
+                        printf("reading\n");
+                        write(sd_conn, buffer, sizeof(buffer));
+                        read(sd_conn, buffer, sizeof(buffer));
+                        printf("got it\n");
+                    }
+                    type_night++;
+                } if (type_night == 1) {
                     printf("Waiting for Detective\n");
                     if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
                         printf("Here are all of your suspects: %s\n", to_string(players));

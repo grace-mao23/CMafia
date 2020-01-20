@@ -72,21 +72,13 @@ int main() {
                     sleep(1);
                     for (i = 1; i <= sub_num; i++) { // i is the subserver number
                         read(fd1[i][0], buffer, sizeof(buffer));
-			printf("%s\n",buffer);
+                        printf("%s\n",buffer);
                         // host reads username from EACH subserver
-                        //printf("Host: received %s from %d\n", buffer, i);
                         if (buffer[0] == 'U') {
-                            //printf("A\n");
-                          //  while (players[j] == 0) {
-                            //    j++;
-                          //  } // j is the username slot number
-                            //printf("B\n");
                             int k = 0;
                             for (k = 1; k < strlen(buffer); k++) { // k is the character number
-                                players[i-1][k - 1] = buffer[k];
+                                players[i - 1][k - 1] = buffer[k];
                             }
-                          //  printf("C\n");
-                            // copying usernames into players
                         }
 	              }
                     strcpy(buffer, "\0");
@@ -100,12 +92,12 @@ int main() {
                         write(fd2[i][1], buffer, sizeof(buffer));
                         // host writes list of players to EACH subserver
                     }
-		   read(fd1[i][0],buffer,sizeof(buffer));
-		   if(strcmp(buffer,"done")==0){
-		     for (i=1;i<12;i++){
-		      write(fd2[i][1],buffer,sizeof(buffer));
-		     }
-		   }
+                    read(fd1[i][0], buffer, sizeof(buffer));
+                    if (strcmp(buffer, "done") == 0) {
+                        for (i = 1; i < 12; i++) {
+                            write(fd2[i][1], buffer, sizeof(buffer));
+                        }
+                    }
                 }
             }
         } else { // child ==> SUBSERVER
@@ -121,25 +113,25 @@ int main() {
                     write(client, buffer, sizeof(buffer));
                     // subserver writes number of players to client
                     quitted = -2;
-                }else if(strcmp(buffer,"done")){
-		  write(client,buffer,sizeof(buffer));
-		}
+                } else if (strcmp(buffer, "done")) {
+                    write(client, buffer, sizeof(buffer));
+                }
             }
             while (quitted == -2 && read(client, buffer, sizeof(buffer))) {
-              if (buffer[0] == 'U') {
-                // subserver reads username from client
-                write(fd1[sub_num][1], buffer, sizeof(buffer));
-                // subserver writes username to host
-                quitted = -1;
-              }
+                if (buffer[0] == 'U') {
+                    // subserver reads username from client
+                    write(fd1[sub_num][1], buffer, sizeof(buffer));
+                    // subserver writes username to host
+                    quitted = -1;
+                }
             }
             while (quitted == -1 && read(fd2[sub_num][0], buffer, sizeof(buffer))) {
-              // subserver reads the list of usernames
-              if (buffer[0] == 'U') {
-                write(client, buffer, sizeof(buffer));
-                // subserver writes the list of usernames to client
-                quitted = 0;
-              }
+                // subserver reads the list of usernames
+                if (buffer[0] == 'U') {
+                    write(client, buffer, sizeof(buffer));
+                    // subserver writes the list of usernames to client
+                    quitted = 0;
+                }
             }
             //WILL WORK ON LATER
             quitted = 0; // may not need
@@ -152,11 +144,11 @@ int main() {
                     write(fd1[sub_num][0], "q", sizeof("q")); //isn't this for reading
                 } else if (buffer[0] == 'U') {
                     write(fd1[sub_num][1], buffer, sizeof(buffer));
-                }else if(strcmp(buffer,"done")==0){
-		    printf("received by subserver\n");
-		    write(fd1[sub_num][0],buffer,sizeof(buffer));
-		    printf("writing to server %s\n",buffer);
-		}
+                } else if (strcmp(buffer, "done") == 0) {
+                    printf("received by subserver\n");
+                    write(fd1[sub_num][0], buffer, sizeof(buffer));
+                    printf("writing to server %s\n", buffer);
+                }
             }
             close(client);
             exit(0);
