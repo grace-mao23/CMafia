@@ -72,7 +72,7 @@ int main() {
                     printf("george is a bad advice giver\n");
                     sleep(1);
                     printf("george has wierd passwords\n");
-                    printf("Subserver: subnum %d\n", sub_num);
+                    printf("Host: subnum %d\n", sub_num);
                     for (i = 1; i <= sub_num; i++) {
                         read(fd1[i][0], buffer, sizeof(buffer));
                         // host reads username from EACH subserver
@@ -84,6 +84,7 @@ int main() {
                             for (i = 1; i < strlen(buffer); i++) {
                                 players[j][i - 1] = buffer[i];
                             }
+                            printf("Host: username is %s\n", players[j]);
                             // copying usernames into players
                         }
                     }
@@ -128,7 +129,7 @@ int main() {
             while (quitted == -1 && read(fd2[sub_num][0], buffer, sizeof(buffer))) {
               // subserver reads the list of usernames
               if (buffer[0] == 'U') {
-                printf("Subserver: Got list of usernames\n");
+                printf("Subserver: Got list of usernames %s\n", buffer);
                 write(client, buffer, sizeof(buffer));
                 // subserver writes the list of usernames to client
                 printf("Subserver: Wrote list of usernames to client\n");
