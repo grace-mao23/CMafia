@@ -5,4 +5,3 @@ all: server.c mafia.c
 clean:
 	rm server
 	rm mafia
-	rm *.o

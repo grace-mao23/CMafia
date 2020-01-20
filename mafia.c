@@ -143,8 +143,6 @@ int getRole(char *check) {
     return -1;
 }
 
-//=================================================================================================================
-//George's Code
 int len_single(char *ary) {
     int count = 0;
     for (count = 0; &ary[count] != NULL; count++) {
@@ -210,8 +208,16 @@ char **parse_args(char *line, char *del) {
     tokens[i] = 0;
     return tokens;
 }
-//=================================================================================================================
-//Grace's Code
+
+int valid(char *name) {
+    int i = 0;
+    for (; i < len_double(players)) {
+        if (strcmp(players[i], name) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
 
 // notes:
 // num_players attainable through length of users later

@@ -18,3 +18,12 @@ Finally fixed the pipes between the sub-servers and the server with the help of 
 
 Amanda -- 18:38 1-16-2020
 Fixed the bugs that occurred when copying pasting the code into the correct pipes
+
+Amanda -- 9:43 1-19-2020
+Fixed the bugs that were caused when a segfault occured when inputting a username
+
+Grace -- 21:21 1-19-2020
+Created the algorithms that helps prints the list of usernames
+
+George -- 22:43 1-19-2020
+Created the algorithms that randomizes roles to the usernames.
