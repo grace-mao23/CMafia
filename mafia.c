@@ -390,7 +390,7 @@ int main() {
                         write(sd_conn, victim, sizeof(victim));
                         m_turn.index++;
                         if(m_turn.index==maf){
-                          m_turn.index==0;
+                          m_turn.index=0;
                         }
                     } else {
                         strcpy(game_buffer, "done");
@@ -409,12 +409,12 @@ int main() {
                         printf("\\Choose to investigate a suspect: ");
                         fgets(game_buffer, 1000, stdin);
                         game_buffer[strlen(game_buffer) - 1] = '\0';
-                        /*while (!valid(&buffer)) { //function to see if its valid victim
+                        while (!valid(buffer)) { //function to see if its valid victim
                             printf("\nYou have chosen an invalid suspect.\n Here are all of your suspects: %s\n", to_string(players));
                             printf("\\Choose to investigate a suspects: ");
                             fgets(buffer, 1000, stdin);
                             buffer[strlen(buffer) - 1] = '\0';
-                        }*/
+                        }
                         printf("\nYou have chosen to investigate: %s\n", game_buffer);
                         sleep(2);
                         if (getRole(game_buffer) == 0) {
@@ -434,8 +434,8 @@ int main() {
                     }
                     read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
                     d_turn.index++;
-                    if(d_turn.index==maf){
-                      d_turn.index==0;
+                    if(d_turn.index==det){
+                      d_turn.index=0;
                     }
                     type_night++;
                 }
@@ -446,15 +446,18 @@ int main() {
                         printf("\\Choose to save a patients: ");
                         fgets(game_buffer, 1000, stdin);
                         game_buffer[strlen(game_buffer) - 1] = '\0';
-                        /*while (!valid(&buffer)) { //function to see if its valid victim
+                        while (!valid(buffer)) { //function to see if its valid victim
                             printf("\nYou have voted for an invalid victim.\n Here are all of your patients: %s\n", to_string(players));
                             printf("\\Choose to save a patient: ");
                             fgets(buffer, 1000, stdin);
                             buffer[strlen(buffer)-1] = '\0';
-                        }*/
+                        }
                         printf("\nYou have chosent to save: %s\n", game_buffer);
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                         n_turn.index++;
+                        if(n_turn.index==nur){
+                          n_turn.index=0;
+                        }
                     } else {
                         strcpy(game_buffer, "done");
                         write(sd_conn, game_buffer, sizeof(game_buffer));
