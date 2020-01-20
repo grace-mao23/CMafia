@@ -169,6 +169,18 @@ char *to_string(char **ary) {
     return line;
 }
 
+char * print_players(){
+  printf("In Game: ");
+  for(size_t i=0; i<num_players;i++){
+    printf("%s",players[i]);
+    if(i!=num_players-1){
+      printf(",");
+    }else{
+      printf("\n");
+    }
+  }
+}
+
 int remove_name(char **ary, char *name) {
     int i = 0;
     for (; i < len_double(ary); i++) {
@@ -250,14 +262,13 @@ int main() {
         }
         while (game_start == 0 && read(sd_conn, buffer, sizeof(buffer))) {
             // client reads list of usernames from subserver
-            printf("readint other palyers inof  %s\n", buffer);
-            if (buffer[0] == 'U') {
-                buffer[0] = ',';
+              if (buffer[0] == 'U') {
+	        memmove(buffer,buffer+1,strlen(buffer));	    
                 players = parse_args(buffer, ",");
                 game_start = 1;
             }
         }
-        printf("\nIn game: %s\n", to_string(players)); // DEVELOP A TO STRING FOR CHAR **
+	print_players();
         printf("\\Mafia$ Generating Role...\n");
         genRoles();
         if (getRole(username) == 0) {
