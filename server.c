@@ -47,27 +47,26 @@ int detectiveNum(int users) {
 //need to initialize turns to 0
 char * genRoles() {
     char * string=malloc(sizeof(char) * 1000);
-    char *assign = calloc(num_players, sizeof(char *));
-    int total = num_players;
+    char *assign = malloc(sub_num * sizeof(char));
+    int total = sub_num;
     for (size_t i = 0; i < maf; i++) {
-        assign[i]=malloc(sizeof(char) * 1000);
-        strcpy(assign[i], "1");
+        assign[i]= '1';
     }
     for (size_t i = 0; i < det; i++) {
-        strcpy(assign[maf+i], "2");
+        assign[maf+i]= '2';
     }
     for (size_t i = 0; i < nur; i++) {
-        strcpy(assign[maf+det+i], "3");
+        assign[maf+det+i]= '3';
     }
-    for (size_t i = maf + nur + det; i < num_players; i++) {
-        strcpy(assign[i],"0");
+    for (size_t i = maf + nur + det; i < sub_num; i++) {
+        assign[i]='0';
     }
-    for (size_t i = 0; i < num_players; i++) {
+    for (size_t i = 0; i < sub_num; i++) {
         int index = rand() % total;
         strcat(string, assign[index]);
         strcat(string,",");
         total--;
-        char * temp=malloc(sizeof(char) * 10);
+        char temp=malloc(sizeof(char) * 1);
         temp = assign[total];
         assign[total] = assign[index];
         assign[index] = temp;
@@ -148,9 +147,9 @@ int main() {
                         write(fd2[i][1], buffer, sizeof(buffer));
                         // host writes number of players to subserver
                     }
-                    mafiaNum();
-                    nurseNum();
-                    detectiveNum();
+                    mafiaNum(sub_num);
+                    nurseNum(sub_num);
+                    detectiveNum(sub_num);
                     genRoles();
                     int j = 0;
                     sleep(1);
