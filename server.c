@@ -81,8 +81,9 @@ int main() {
                           //  while(strcmp(players[0], "\0") == 0) {
                             //    j++;
                           //  }
-                            for (i = 1; i < strlen(buffer); i++) {
-                                players[j][i - 1] = buffer[i];
+                            int k = 0;
+                            for (k = 1; i < strlen(buffer); k++) {
+                                players[j][k - 1] = buffer[k];
                             }
                             printf("Host: username is %s\n", players[j]);
                             // copying usernames into players
