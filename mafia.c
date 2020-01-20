@@ -379,7 +379,7 @@ int main() {
                         strcpy(game_buffer, "done");
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                     }
-                    read(sd_conn, game_buffer, sizeof(game_buffer));// block until server sends signal
+                    read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
                     type_night++;
                   //  printf("\n\n\nNext\n\n\n");
                 }
@@ -387,7 +387,7 @@ int main() {
                     printf("Waiting for Detective\n");
                     printf("%s, %s!\n", username, d_turn.member[d_turn.index]);
                     printf("%d\n", strcmp(username, d_turn.member[d_turn.index]));
-		    if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
+                    if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
                         printf("Here are all of your suspects: %s\n", to_string(players));
                         printf("\\Choose to investigate a suspect: ");
                         fgets(game_buffer, 1000, stdin);
@@ -409,11 +409,17 @@ int main() {
                         } else {
                             printf("%s's identity is: Nurse\n", game_buffer);
                         }
+                        strcpy(game_buffer, "done");
+                        write(sd_conn, game_buffer, sizeof(game_buffer));
+                    } else {
+                        strcpy(game_buffer, "done");
+                        write(sd_conn, game_buffer, sizeof(game_buffer));
                     }
+                    read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
                     d_turn.index++;
                     type_night++;
                 }
-                if (type_night = 2) {
+                if (type_night == 2) {
                     printf("Waiting for Nurse\n");
                     if (strcmp(username, n_turn.member[n_turn.index]) == 0) {
                         printf("Here are all of your patients: %s\n", to_string(players));

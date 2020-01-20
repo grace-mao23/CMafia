@@ -113,6 +113,15 @@ int main() {
 
                     for (i = 1; i < 13; i++) {
                         read(fd1[i][0], buffer, sizeof(buffer));
+                    }
+
+                    for (i = 1; i < 13; i++) {
+                        strcpy(buffer, "detective done");
+                        write(fd2[i][1], buffer, sizeof(buffer));
+                    }
+
+                    for (i = 1; i < 13; i++) {
+                        read(fd1[i][0], buffer, sizeof(buffer));
                         if (strcmp(buffer, "done") != 0) {
                             strcpy(saved, buffer);
                         }
@@ -178,11 +187,19 @@ int main() {
                 write(client, buffer, sizeof(buffer)); // subserver sends signal to client
                 mode = 1;
             }
-            while (mode == 1 && read(fd2[sub_num][0], buffer, sizeof(buffer))) { //server sending who the dead person is
+
+            while (mode == 1 && read(client, buffer, sizeof(buffer))) { //subserver does detective signalling
+                write(fd1[sub_num][1], buffer, sizeof(buffer));
+                read(fd2[sub_num][0], buffer, sizeof(buffer));
                 write(client, buffer, sizeof(buffer));
-                mode = 2; //i really love how we just have unnecessary while loops and we just stick to them -george
+                mode = 2;
             }
-            while (mode == 2 && read(client, buffer, sizeof(buffer))) { //check to see if client has died ingame
+
+            while (mode == 2 && read(fd2[sub_num][0], buffer, sizeof(buffer))) { //server sending who the dead person is
+                write(client, buffer, sizeof(buffer));
+                mode = 3; //i really love how we just have unnecessary while loops and we just stick to them -george
+            }
+            while (mode == 3 && read(client, buffer, sizeof(buffer))) { //check to see if client has died ingame
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
                 if (strcmp(buffer, "died") == 0) {
                     close(client);
@@ -192,7 +209,7 @@ int main() {
                     close(sd);
                     return 0;
                 }
-                mode = 3;
+                mode = 4;
             }
             //WILL WORK ON LATER
             /*int quitted = 0; // may not need
