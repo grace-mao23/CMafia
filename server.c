@@ -78,7 +78,7 @@ int main() {
                         // host reads username from EACH subserver
                         printf("Host: received %s from %d\n", buffer, i);
                         if (buffer[0] == 'U') {
-                            while(strcmp(players[0], "\0") == 0) {
+                            while (strcmp(players[j], "\0") == 0) {
                                 j++;
                             } // j is the username slot number
                             int k = 0;
