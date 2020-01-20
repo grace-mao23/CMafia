@@ -72,6 +72,7 @@ int main() {
                     printf("george is a bad advice giver\n");
                     sleep(1);
                     printf("george has wierd passwords\n");
+                    printf("Subserver: subnum %d\n", sub_num);
                     for (i = 0; i <= sub_num; i++) {
                         read(fd1[i][0], buffer, sizeof(buffer));
                         // host reads username from EACH subserver
@@ -130,7 +131,7 @@ int main() {
                 write(client, buffer, sizeof(buffer));
                 // subserver writes the list of usernames to client
                 printf("Subserver: Wrote list of usernames to client\n");
-                quitted == 0;
+                quitted = 0;
               }
             }
             //WILL WORK ON LATER
