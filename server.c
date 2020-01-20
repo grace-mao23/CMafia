@@ -73,7 +73,7 @@ int main() {
                     sleep(1);
                     printf("george has wierd passwords\n");
                     printf("Subserver: subnum %d\n", sub_num);
-                    for (i = 0; i <= sub_num; i++) {
+                    for (i = 0; i <= sub_num + 1; i++) {
                         read(fd1[i][0], buffer, sizeof(buffer));
                         // host reads username from EACH subserver
                         printf("Host: received %s from %d\n", buffer, i);
@@ -95,6 +95,7 @@ int main() {
                     }
                     for (i = 0; i < 12; i++) {
                         write(fd2[i][1], buffer, sizeof(buffer));
+                        printf("\n!!!!!!!!!!!!!!!\n");
                         // host writes list of players to EACH subserver
                     }
                 }
