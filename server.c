@@ -85,7 +85,7 @@ int main() {
                                 players[i - 1][k - 1] = buffer[k];
                             }
                         }
-	              }
+	                  }
                     strcpy(buffer, "\0");
                     strcpy(buffer, "U");
                     int a = 0;// which username slot we are on
@@ -97,12 +97,19 @@ int main() {
                         write(fd2[i][1], buffer, sizeof(buffer));
                         // host writes list of players to EACH subserver
                     }
-                    for (i = 1; i < 13; i++) { //reads what the victim is
+
+
+                    for (i = 1; i < 13; i++) { // host reads what the victim is
                         read(fd1[i][0], buffer, sizeof(buffer));
                         if (strcmp(buffer, "done") != 0) {
-                            strcpy(victim, buffer);
+                            strcpy(victim, buffer); // sent by mafia
                         }
                     }
+                    for (i = 1; i < 13; i++) { // host writes the signal to each subserver
+                        strcpy(buffer, "mafia done");
+                        write(fd2[i][1], buffer, sizeof(buffer));
+                    }
+
                     for (i = 1; i < 13; i++) {
                         read(fd1[i][0], buffer, sizeof(buffer));
                         if (strcmp(buffer, "done") != 0) {
@@ -163,6 +170,8 @@ int main() {
             }
             while (mode == 0 && read(client, buffer, sizeof(buffer))) { //subserver sending victim/saved/done
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
+                read(fd2[sub_num][0], buffer, sizeof(buffer)); // subserver receives signal
+                write(client, buffer, sizeof(buffer)); // subserver sends signal to client
                 mode = 1;
             }
             while (mode == 1 && read(fd2[sub_num][0], buffer, sizeof(buffer))) { //server sending who the dead person is

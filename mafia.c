@@ -375,8 +375,9 @@ int main() {
                         m_turn.index++;
                     } else {
                         strcpy(buffer, "done");
-                        write(sd_conn, buffer, sizeof(buffer));
+                        write(sd_conn, buffer, sizeof(buffer));   
                     }
+                    read(sd_conn, buffer, sizeof(buffer));// block until server sends signal
                     type_night++;
                 }
                 if (type_night == 1) {
