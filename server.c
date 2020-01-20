@@ -78,14 +78,17 @@ int main() {
                         // host reads username from EACH subserver
                         printf("Host: received %s from %d\n", buffer, i);
                         if (buffer[0] == 'U') {
+                            printf("A\n");
                             while (strcmp(players[j], "\0") == 0) {
                                 j++;
                             } // j is the username slot number
+                            printf("%d B\n", j);
                             int k = 0;
                             for (k = 1; k < strlen(buffer); k++) { // k is the character number
                                 players[j][k - 1] = buffer[k];
                             }
-                          //  printf("Host: username is %s\n", players[j]);
+                            printf("C\n");
+                            printf("Host: username is %s\n", players[j]);
                             // copying usernames into players
                         }
                     }
