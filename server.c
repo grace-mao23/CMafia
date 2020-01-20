@@ -68,7 +68,7 @@ int main() {
                         write(fd2[i][1], buffer, sizeof(buffer));
                         // host writes number of players to subserver
                     }
-                    int j = 0;
+                    //int j = 0;
                     printf("george is a bad advice giver\n");
                     sleep(1);
                     printf("george has wierd passwords\n");
@@ -79,16 +79,16 @@ int main() {
                         printf("Host: received %s from %d\n", buffer, i);
                         if (buffer[0] == 'U') {
                             printf("A\n");
-                            while (strcmp(players[j], "\0") == 0) {
-                                j++;
-                            } // j is the username slot number
-                            printf("%d B\n", j);
+                          //  while (players[j] == 0) {
+                            //    j++;
+                          //  } // j is the username slot number
+                            printf("B\n");
                             int k = 0;
                             for (k = 1; k < strlen(buffer); k++) { // k is the character number
-                                players[j][k - 1] = buffer[k];
+                                players[i-1][k - 1] = buffer[k];
                             }
                             printf("C\n");
-                            printf("Host: username is %s\n", players[j]);
+                            printf("Host: username is %s\n", players[i-1]);
                             // copying usernames into players
                         }
                     }
