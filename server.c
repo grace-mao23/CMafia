@@ -76,27 +76,29 @@ int main() {
                     for (i = 1; i <= sub_num; i++) { // i is the subserver number
                         read(fd1[i][0], buffer, sizeof(buffer));
                         // host reads username from EACH subserver
-                        printf("Host: received %s from %d\n", buffer, i);
+                        //printf("Host: received %s from %d\n", buffer, i);
                         if (buffer[0] == 'U') {
-                            printf("A\n");
+                            //printf("A\n");
                           //  while (players[j] == 0) {
                             //    j++;
                           //  } // j is the username slot number
-                            printf("B\n");
+                            //printf("B\n");
                             int k = 0;
                             for (k = 1; k < strlen(buffer); k++) { // k is the character number
                                 players[i-1][k - 1] = buffer[k];
                             }
-                            printf("C\n");
+                          //  printf("C\n");
                             printf("Host: username is %s\n", players[i-1]);
                             // copying usernames into players
                         }
                     }
                     strcpy(buffer, "\0");
                     strcpy(buffer, "U");
-                    for (size_t a = 0; a <= sub_num; a++) {
+                    int a = 0;
+                    for (a = 0; a <= sub_num; a++) {
                         strcat(players[sub_num], ",");
                         strcat(buffer, players[sub_num]);
+                        printf("A For Loop: %s\n", buffer);
                     }
                     for (i = 1; i < 12; i++) {
                         write(fd2[i][1], buffer, sizeof(buffer));
