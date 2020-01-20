@@ -290,7 +290,7 @@ int main() {
         }
         printf("\n");
         game_start = 1;
-        night = 1;
+        night = 0;
         num_day = 1;
         int type_day = 0;
         num_night = 1;
@@ -333,9 +333,11 @@ int main() {
                         //voting
                     }
                 }
+                night = 1;
+                num_day++;
             } else { //nighttime
+                printf("Night Beginning!\n");
                 if (type_night == 0) {
-                    printf("Waiting for Mafia\n");
                     if (strcmp(username, m_turn.member[m_turn.index]) == 0) {
                         printf("Here are all of your victims: \n");
                         print_players();
@@ -357,6 +359,7 @@ int main() {
                             m_turn.index = 0;
                         }
                     } else {
+                        printf("\nWaiting for Mafia...\n");
                         strcpy(game_buffer, "done");
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                     }
@@ -365,7 +368,6 @@ int main() {
                   //  printf("\n\n\nNext\n\n\n");
                 }
                 if (type_night == 1) {
-                    printf("Waiting for Detective\n");
                     if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
                         printf("Here are all of your suspects: ");
                         print_players();
@@ -392,6 +394,7 @@ int main() {
                         strcpy(game_buffer, "done");
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                     } else {
+                        printf("Waiting for Detective...\n");
                         strcpy(game_buffer, "done");
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                     }
@@ -403,7 +406,6 @@ int main() {
                     type_night++;
                 }
                 if (type_night == 2) {
-                    printf("Waiting for Nurse\n");
                     printf("print players: ");
                     print_players();
                     printf("printing roles: ");
@@ -429,24 +431,21 @@ int main() {
                             n_turn.index = 0;
                         }
                     } else {
+                        printf("Waiting for Nurse...\n");
                         strcpy(game_buffer, "done");
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                     }
                     type_night = 0;
                 }
                 num_night++;
+                night = 0;
                 read(sd_conn, game_buffer, sizeof(game_buffer));
                 printf("did id\n");
                 if (strcmp(game_buffer, username) == 0) { //checking to see if he dead
                     printf("Unfortunately, you have DIED\n");
-                    strcmp(game_buffer, "died");
-                    write(sd_conn, game_buffer, sizeof(game_buffer));
-                    sleep(10);
-                    return 0;
+                    printf("Spectating the game now...\n");
                 } else {
                     printf("Congradulations, you have SURVIVED the night\n");
-                    strcmp(game_buffer, "surv");
-                    write(sd_conn, game_buffer, sizeof(game_buffer));
                 }
             }
         }

@@ -220,13 +220,6 @@ int main() {
                             write(fd2[i][1], victim, sizeof(victim));
                         }
                     }
-                    for (i = 1; i <= sub_num; i++) { //check to see if client with subserver died
-                        read(fd1[i][0], buffer, sizeof(buffer));
-                        if (strcmp(buffer, "died") == 0) {
-                            close(fd1[i][0]);
-                            close(fd2[i][1]);
-                        }
-                    }
                 }
             }
         } else { // child ==> SUBSERVER
@@ -260,8 +253,8 @@ int main() {
                     write(client, buffer, sizeof(buffer));
                     // subserver writes the list of usernames to client
                     mode = 0;
-                }else if(buffer[0]=='R'){
-                  write(client, buffer, sizeof(buffer));
+                } else if (buffer[0] == 'R') {
+                    write(client, buffer, sizeof(buffer));
                 }
             }
             while (mode == 0 && read(client, buffer, sizeof(buffer))) { //subserver sending victim/saved/done
@@ -290,18 +283,7 @@ int main() {
                 write(client, buffer, sizeof(buffer));
                 mode = 4; //i really love how we just have unnecessary while loops and we just stick to them -george
             }
-            while (mode == 4 && read(client, buffer, sizeof(buffer))) { //check to see if client has died ingame
-                write(fd1[sub_num][1], buffer, sizeof(buffer));
-                if (strcmp(buffer, "died") == 0) {
-                    close(client);
-                    close(fd1[sub_num][1]);
-                    close(fd2[sub_num][0]);
-                    exit(0);
-                    close(sd);
-                    return 0;
-                }
-                mode = 5;
-            }
+
             close(client);
             exit(0);
         }
