@@ -108,10 +108,16 @@ void genRoles() {
     for (size_t i = maf+nur+det; i < num_players; i++) {
       assign[i]=0;
     }
+    m_turn.index=0;
+    d_turn.index=0;
+    n_turn.index=0;
     unsigned int r;
+    printf("woah\n");
+    printint(assign);
     for (size_t i = 0; i < num_players; i++) {
         int index=rand() % total;
         r = assign[index];
+	printf("r = %d\n",r);
         if (r==1) {
             roles[i] = 1;
             m_turn.member[m_turn.index] = players[i];
@@ -132,10 +138,11 @@ void genRoles() {
         assign[total]=assign[r];
         assign[r]=assign[total];
     }
+    printint(roles);
 }
 
 int getRole(char *check) {
-    for (size_t i = 0; players[i] != NULL; i++) {
+    for (size_t i = 0; i<num_players; i++) {
         if (strcmp(players[i], check) == 0) {
             return i;
         }
@@ -227,6 +234,7 @@ int main() {
     num_night = 0;
     num_day = 0;
     username = malloc(sizeof(char) * 1000);
+    victim=malloc(sizeof(char)*1000);
     strcpy(username, "\0");
     sd_conn = client_setup(TEST_IP);
     players = calloc(12, sizeof(char*));
@@ -260,8 +268,7 @@ int main() {
             printf("\\Mafia$ Waiting for other players...\n");
             strcpy(buffer, "\0");
             strcpy(buffer, "U");
-            strncat(buffer, username, strlen(username));
-            printf("Copied over %s\n", buffer); // buffer becomes U + <username>
+            strncat(buffer, username, strlen(username));          
             write(sd_conn, buffer, sizeof(buffer));
             // client writes username to subserver
         }
@@ -274,20 +281,25 @@ int main() {
             }
         }
 	print_players();
-  	printf("\\Mafia$ Generating Role...\n");
+  	printf("\\Mafia$ Generating Role...\n\n");
 	mafiaNum(num_players);
 	detectiveNum(num_players);
 	nurseNum(num_players);
+	printf("\n");
         genRoles();
-        if (getRole(username) == 0) {
+	printf("what\n");
+	printint(roles);
+	printf("getrole %d\n",getRole(username));
+        if (roles[getRole(username)] == 0) {
             printf("Your Role: Civilian\n");
-        } else if (getRole(username) == 1) {
+        } else if (roles[getRole(username)] == 1) {
             printf("Your Role: Mafia\n");
-        } else if (getRole(username) == 2) {
+        } else if (roles[getRole(username) == 2]) {
             printf("Your Role: Detective\n");
         } else {
             printf("Your Role: Nurse\n");
         }
+	printf("\n");
         game_start = 1;
         night = 1;
         num_day = 1;
@@ -303,6 +315,10 @@ int main() {
         mdone = 0;
         ndone = 0;
         ddone = 0;
+	printf("all mafs\n");
+	for(int i=0;i<maf;i++){
+	  printf("%s\n", m_turn.member[i]);
+	}
         while (!game_over) {
             if (!night) { //daytime
                 printf("It's Daytime!\n");
@@ -331,8 +347,12 @@ int main() {
             } else { //nighttime
                 if (type_night == 0) {
                     printf("Waiting for Mafia\n");
+		    printf("voting right now %s\n",m_turn.member[m_turn.index]);
+		    printf("askdjfa\n");
                     if (strcmp(username, m_turn.member[m_turn.index]) == 0) {
-                        printf("Here are all of your victims: %s\n", to_string(players));
+                        printf("ajkdf\n");
+			printf("Here are all of your victims: \n");
+			print_players();
                         printf("\\Vote for your victim: ");
                         fgets(buffer, 1000, stdin);
                         buffer[strlen(buffer) - 1] = '\0';
@@ -345,8 +365,18 @@ int main() {
                         printf("\nYou have selected to kill: %s\n", buffer);
                         strcpy(victim, buffer);
                         m_turn.index++;
-                    }
-                } else if (type_night == 1) {
+			strcpy(buffer,"done");
+		        write(sd_conn,buffer,sizeof(buffer));
+			printf("snet to subserver\n");
+		    }else{
+	             printf("reading\n");
+		     write(sd_conn,buffer,sizeof(buffer));
+		     read(sd_conn,buffer,sizeof(buffer));
+		     printf("got it\n");
+               	    }
+		      
+		  type_night++;  
+                  }if (type_night == 1) {
                     printf("Waiting for Detective\n");
                     if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
                         printf("Here are all of your suspects: %s\n", to_string(players));
