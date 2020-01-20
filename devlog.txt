@@ -30,3 +30,6 @@ Created the algorithms that randomizes roles to the usernames.
 
 George -- 4:53 1-20-2020
 Finished the entire night phase woot woot just need to check it when I wake up.
+
+Grace -- 9:56 1-20-2020
+Fixed the bug that is caused by using buffer string in weird places. In addition, created the signaling that causes the code to stop and wait for other players when they choose victims.
