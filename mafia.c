@@ -386,7 +386,8 @@ int main() {
                 if (type_night == 1) {
                     printf("Waiting for Detective\n");
                     printf("%s, %s!\n", username, d_turn.member[d_turn.index]);
-                    if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
+                    printf("%d\n", strcmp(username, d_turn.member[d_turn.index]));
+		    if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
                         printf("Here are all of your suspects: %s\n", to_string(players));
                         printf("\\Choose to investigate a suspect: ");
                         fgets(game_buffer, 1000, stdin);
