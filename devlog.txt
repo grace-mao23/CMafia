@@ -35,4 +35,4 @@ Grace -- 9:56 1-20-2020
 Fixed the bug that is caused by using buffer string in weird places. In addition, created the signaling that causes the code to stop and wait for other players when they choose victims.
 
 Amanda -- 16:25 1-20-2020
-Fixed the segfault that occurred when the turns struct wasn't being initialized propertly
+Fixed the segfault that occurred when the turns struct wasn't being initialized properly
