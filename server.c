@@ -99,7 +99,7 @@ int main() {
                     }
 
 
-                    for (i = 1; i < 13; i++) { // host reads what the victim is
+                    for (i = 1; i <= sub_num; i++) { // host reads what the victim is
                         read(fd1[i][0], buffer, sizeof(buffer));
                         if (strcmp(buffer, "done") != 0) {
                             strcpy(victim, buffer); // sent by mafia

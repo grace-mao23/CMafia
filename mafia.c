@@ -362,8 +362,8 @@ int main() {
                         printf("Here are all of your victims: \n");
                         print_players();
                         printf("\\Vote for your victim: ");
-                        int check_term = fgets(victim, 1000, stdin);
-                        victim[check_term] = '\0';
+                        fgets(victim, 1000, stdin);
+                        victim[strlen(victim)] = '\0';
                         /*while (!valid(&buffer)) { //function to see if its valid victim
                             printf("\nYou have voted for an invalid victim.%s\n Here are all of your victims\n", to_string(players));
                             printf("\\Vote for your victim: ");
