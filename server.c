@@ -85,7 +85,7 @@ int main() {
                             for (k = 1; k < strlen(buffer); k++) { // k is the character number
                                 players[j][k - 1] = buffer[k];
                             }
-                            printf("Host: username is %s\n", players[j]);
+                          //  printf("Host: username is %s\n", players[j]);
                             // copying usernames into players
                         }
                     }
