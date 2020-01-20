@@ -125,29 +125,26 @@ void startSpecial() {
     d_turn.index = 0;
     n_turn.index = 0;
     for (size_t i = 0; i < maf; i++) {
-        m_turn.member[m_turn.index] = malloc(sizeof(char) * 1000);
-        m_turn.index++;
+        m_turn.member[i] = malloc(sizeof(char) * 1000);
         strcpy(m_turn.member[i], "\0");
     }
     for (size_t i = 0; i < det; i++) {
-        d_turn.member[d_turn.index] = malloc(sizeof(char) * 1000);
-        d_turn.index++;
+        d_turn.member[i] = malloc(sizeof(char) * 1000);
         strcpy(d_turn.member[i], "\0");
     }
     for (size_t i = 0; i < nur; i++) {
-        n_turn.member[n_turn.index] = malloc(sizeof(char) * 1000);
-        n_turn.index++;
+        n_turn.member[i] = malloc(sizeof(char) * 1000);
         strcpy(n_turn.member[i], "\0");
     }
-    for (size_t i = 0; strcmp(players[i],"\0")!=0; i++) {
+    for (size_t i = 0; i<num_players; i++) {
         if (roles[i] == 1){
             strcpy(m_turn.member[m_turn.index], players[i]);
             m_turn.index++;
         } else if (roles[i] == 2) {
-            strcpy(d_turn.member[m_turn.index], players[i]);
+            strcpy(d_turn.member[d_turn.index], players[i]);
             d_turn.index++;
         } else if (roles[i] == 3) {
-            strcpy(n_turn.member[m_turn.index], players[i]);
+            strcpy(n_turn.member[n_turn.index], players[i]);
             n_turn.index++;
         }
     }
@@ -310,7 +307,6 @@ int main() {
                 memmove(buffer, buffer + 1,strlen(buffer));
                 parse_int(buffer);
                 printint(roles);
-                startSpecial();
             }
         }
         print_players();
@@ -318,11 +314,9 @@ int main() {
         mafiaNum(num_players);
         detectiveNum(num_players);
         nurseNum(num_players);
-        printf("\n");
-        printf("what\n");
+        startSpecial();//has to be after these three functions aboce
         printint(roles);
-
-        printf("getrole %d\n",getRole(username));
+        printf("\n");
         if (roles[getRole(username)] == 0) {
             printf("Your Role: Civilian\n");
         } else if (roles[getRole(username)] == 1) {
