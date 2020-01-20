@@ -227,7 +227,7 @@ char **parse_args(char *line, char *del) {
     return tokens;
 }
 
-char **parse_int(char *line) {
+void parse_int(char *line) {
     for (size_t i = 0; i < num_players; i++) {
       roles[i]=line[2*i]-48;
     }
@@ -374,16 +374,13 @@ int main() {
             } else { //nighttime
                 if (type_night == 0) {
                     printf("Waiting for Mafia\n");
-                    printf("voting right now %s\n", m_turn.member[m_turn.index]);
-                  //  printf("askdjfa\n");
                     if (strcmp(username, m_turn.member[m_turn.index]) == 0) {
-                      //  printf("ajkdf\n");
                         printf("Here are all of your victims: \n");
                         print_players();
                         printf("\\Vote for your victim: ");
                         fgets(victim, 1000, stdin);
                         victim[strlen(victim)] = '\0';
-                        while (!valid(&victim)) { //function to see if its valid victim
+                        while (!valid(victim)) { //function to see if its valid victim
                             printf("\nYou have voted for an invalid victim.%s\n Here are all of your victims\n", to_string(players));
                             printf("\\Vote for your victim: ");
                             fgets(victim, 1000, stdin);
@@ -392,6 +389,9 @@ int main() {
                         printf("\nYou have selected to kill: %s\n", victim);
                         write(sd_conn, victim, sizeof(victim));
                         m_turn.index++;
+                        if(m_turn.index==maf){
+                          m_turn.index==0;
+                        }
                     } else {
                         strcpy(game_buffer, "done");
                         write(sd_conn, game_buffer, sizeof(game_buffer));
@@ -434,6 +434,9 @@ int main() {
                     }
                     read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
                     d_turn.index++;
+                    if(d_turn.index==maf){
+                      d_turn.index==0;
+                    }
                     type_night++;
                 }
                 if (type_night == 2) {
