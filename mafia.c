@@ -70,39 +70,46 @@ int detectiveNum(int users) {
 }
 //need to initialize turns to 0
 void genRoles() {
-    int total = num_players;
-    int m = maf;
-    int d = det;
-    int n = nur;
+    int * assign=calloc(num_players,sizeof(int));
+    int total=num_players;
     m_turn.member = calloc(m, sizeof(char*));
     n_turn.member = calloc(d, sizeof(char*));
     d_turn.member = calloc(n, sizeof(char*));
-    for (size_t i = 0; i < m; i++) {
+    for (size_t i = 0; i < maf; i++) {
         m_turn.member = malloc(sizeof(char)*1000);
         strcpy(m_turn.member[i], "\0");
+        assign[i]=1;
     }
-    for (size_t i = 0; i < n; i++) {
-        n_turn.member = malloc(sizeof(char)*1000);
-        strcpy(n_turn.member[i], "\0");
-    }
-    for (size_t i = 0; i < d; i++) {
+    for (size_t i = 0; i < det; i++) {
         d_turn.member = malloc(sizeof(char)*1000);
         strcpy(d_turn.member[i], "\0");
+        assign[maf+i]=2;
+    }
+    for (size_t i = 0; i < nur; i++) {
+        n_turn.member = malloc(sizeof(char)*1000);
+        strcpy(n_turn.member[i], "\0");
+        assign[maf+det+i]=3;
+    }
+    for (size_t i = maf+nur+det; i < num_players; i++) {
+      assign[i]=0;
     }
     unsigned int r;
     for (size_t i = 0; i < num_players; i++) {
-        r = rand() % total;
-        if (r < m) {
+        printf("i=%d\n",i );
+        int index=rand() % total;
+        printf("index=%d\n",index );
+        r = assign[index];
+        if (r==1) {
             roles[i] = 1;
             m_turn.member[m_turn.index] = players[i];
             m_turn.index++;
             m--;
-        } else if (r < m + d) {
+        } else if (r ==2) {
             roles[i] = 2;
             d_turn.member[d_turn.index] = players[i];
             d_turn.index++;
             d--;
-        } else if(r<m+d+n) {
+        } else if(r==3) {
             roles[i] = 3;
             n_turn.member[n_turn.index] = players[i];
             n_turn.index++;
@@ -111,6 +118,10 @@ void genRoles() {
           roles[i]=0;
         }
         total--;
+        printf("change: %d\n",total );
+        int temp=assign[total];
+        assign[total]=assign[r];
+        assign[r]=assign[total];
     }
 }
 
