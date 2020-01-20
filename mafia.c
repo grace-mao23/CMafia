@@ -141,13 +141,13 @@ void startSpecial() {
     }
     for (size_t i = 0; strcmp(players[i],"\0")!=0; i++) {
         if (roles[i] == 1){
-            m_turn.member[m_turn.index] = players[i];
+            strcpy(m_turn.member[m_turn.index], players[i]);
             m_turn.index++;
         } else if (roles[i] == 2) {
-            d_turn.member[m_turn.index] = players[i];
+            strcpy(d_turn.member[m_turn.index], players[i]);
             d_turn.index++;
         } else if (roles[i] == 3) {
-            n_turn.member[m_turn.index] = players[i];
+            strcpy(n_turn.member[m_turn.index], players[i]);
             n_turn.index++;
         }
     }
@@ -343,9 +343,6 @@ int main() {
         for (int i = 0; i < num_players; i++) {
             votes[i] = 0;
         }
-        m_turn.index = 0;
-        d_turn.index = 0;
-        n_turn.index = 0;
         mdone = 0;
         ndone = 0;
         ddone = 0;
@@ -383,7 +380,7 @@ int main() {
             } else { //nighttime
                 if (type_night == 0) {
                     printf("Waiting for Mafia\n");
-                  //  printf("voting right now %s\n", m_turn.member[m_turn.index]);
+                    printf("voting right now %s\n", m_turn.member[m_turn.index]);
                   //  printf("askdjfa\n");
                     if (strcmp(username, m_turn.member[m_turn.index]) == 0) {
                       //  printf("ajkdf\n");
@@ -392,12 +389,12 @@ int main() {
                         printf("\\Vote for your victim: ");
                         fgets(victim, 1000, stdin);
                         victim[strlen(victim)] = '\0';
-                        /*while (!valid(&buffer)) { //function to see if its valid victim
+                        while (!valid(&victim)) { //function to see if its valid victim
                             printf("\nYou have voted for an invalid victim.%s\n Here are all of your victims\n", to_string(players));
                             printf("\\Vote for your victim: ");
-                            fgets(buffer, 1000, stdin);
-                            buffer[strlen(buffer) - 1] = '\0';
-                        }*/
+                            fgets(victim, 1000, stdin);
+                            victim[strlen(victim) - 1] = '\0';
+                        }
                         printf("\nYou have selected to kill: %s\n", victim);
                         write(sd_conn, victim, sizeof(victim));
                         m_turn.index++;
