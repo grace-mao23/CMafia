@@ -76,11 +76,11 @@ int main() {
                     for (i = 0; i <= sub_num; i++) {
                         read(fd1[i][0], buffer, sizeof(buffer));
                         // host reads username from EACH subserver
-                        printf("server received %s\n", buffer);
+                        printf("Host: received %s from %d\n", buffer, i);
                         if (buffer[0] == 'U') {
-                            while(strcmp(players[0], "\0") != 0) {
-                                j++;
-                            }
+                          //  while(strcmp(players[0], "\0") == 0) {
+                            //    j++;
+                          //  }
                             for (i = 1; i < strlen(buffer); i++) {
                                 players[j][i - 1] = buffer[i];
                             }
