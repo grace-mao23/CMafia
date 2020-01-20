@@ -27,3 +27,6 @@ Created the algorithms that helps prints the list of usernames
 
 George -- 22:43 1-19-2020
 Created the algorithms that randomizes roles to the usernames.
+
+George -- 4:53 1-20-2020
+Finished the entire night phase woot woot just need to check it when I wake up.

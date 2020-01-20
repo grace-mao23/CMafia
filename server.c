@@ -8,7 +8,12 @@ int main() {
     taken_setup(taken);
     int fd1[13][2]; // host reading from subserver
     int fd2[13][2]; // host writing to subserver
-    char ** players;
+    char *victim;
+    char *saved;
+    char **players;
+
+    victim = malloc(sizeof(char) * 1000);
+    saved = malloc(sizeof(char) * 1000);
     players = calloc(12, sizeof(char*));
     for (size_t i = 0; i < 12; i++) {
         players[i] = malloc(sizeof(char) * 1000);
@@ -88,22 +93,45 @@ int main() {
                         strcat(players[a], ",");
                         strcat(buffer, players[a]);
                     }
-                    for (i = 1; i < 12; i++) {
+                    for (i = 1; i < 13; i++) {
                         write(fd2[i][1], buffer, sizeof(buffer));
                         // host writes list of players to EACH subserver
                     }
-                    read(fd1[i][0], buffer, sizeof(buffer));
-                    if (strcmp(buffer, "done") == 0) {
-                        for (i = 1; i < 12; i++) {
-                            write(fd2[i][1], buffer, sizeof(buffer));
+                    for (i = 1; i < 13; i++) { //reads what the victim is
+                        read(fd1[i][0], buffer, sizeof(buffer));
+                        if (strcmp(buffer, "done") != 0) {
+                            strcpy(victim, buffer);
+                        }
+                    }
+                    for (i = 1; i < 13; i++) {
+                        read(fd1[i][0], buffer, sizeof(buffer));
+                        if (strcmp(buffer, "done") != 0) {
+                            strcpy(saved, buffer);
+                        }
+                    }
+                    if (strcmp(victim, saved) == 0) { //if victim and saved are the same, then no one dies
+                        strcpy(buffer, "");
+                        for (i = 1; i < 13; i++) {
+                            write(fd2[i][1], victim, sizeof(victim));
+                        }
+                    } else {
+                        for (i = 1; i < 13; i++) {
+                            write(fd2[i][1], victim, sizeof(victim));
+                        }
+                    }
+                    for (i = 1; i < 13; i++) { //check to see if client with subserver died
+                        read(fd1[i][0], buffer, sizeof(buffer));
+                        if (strcmp(buffer, "died") == 0) {
+                            close(fd1[i][0]);
+                            close(fd2[i][1]);
                         }
                     }
                 }
             }
         } else { // child ==> SUBSERVER
-            int quitted = -3;
+            int mode = -3;
             printf("Waiting for players to join...\n");
-            while (quitted == -3 && read(fd2[sub_num][0], buffer, sizeof(buffer))) {
+            while (mode == -3 && read(fd2[sub_num][0], buffer, sizeof(buffer))) {
                 // subserver reads Start from server
                 if (strcmp(buffer, "Start\n") == 0) {
                     write(client, buffer, sizeof(buffer));
@@ -112,29 +140,49 @@ int main() {
                 } else if ((strlen(buffer) == 4) && ('N' == buffer[0])) {
                     write(client, buffer, sizeof(buffer));
                     // subserver writes number of players to client
-                    quitted = -2;
+                    mode = -2;
                 } else if (strcmp(buffer, "done")) {
                     write(client, buffer, sizeof(buffer));
                 }
             }
-            while (quitted == -2 && read(client, buffer, sizeof(buffer))) {
+            while (mode == -2 && read(client, buffer, sizeof(buffer))) {
                 if (buffer[0] == 'U') {
                     // subserver reads username from client
                     write(fd1[sub_num][1], buffer, sizeof(buffer));
                     // subserver writes username to host
-                    quitted = -1;
+                    moed = -1;
                 }
             }
-            while (quitted == -1 && read(fd2[sub_num][0], buffer, sizeof(buffer))) {
+            while (mode == -1 && read(fd2[sub_num][0], buffer, sizeof(buffer))) {
                 // subserver reads the list of usernames
                 if (buffer[0] == 'U') {
                     write(client, buffer, sizeof(buffer));
                     // subserver writes the list of usernames to client
-                    quitted = 0;
+                    mode = 0;
                 }
             }
+            while (mode == 0 && read(client, buffer, sizeof(buffer))) { //subserver sending victim/saved/done
+                write(fd1[sub_num][1], buffer, sizeof(buffer));
+                mode = 1;
+            }
+            while (mode == 1 && read(fd2[sub_num][0], buffer, sizeof(buffer))) { //server sending who the dead person is
+                write(client, buffer, sizeof(buffer));
+                mode = 2; //i really love how we just have unnecessary while loops and we just stick to them -george
+            }
+            while (mode == 2 && read(client, buffer, sizeof(buffer))) { //check to see if client has died ingame
+                write(fd1[sub_num][1], buffer, sizeof(buffer));
+                if (strcmp(buffer, "died") == 0) {
+                    close(client);
+                    close(fd1[sub_num][1]);
+                    close(fd2[sub_num][0]);
+                    exit(0);
+                    close(sd);
+                    return 0;
+                }
+                mode = 3;
+            }
             //WILL WORK ON LATER
-            quitted = 0; // may not need
+            /*int quitted = 0; // may not need
             while (!quitted && read(client, buffer, sizeof(buffer))) {
                 printf("%c\n", buffer[0]);
                 if (buffer[0] == 'n') { //when the nurse tells server who is being saved
@@ -149,7 +197,7 @@ int main() {
                     write(fd1[sub_num][0], buffer, sizeof(buffer));
                     printf("writing to server %s\n", buffer);
                 }
-            }
+            }*/
             close(client);
             exit(0);
         }

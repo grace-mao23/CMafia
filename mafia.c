@@ -5,7 +5,7 @@ char **players;
 int *roles; //0 is regular person, 1 is mafia, 2 is detective, 3 is nurse
 int *votes;
 int maf, nur, det, mdone, ddone, ndone, num_players;
-char * username;
+char *username;
 char *victim;
 int game_over = 0;
 int game_start = 0;
@@ -70,7 +70,8 @@ int detectiveNum(int users) {
     printf("Total Detective(s): %d\n", detective);
     return detective;
 }
-char * printint(int * list) {
+
+void printint(int *list) {
     printf("starting to print\n\n");
     for(size_t i = 0; i < num_players; i++){
         printf("%d,", list[i]);
@@ -86,7 +87,7 @@ void genRoles() {
     n_turn.member = calloc(nur, sizeof(char*));
     m_turn.index = 0;
     d_turn.index = 0;
-    n_turn.index - 0;
+    n_turn.index = 0;
     for (size_t i = 0; i < maf; i++) {
         m_turn.member[m_turn.index] = malloc(sizeof(char) * 1000);
         m_turn.index++;
@@ -142,7 +143,7 @@ void genRoles() {
 }
 
 int getRole(char *check) {
-    for (size_t i = 0; i<num_players; i++) {
+    for (size_t i = 0; i < num_players; i++) {
         if (strcmp(players[i], check) == 0) {
             return i;
         }
@@ -179,7 +180,7 @@ char *to_string(char **ary) {
     return line;
 }
 
-char * print_players() {
+void print_players() {
     printf("In Game: ");
     for (size_t i = 0; i < num_players; i++) {
         printf("%s",players[i]);
@@ -218,12 +219,12 @@ char **parse_args(char *line, char *del) {
 
 int valid(char *name) {
     int i = 0;
-    for (; i < len_double(players)) {
+    for (; i < len_double(players); i++) {
         if (strcmp(players[i], name) == 0) {
-            return true;
+            return 1;
         }
     }
-    return false;
+    return 0;
 }
 
 // notes:
@@ -240,7 +241,7 @@ int main() {
     num_night = 0;
     num_day = 0;
     username = malloc(sizeof(char) * 1000);
-    victim = malloc(sizeof(char)*1000);
+    victim = malloc(sizeof(char) * 1000);
     strcpy(username, "\0");
     sd_conn = client_setup(TEST_IP);
     players = calloc(12, sizeof(char*));
@@ -281,7 +282,7 @@ int main() {
         while (game_start == 0 && read(sd_conn, buffer, sizeof(buffer))) {
             // client reads list of usernames from subserver
             if (buffer[0] == 'U') {
-                memmove(buffer,buffer+1,strlen(buffer));
+                memmove(buffer, buffer + 1,strlen(buffer));
                 players = parse_args(buffer, ",");
                 game_start = 1;
             }
@@ -309,6 +310,7 @@ int main() {
         game_start = 1;
         night = 1;
         num_day = 1;
+        type_day = 0;
         num_night = 1;
         type_night = 0;
         votes = calloc(num_players, sizeof(int));
@@ -322,7 +324,7 @@ int main() {
         ndone = 0;
         ddone = 0;
         printf("all mafs\n");
-        for(int i = 0; i < maf; i++){
+        for (int i = 0; i < maf; i++){
             printf("%s\n", m_turn.member[i]);
         }
         while (!game_over) {
@@ -332,23 +334,23 @@ int main() {
                     printf("Welcome to Mafia!\n");
                     sleep(2);
                     printf("The night will begin shortly...\n");
-                } else if (num_day == 1) {
-                    if (victim != NULL) {
-                        printf("%s has died!\n", victim);
-                        if (strcmp(username, victim) == 0) {
-                            game_over = 1;
-                        } else {
-                            printf("You have 5 minutes to discuss.\n"); //George's Timer
-                        }
-                    } else {
-                        printf("Nobody Died!\n");
-                    }
-                    num_day = 2;
-                } else if (num_day == 2) {
-                  //chatbox
                 } else {
-
-                  //voting
+                    if (type_day == 0) {
+                        if (strcmp(victim, "") == 0) {
+                            printf("Nobody Died!\n");
+                        } else {
+                            printf("%s has died!\n", victim);
+                            if (strcmp(username, victim) == 0) {
+                                game_over = 1;
+                            } else {
+                                printf("You have 5 minutes to discuss.\n"); //George's Timer
+                            }
+                        }
+                    } else if (type_day == 1) {
+                        //chatbox
+                    } else {
+                        //voting
+                    }
                 }
             } else { //nighttime
                 if (type_night == 0) {
@@ -360,28 +362,24 @@ int main() {
                         printf("Here are all of your victims: \n");
                         print_players();
                         printf("\\Vote for your victim: ");
-                        fgets(buffer, 1000, stdin);
-                        buffer[strlen(buffer) - 1] = '\0';
+                        fgets(victim, 1000, stdin);
+                        victim[strlen(buffer) - 1] = '\0';
                         /*while (!valid(&buffer)) { //function to see if its valid victim
                             printf("\nYou have voted for an invalid victim.%s\n Here are all of your victims\n", to_string(players));
                             printf("\\Vote for your victim: ");
                             fgets(buffer, 1000, stdin);
                             buffer[strlen(buffer) - 1] = '\0';
                         }*/
-                        printf("\nYou have selected to kill: %s\n", buffer);
-                        strcpy(victim, buffer);
+                        printf("\nYou have selected to kill: %s\n", victim);
+                        write(sd_conn, victim, sizeof(victim));
                         m_turn.index++;
+                    } else {
                         strcpy(buffer, "done");
                         write(sd_conn, buffer, sizeof(buffer));
-                        printf("snet to subserver\n");
-                    } else {
-                        printf("reading\n");
-                        write(sd_conn, buffer, sizeof(buffer));
-                        read(sd_conn, buffer, sizeof(buffer));
-                        printf("got it\n");
                     }
                     type_night++;
-                } if (type_night == 1) {
+                }
+                if (type_night == 1) {
                     printf("Waiting for Detective\n");
                     if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
                         printf("Here are all of your suspects: %s\n", to_string(players));
@@ -407,7 +405,9 @@ int main() {
                         }
                     }
                     d_turn.index++;
-                } else {
+                    type_night++;
+                }
+                if (type_night = 2) {
                     printf("Waiting for Nurse\n");
                     if (strcmp(username, n_turn.member[n_turn.index]) == 0) {
                         printf("Here are all of your patients: %s\n", to_string(players));
@@ -421,14 +421,26 @@ int main() {
                             buffer[strlen(buffer)-1] = '\0';
                         }*/
                         printf("\nYou have chosent to save: %s\n", buffer);
-                        if (strcmp(victim, buffer) == 0) {
-                            victim = NULL;
-                        }
+                        write(sd_conn, buffer, sizeof(buffer));
                         n_turn.index++;
+                    } else {
+                        strcpy(buffer, "done");
+                        write(sd_conn, buffer, sizeof(buffer));
                     }
                 }
-                m_turn.index++;
-                num_night = 2;
+                num_night++;
+                read(sd_conn, buffer, sizeof(buffer));
+                if (strcmp(buffer, username) == 0) { //checking to see if he dead
+                    printf("Unfortunately, you have DIED\n");
+                    strcmp(buffer, "died");
+                    write(sd_conn, buffer, sizeof(buffer));
+                    sleep(10);
+                    return 0;
+                } else {
+                    printf("Congradulations, you have SURVIVED the night\n");
+                    strcmp(buffer, "surv");
+                    write(sd_conn, buffer, sizeof(buffer));
+                }
             }
         }
     }
