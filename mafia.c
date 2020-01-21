@@ -77,7 +77,7 @@ int detectiveNum(int users) {
 void printint(int *list) {
     printf("starting to print\n\n");
     for(size_t i = 0; i < num_players; i++){
-        printf("%d,", list[i]);
+        printf("%d, ", list[i]);
     }
     printf("\n");
 }
@@ -217,44 +217,44 @@ void removeMember(char * name){
                 if (i != maf - 1) {
                     strcpy(m_turn.member[i], m_turn.member[i + 1]);
                 }
-      }
-    }
-    maf--;
-  }else if(roles[index]==2){
-    for (size_t i = 0; i < det; i++) {
-      if(strcmp(d_turn.member[i],name)==0){
-        replace=i;
-      }
-      if(replace==det-1){
-        d_turn.index=(d_turn.index+1)%(det-1);
-        i=det;
-      }else if(replace!=-1){
-        if(i!=det-1){
-            strcpy(d_turn.member[i],d_turn.member[i+1]);
+            }
         }
-      }
-    }
-    det--;
-  }else if(roles[index]==3){
-    for (size_t i = 0; i < nur; i++) {
-      if(strcmp(n_turn.member[i],name)==0){
-        replace=i;
-      }
-      if(replace==nur-1){
-        n_turn.index=(n_turn.index+1)%(nur-1);
-        i=nur;
-      }else if(replace!=-1){
-        if(i!=nur-1){
-            strcpy(n_turn.member[i],n_turn.member[i+1]);
+        maf--;
+    } else if (roles[index] == 2) {
+        for (size_t i = 0; i < det; i++) {
+            if (strcmp(d_turn.member[i], name) == 0) {
+                replace = i;
+            }
+            if (replace == det - 1) {
+                d_turn.index = (d_turn.index + 1) % (det - 1);
+                i = det;
+            } else if (replace != -1) {
+                if (i != det - 1) {
+                    strcpy(d_turn.member[i], d_turn.member[i + 1]);
+                }
+            }
         }
-      }
+        det--;
+    } else if (roles[index] == 3) {
+        for (size_t i = 0; i < nur; i++) {
+            if (strcmp(n_turn.member[i], name) == 0) {
+                replace = i;
+            }
+            if (replace == nur - 1) {
+                n_turn.index = (n_turn.index + 1) % (nur - 1);
+                i = nur;
+            } else if (replace != -1) {
+                if (i != nur - 1) {
+                    strcpy(n_turn.member[i], n_turn.member[i + 1]);
+                }
+            }
+        }
+        nur--;
     }
-    nur--;
-  }
 
-  for (size_t i = index; i < num_players; i++) {
-    strcpy(players[i],players[i+1]);
-  }
+    for (size_t i = index; i < num_players; i++) {
+        strcpy(players[i], players[i+1]);
+    }
 }
 // notes:
 // num_players attainable through length of users later
@@ -311,13 +311,13 @@ int main() {
         while (game_start == 0 && read(sd_conn, buffer, sizeof(buffer))) {
             // client reads list of usernames from subserver
             if (buffer[0] == 'U') {
-                memmove(buffer, buffer + 1,strlen(buffer));
-                players = parse_args(buffer, ",");
+                memmove(buffer, buffer + 1, strlen(buffer));
+                players = parse_args(buffer, ", ");
                 game_start = 1;
             }
             if (buffer[0] == 'R') {
                 printf("\\Mafia$ Generating Role...\n\n");
-                memmove(buffer, buffer + 1,strlen(buffer));
+                memmove(buffer, buffer + 1, strlen(buffer));
                 parse_int(buffer);
                 //printint(roles);
             }
@@ -383,17 +383,17 @@ int main() {
                         }
                     }
                     if (type_day == 1) { // statements
-                        if(getRole(username)!=-1){
-                          printf("You will now have the chance to enter your statements\n");
-                          printf("Your statement: ");
-                          fgets(game_buffer, 1000, stdin);
-                          game_buffer[strlen(game_buffer)] = '\0';
-                          write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
-                          // subserver won't receive it until it's the subserver's turn from host
-                          sleep(10);
-                          for (int i = 0; i < num_players; i++) {
-                              read(sd_conn, game_buffer, sizeof(game_buffer));
-                              printf("%s: %s\n", players[i], game_buffer);
+                        if (getRole(username) != -1) {
+                            printf("You will now have the chance to enter your statements\n");
+                            printf("Your statement: ");
+                            fgets(game_buffer, 1000, stdin);
+                            game_buffer[strlen(game_buffer)] = '\0';
+                            write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
+                            // subserver won't receive it until it's the subserver's turn from host
+                            sleep(10);
+                            for (int i = 0; i < num_players; i++) {
+                                read(sd_conn, game_buffer, sizeof(game_buffer));
+                                printf("%s: %s\n", players[i], game_buffer);
                             }
                         }
                         type_day++;
@@ -508,9 +508,9 @@ int main() {
                 if (strcmp(victim, username) == 0) { //checking to see if he dead
                     printf("Unfortunately, you have DIED\n");
                     printf("Do you wish to quit? (yes/no)");
-                    fgets(game_buffer,1000,stdin);
+                    fgets(game_buffer, 1000, stdin);
                     game_buffer[strlen(game_buffer)] = '\0';
-                    if(strcmp(game_buffer,"yes")){
+                    if(strcmp(game_buffer, "yes")){
                       game_over=1;
                     }else{
                       printf("Spectating the game now...\n");
