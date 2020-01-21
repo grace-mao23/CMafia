@@ -339,6 +339,7 @@ int main() {
                         if (strcmp(victim, "") == 0) {
                             printf("Nobody Died!\n");
                             sleep(2);
+                            type_day++;
                         } else {
                             printf("%s has died!\n", victim);
                             if (strcmp(username, victim) == 0) {
