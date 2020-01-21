@@ -86,6 +86,20 @@ You have selected to save: b
 ```
 Afterwards, when all roles have gotten a turn, you will get a message saying whether you have survived or died. Note that if the nurse and mafia pick the same person, then nobody dies.
 
-What comes next is the day phase. Here, the person who died gets announced to everyone. Then, everybody has a chance to say one statement of at most 900 characters (which goes unchecked, so you should count them yourself or your game will break) about who they think the murderer is. Those statements get displayed to everyone, and then they will get a chance to vote. If you are spectating the game, you cannot say a statement, but you can also view them. Then, you must pay $3 for us to continue the game. Seriously, though, unfortunately, voting has not been implemented yet, as our way of determining a majority is flawed, but we can't fix.
+What comes next is the day phase. Here, the person who died gets announced to everyone. Then, everybody has a chance to say one statement of at most 900 characters (which goes unchecked, so you should count them yourself or your game will break) about who they think the murderer is. Those statements get displayed to everyone, and then they will get a chance to vote. If you are spectating the game, you cannot say a statement, but you can also view them. Then, you must pay $3 for us to continue the game. Voting will take into account ties and who died. If there's a tie, no one dies.
 
-And unfortunately, the game can only last one cycle. The game breaks after the second night and we don't know why. Sorry :(. Our code simply doesn't like us. The read function simply doesn't know how to block?? Honestly, being able to do one night as an accomplishment already. We were able to implement pipes, memory allocation, forking, and networking. You can also see that we close all the servers correctly and we free all of our allocated memory.
+## Limitations and Bugs
+
+And unfortunately, the game can only last one cycle. The game breaks after the second night and we don't know why. Sorry :(. Our code simply doesn't like us. 
+
+In all seriousness, the game does not continue going after the mafia votes for a second person to kill in the second night. While it writes the victim to the host, none of the clients receive the signal to keep going, so the game blocks. However, everything that we've implemented is testable through the first day and night. The mafia may die, making the game end. Or someone else may die, and the mafia will win. Or no one dies! Yay!
+
+We were able to implement pipes, memory allocation, forking, and networking. You can also see that we close all the servers correctly and we free all of our allocated memory.
+
+We are very sorry that we couldn't get the rest of our code to work. We didn't have enough time and we didn't expect to encounter so much networking, as you can probably tell from our timeline in our original proposal.
+
+But we hope you enjoy this game anyway!
+
+Best,
+
+Team GAG
