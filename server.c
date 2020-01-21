@@ -236,6 +236,17 @@ int main() {
                             write(fd2[i][1], statements, sizeof(statements));
                             printf("HOST wrote statements to %d\n", i);
                         }
+
+                        //checking to see if game over
+                        for (i = 1; i <= sub_num; i++) {
+                            read(fd1[i][0], buffer, sizeof(buffer));
+                            if (strcmp(buffer, "over") == 0) {
+                                continue1 = 0;
+                                close(client);
+                                close(fd2[i][1]);
+                                close(fd1[i][0]);
+                            }
+                        }
                     }
                 }
             }
@@ -300,10 +311,18 @@ int main() {
                     read(fd2[sub_num][0], buffer, sizeof(buffer));
                     printf("Subserver read %s statements\n", buffer);
                     write(client, buffer, sizeof(buffer));
-                    
+                }
+
+                //checking to see if game is over at the end of the day
+                read(client, buffer, sizeof(buffer));
+                write(fd1[sub_num][1], buffer, sizeof(buffer));
+                if (strcmp(buffer, "over") == 0) {
+                    continue1 = 0;
+                    close(client);
+                    close(fd1[sub_num][1]);
+                    close(fd2[sub_num][0]);
                 }
             }
-
             close(client);
             exit(0);
         }

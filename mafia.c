@@ -403,8 +403,24 @@ int main() {
                         night = 1;
                         num_day++;
                     }
-                    if (2 * maf >= num_players) {
+                    if (2 * maf >= num_players || maf <= 0) { //checks to see if game is over
                         game_over = 1;
+                        printf("There are %d mafia and %d players left in the game\n", maf, players);
+                        sleep(1);
+                        if (maf <= 0) {
+                            printf("The TOWN wins!\n");
+                        } else {
+                            printf("The MAFIA wins!\n");
+                        }
+                        strcpy(buffer, "over");
+                        write(sd_conn, buffer, sizeof(buffer));
+                        game_over = 1;
+                    } else {
+                        strcpy(buffer, "notover");
+                        write(sd_conn, buffer, sizeof(buffer));
+                        sleep(1);
+                        printf("The night will begin shortly...\n");
+                        sleep(2);
                     }
                 }
             } else { //nighttime
