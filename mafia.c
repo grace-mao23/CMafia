@@ -157,38 +157,25 @@ void print_players() {
     for (size_t i = 0; i < num_players; i++) {
         if (players[i] >= 0) { //negative means they died
             printf("%s", players[i]);
-        }
-        if (i != num_players - 1) {
-            printf(", ");
-        } else {
-            printf("\n\n");
+            if (i != num_players - 1) {
+                printf(", ");
+            }
         }
     }
+    printf("\n\n");
 }
 
 void print_players_mafia() { //this is for mafia when printing who's in the game that they can kill
-    printf("In Game: ");
+    printf("Victims: ");
     for (size_t i = 0; i < num_players; i++) {
-        if (roles[i] >= 0 && roles[i] != 1) {
+        if (roles[i] >= 0 && roles[i] != 1) { //negative means they died; 1 means they're mafia
             printf("%s", players[i]);
-        }
-        if (i != num_players - 1) {
-            printf(", ");
-        } else {
-            printf("\n\n");
+            if (i != num_players - 1) {
+                printf(", ");
+            }
         }
     }
-}
-
-int remove_name(char **ary, char *name) {
-    int i = 0;
-    for (; i < len_double(ary); i++) {
-        if (strcmp(ary[i], name) == 0) {
-            strcpy(ary[i], " ");
-            return 1;
-        }
-    }
-    return 0;
+    printf("\n\n");
 }
 
 char **parse_args(char *line, char *del) {
@@ -207,7 +194,7 @@ char **parse_args(char *line, char *del) {
 
 void parse_int(char *line) {
     for (size_t i = 0; i < num_players; i++) {
-      roles[i]=line[2*i]-48;
+      roles[i] = line[2 * i] - 48;
     }
 }
 
@@ -365,10 +352,10 @@ int main() {
                 night = 1;
                 num_day++;
             } else { //nighttime
-                printf("Night Beginning!\n");
+                printf("\nNIGHT BEGINNING!\n");
                 if (type_night == 0) {
                     if (strcmp(username, m_turn.member[m_turn.index]) == 0) {
-                        printf("Here are all of your victims: \n");
+                        printf("\nMafia! Here are all of your victims: \n");
                         print_players_mafia();
                         sleep(1);
                         printf("\\Vote for your victim: ");
@@ -400,7 +387,7 @@ int main() {
                 }
                 if (type_night == 1) {
                     if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
-                        printf("Here are all of your suspects: ");
+                        printf("\nDetective! Here are all of your suspects: ");
                         print_players();
                         sleep(2);
                         printf("\\Choose to investigate a suspect: ");
@@ -426,7 +413,7 @@ int main() {
                         strcpy(game_buffer, "done");
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                     } else {
-                        printf("Waiting for Detective...\n");
+                        printf("\nWaiting for Detective...\n");
                         strcpy(game_buffer, "done");
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                     }
@@ -438,14 +425,8 @@ int main() {
                     type_night++;
                 }
                 if (type_night == 2) {
-                    printf("print players: ");
-                    print_players();
-                    printf("printing roles: ");
-                    printint(roles);
-                    printf("%s, %s!\n", username, n_turn.member[n_turn.index]);
-                    printf("%d\n", strcmp(username, n_turn.member[n_turn.index]));
                     if (strcmp(username, n_turn.member[n_turn.index]) == 0) {
-                        printf("Here are all of your patients: ");
+                        printf("\nNurse! Here are all of your patients: ");
                         print_players();
                         sleep(1);
                         printf("\\Choose to save a patients: ");
@@ -464,7 +445,7 @@ int main() {
                             n_turn.index = 0;
                         }
                     } else {
-                        printf("Waiting for Nurse...\n");
+                        printf("\nWaiting for Nurse...\n");
                         strcpy(game_buffer, "done");
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                     }
@@ -480,7 +461,6 @@ int main() {
                     printf("Congradulations, you have SURVIVED the night\n");
                 }
                 if (strcmp(victim, "") != 0) {
-                    num_players--;
                     int role = roles[getRole(victim)];
                     if (role == 1) {
                         //remove mafia
