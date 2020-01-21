@@ -53,7 +53,7 @@ Topics Implemented:
 
 ALLOCATING MEMORY
 
-For many of our variables (such as char * and char * * pointers) we need to calloc and malloc. For example, to hold variables such as username of the client, list of player names, voting list ... etc. 
+For many of our variables (such as char * and char * * pointers) we need to calloc and malloc. For example, to hold variables such as username of the client, list of player names, voting list ... etc.
 
 NETWORKING
 
@@ -112,16 +112,16 @@ int game_over
 int game_start
    * Keeps track when to start game
 int num_day
-   * Keeps track of how day phases occured
+   * Keeps track of how day phases occurred
 int num_night
-   * Keeps track of how night phases occured
+   * Keeps track of how night phases occurred
 int type_night
    * Keeps track of what phase of night it is
 int type_day
    * Keeps track of what phase of day it is
 
 struct turns {
-    char * *member; //shows members of this role
+    char **member; //shows members of this role
     int index;      //which member is voting next
 };
 struct turns m_turn;

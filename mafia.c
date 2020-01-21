@@ -271,22 +271,22 @@ void removeMember(char *name) {
 
 void readVotes(char *line){
     for (size_t i = 0; i < num_players; i++) {
-      votes[line[2 * i] - 97]++;
+        votes[line[2 * i] - 97]++;
     }
-    int max=0;
-    int dup=0;
+    int max = 0;
+    int dup = 0;
     for (size_t i = 0; i < num_players; i++) {
-      if(votes[i]>votes[max]){
-        max=i;
-        dup=0;
-      }else if(votes[i]==votes[max]){
-        dup=1;
-      }
+        if (votes[i] > votes[max]) {
+            max = i;
+            dup = 0;
+        } else if (votes[i] == votes[max]) {
+            dup = 1;
+        }
     }
-    if(dup){
+    if (dup) {
       printf("It was a tie! Nobody Gets Voted Out!\n");
-    }else{
-      printf("%s was voted to die! \n",players[max]);
+    } else {
+      printf("%s was voted to die! \n", players[max]);
       //insert gameover code for players max
       removeMember(players[max]);
     }
@@ -440,6 +440,7 @@ int main() {
                         type_day++;
                     }
                     if (type_day == 2) {
+                        char new_buffer[BUFFER_SIZE] = "";
                         for (size_t i = 0; i < num_players; i++) {
                             votes[i]=0;
                         }
@@ -448,32 +449,28 @@ int main() {
                             printf("Here are all your candidates: ");
                             print_players();
                             printf("\\Vote: ");
-                            fgets(game_buffer, 1000,stdin);
-                            game_buffer[strlen(game_buffer) - 1] = '\0';
-                            while (!valid(game_buffer)) { //function to see if its valid victim
+                            fgets(new_buffer, 1000,stdin);
+                            new_buffer[strlen(new_buffer) - 1] = '\0';
+                            while (!valid(new_buffer)) { //function to see if its valid victim
                                 printf("\nYou have chosen an invalid candidate.\nHere are all of your possible suspects.\n");
                                 print_players();
                                 sleep(1);
                                 printf("\\Vote: ");
-                                fgets(game_buffer, 1000, stdin);
-                                game_buffer[strlen(game_buffer) - 1] = '\0';
+                                fgets(new_buffer, 1000, stdin);
+                                new_buffer[strlen(new_buffer) - 1] = '\0';
                             }
-                            printf("You have selected to vote for %s\n", game_buffer);
-                            char vote = 97 + getRole(game_buffer);
-                            strcat(game_buffer, &vote);
+                            printf("You have selected to vote for %s\n", new_buffer);
+                            char vote = 97 + getRole(new_buffer);
+                            strcat(new_buffer, &vote);
                         } else {
-                            strcpy(game_buffer, "dead");
+                            strcpy(new_buffer, "dead");
                         }
-                        printf("Did 1: %s\n", game_buffer);
-                        write(sd_conn, game_buffer, sizeof(game_buffer));
+                        printf("Did 1: %s\n", new_buffer);
+                        write(sd_conn, new_buffer, sizeof(new_buffer));
                         printf("Did 2\n");
-                        sleep(1);
-                        int waiting_thing = 1;
-                        while (waiting_thing && read(sd_conn, game_buffer, sizeof(game_buffer))) {
-                            waiting_thing = 0;
-                        }
-                        printf("Did 3: %s\n", game_buffer);
-                        readVotes(game_buffer);
+                        read(sd_conn, new_buffer, sizeof(new_buffer));
+                        printf("Did 3: %s\n", new_buffer);
+                        readVotes(new_buffer);
                         night = 1;
                         num_day++;
                     }
@@ -507,8 +504,6 @@ int main() {
                         printf("\\Vote for your victim: ");
                         fgets(victim, 1000, stdin);
                         victim[strlen(victim) - 1] = '\0';
-                        printf("%s\n", victim);
-                        printf("valid: %d\n", valid_mafia(victim));
                         while (!valid_mafia(victim)) { //function to see if its valid victim
                             printf("\nYou have voted for an invalid victim.\nHere are all of your possible victims.\n");
                             print_players_mafia();
@@ -542,7 +537,7 @@ int main() {
                                 printf("\nYou have chosen an invalid suspect.\nHere are all of your possible suspects.\n");
                                 print_players();
                                 sleep(1);
-                                printf("\\Choose to investigate a suspects: ");
+                                printf("\\Choose to investigate a suspect: ");
                                 fgets(buffer, 1000, stdin);
                                 buffer[strlen(buffer) - 1] = '\0';
                             }
