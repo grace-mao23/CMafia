@@ -401,7 +401,7 @@ int main() {
                         night = 1;
                         num_day++;
                     }
-                    type_day = 0;
+
                   }
 
             } else { //nighttime
