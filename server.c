@@ -222,7 +222,7 @@ int main() {
                         }
 
                         char *statements = malloc(sizeof(char) * 12000);
-                        strcpy(statements, "");
+                        strcpy(statements, "Here are the statements: \n");
 
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
@@ -291,7 +291,7 @@ int main() {
 
                 read(fd2[sub_num][0], buffer, sizeof(buffer)); //server sending who the dead person is
                 write(client, buffer, sizeof(buffer));
-                printf("Transmission\n");
+                //printf("Transmission\n");
 
                 mode = 4;
                 while (mode == 4) {

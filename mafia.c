@@ -389,9 +389,14 @@ int main() {
                           game_buffer[strlen(game_buffer)-1] = '\0';
                           printf("You entered %s\n", game_buffer);
                           write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
-                          
-                          read(sd_conn, game_buffer, sizeof(game_buffer));
-                          printf("Here's what everyone said!\n\n");
+
+                          int waiting_thing = 0;
+                          while (waiting_thing == 0 && read(sd_conn, game_buffer, sizeof(game_buffer))) {
+                              if (game_buffer[0] == 'H') {
+                                waiting_thing = 1;
+                              }
+                          }
+                        //  printf("Here's what everyone said!\n\n");
                           printf("%s\n", game_buffer);
                           type_day++;
                         }
