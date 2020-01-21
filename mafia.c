@@ -136,7 +136,7 @@ int len_single(char *ary) {
 
 
 void print_players() {
-    printf("In Game: ");
+    printf("\\Mafia$ In Game: ");
     for (size_t i = 0; i < num_players; i++) {
         if (players[i] >= 0) { //negative means they died
             printf("%s", players[i]);
@@ -149,7 +149,7 @@ void print_players() {
 }
 
 void print_players_mafia() { //this is for mafia when printing who's in the game that they can kill
-    printf("Victims: ");
+    printf("\\Mafia$ Victims: ");
     for (size_t i = 0; i < num_players; i++) {
         if (roles[i] >= 0 && roles[i] != 1) { //negative means they died; 1 means they're mafia
             printf("%s", players[i]);
@@ -284,11 +284,11 @@ void readVotes(char *line){
         }
     }
     if (dup) {
-      printf("It was a tie! Nobody Gets Voted Out!\n");
+        printf("It was a tie! Nobody Gets Voted Out!\n");
     } else {
-      printf("%s was voted to die! \n", players[max]);
-      //insert gameover code for players max
-      removeMember(players[max]);
+        printf("%s was voted to die! \n", players[max]);
+        //insert gameover code for players max
+        removeMember(players[max]);
     }
 }
 // notes:
@@ -437,11 +437,12 @@ int main() {
                             fgets(game_buffer, 1000, stdin);
                             game_buffer[strlen(game_buffer) - 1] = '\0';
                             printf("\\Mafia$ You entered: \"%s\"\n", game_buffer);
+                            strcat(actual, username);
+                            strcat(actual, ": ")
+                            strcat(actual, game_buffer);
                         } else {
                             strcpy(actual, "dead");
                         }
-                        strcat(actual, username);
-                        strcat(actual, game_buffer)
                         write(sd_conn, actual, sizeof(actual)); // write statement to subserver
                         int waiting_thing = 1;
                         while (waiting_thing && read(sd_conn, game_buffer, sizeof(game_buffer))) {

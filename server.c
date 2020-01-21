@@ -187,6 +187,7 @@ int main() {
 
                     int continue1 = 1;
                     while (continue1) {
+                        printf("Waiting for Mafia...\n");
                         for (i = 1; i <= sub_num; i++) { //host reads what the victim is
                             read(fd1[i][0], buffer, sizeof(buffer));
                             if (strcmp(buffer, "done") != 0) {
@@ -198,7 +199,8 @@ int main() {
                             strcpy(buffer, "mafia done");
                             write(fd2[i][1], buffer, sizeof(buffer));
                         }
-
+                        printf("Mafia chose: %s\n", victim);
+                        printf("Waiting for Detective...\n");
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
                         }
@@ -207,14 +209,14 @@ int main() {
                             strcpy(buffer, "detective done");
                             write(fd2[i][1], buffer, sizeof(buffer));
                         }
-
+                        printf("Waiting for Nurse...\n");
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
                             if (strcmp(buffer, "done") != 0) {
                                 strcpy(saved, buffer);
                             }
                         }
-
+                        printf("Nurse chose: %s\n", saved);
                         for (i = 1; i <= sub_num; i++) {
                             strcpy(buffer, "nurse done");
                             write(fd2[i][1], buffer, sizeof(buffer));
@@ -225,28 +227,27 @@ int main() {
                             for (i = 1; i <= sub_num; i++) {
                                 write(fd2[i][1], buffer, sizeof(buffer));
                             }
+                            printf("Nobody Died!\n");
                         } else {
                             for (i = 1; i <= sub_num; i++) {
                                 write(fd2[i][1], victim, sizeof(victim));
                             }
+                            printf("%s Died\n", victim);
                         }
 
                         char *statements = malloc(sizeof(char) * 12000);
-                        strcpy(statements, "Here are the statements: \n");
+                        strcpy(statements, "\\$Mafia Here are the statements: \n");
 
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
-                            printf("HOST read %s\n", buffer);
                             if (strcmp(buffer, "dead") != 0) {
                                 strcat(statements, buffer);
                                 strcat(statements, "\n");
                             }
-                            printf("Statements is now %s\n", statements);
                         }
-
+                        printf("%s\n", statements);
                         for (i = 1; i <= sub_num; i++) {
                             write(fd2[i][1], statements, 12000);
-                            printf("HOST wrote statements to %d\n", i);
                         }
                         free(statements);
                         /*char *vote = malloc(sizeof(char) * 12000);
@@ -342,11 +343,9 @@ int main() {
                 write(client, buffer, sizeof(buffer));
 
                 read(client, buffer, sizeof(buffer));
-                printf("Subserver1 read %s from client\n", buffer);
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
                 char spec_buffer[12000] = "";
                 read(fd2[sub_num][0], spec_buffer, sizeof(spec_buffer));
-                printf("Subserver2 read %s statements\n", spec_buffer);
                 write(client, spec_buffer, sizeof(spec_buffer));
 
                 /*strcpy(buffer,"\0");
