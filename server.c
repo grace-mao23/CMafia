@@ -46,20 +46,20 @@ int detectiveNum(int users) {
 }
 //need to initialize turns to 0
 char *genRoles(int total) {
-    int players=total;
-    char * string=malloc(sizeof(char) * 1000);
+    int players = total;
+    char *string = malloc(sizeof(char) * 1000);
     char *assign = malloc(total * sizeof(char));
     for (size_t i = 0; i < maf; i++) {
-        assign[i]= '1';
+        assign[i] = '1';
     }
     for (size_t i = 0; i < det; i++) {
-        assign[maf+i]= '2';
+        assign[maf + i] = '2';
     }
     for (size_t i = 0; i < nur; i++) {
-        assign[maf+det+i]= '3';
+        assign[maf + det + i] = '3';
     }
     for (size_t i = maf + nur + det; i < total; i++) {
-        assign[i]='0';
+        assign[i] = '0';
     }
     for (size_t i = 0; i < players; i++) {
         int index = rand() % total;
@@ -107,7 +107,7 @@ int main() {
 
 
     sd = server_setup();
-    int checkin = 2; // when to prompt host // chenge to 6
+    int checkin = 3; // when to prompt host // chenge to 6
     char *buffer_p = 0; // buffer pointer
 
 
@@ -149,9 +149,9 @@ int main() {
                     mafiaNum(sub_num);
                     nurseNum(sub_num);
                     detectiveNum(sub_num);
-                    strcpy(buffer,"\0");
-                    strcpy(buffer,"R");
-                    strcat(buffer,genRoles(sub_num));
+                    strcpy(buffer, "\0");
+                    strcpy(buffer, "R");
+                    strcat(buffer, genRoles(sub_num));
                     for (i = 1; i <= sub_num; i++) {
                         write(fd2[i][1], buffer, sizeof(buffer));
                         // host writes number of players to subserver
@@ -168,7 +168,7 @@ int main() {
                                 players[i - 1][k - 1] = buffer[k];
                             }
                         }
-	                  }
+                    }
                     strcpy(buffer, "\0");
                     strcpy(buffer, "U");
                     int a = 0;// which username slot we are on
@@ -183,15 +183,14 @@ int main() {
 
                     int continue1 = 1;
                     while (continue1) {
-                        for (i = 1; i <= sub_num; i++) { // host reads what the victim is
+                        for (i = 1; i <= sub_num; i++) { //host reads what the victim is
                             read(fd1[i][0], buffer, sizeof(buffer));
                             if (strcmp(buffer, "done") != 0) {
-                                strcpy(victim, buffer); // sent by mafia
+                                strcpy(victim, buffer); //sent by mafia
                                 printf("%s\n", victim);
                             }
                         }
-                      //  printf("Host: victim is %s\n", victim);
-                        for (i = 1; i <= sub_num; i++) { // host writes the signal to each subserver
+                        for (i = 1; i <= sub_num; i++) { //host writes the signal to each subserver
                             strcpy(buffer, "mafia done");
                             write(fd2[i][1], buffer, sizeof(buffer));
                         }
@@ -222,19 +221,22 @@ int main() {
                             }
                         }
 
+                        char *statements = malloc(sizeof(char *) * 12);
+                        statements = "";
+
                         for (i = 1; i <= sub_num; i++) {
-                            strcpy(buffer, "your turn");
-                            printf("%d turn\n", i);
-                            write(fd2[i][1], buffer, sizeof(buffer)); // signals for subserver that it's time
-                            read(fd1[i][0], buffer, sizeof(buffer)); // reads the statement from subserver
-                            for (i = 1; i < 13; i++) {
-                              printf("Writing %s to subservers\n", buffer);
-                              write(fd2[i][1], buffer, sizeof(buffer)); // writes statement to every subserver
-                            }
+                            read(fd1[i][0], buffer, sizeof(buffer));
+                            printf("HOST read %s\n", buffer);
+                            strcat(statements, buffer);
+                            strcat(statements, "\n");
+                            printf("Statements is now %s\n", statements);
+                        }
+
+                        for (i = 1; i <= sub_num; i++) {
+                            write(fd2[i][1], statements, sizeof(statements));
+                            printf("HOST wrote statements to %d\n", i);
                         }
                     }
-
-
                 }
             }
         } else { // child ==> SUBSERVER
@@ -274,47 +276,32 @@ int main() {
             }
             int continue1 = 1;
             while (continue1) {
-                while (mode == 0 && read(client, buffer, sizeof(buffer))) { //subserver sending victim/saved/done
-                //    printf("Subserver: received from client\n");
-                    write(fd1[sub_num][1], buffer, sizeof(buffer));
-                  //  printf("Subserver: wrote to host\n");
-                    read(fd2[sub_num][0], buffer, sizeof(buffer)); // subserver receives signal
-                    //printf("Subserver: received signal from host\n");
-                    write(client, buffer, sizeof(buffer)); // subserver sends signal to client
-                    mode = 1;
-                }
+                read(client, buffer, sizeof(buffer)); //subserver sending victim/saved/done
+                write(fd1[sub_num][1], buffer, sizeof(buffer));
+                read(fd2[sub_num][0], buffer, sizeof(buffer)); // subserver receives signal
+                write(client, buffer, sizeof(buffer)); // subserver sends signal to client
 
-                while (mode == 1 && read(client, buffer, sizeof(buffer))) { //subserver does detective signalling
-                    write(fd1[sub_num][1], buffer, sizeof(buffer));
-                    read(fd2[sub_num][0], buffer, sizeof(buffer));
-                    write(client, buffer, sizeof(buffer));
-                    mode = 2;
-                }
+                read(client, buffer, sizeof(buffer)); //subserver does detective signalling
+                write(fd1[sub_num][1], buffer, sizeof(buffer));
+                read(fd2[sub_num][0], buffer, sizeof(buffer));
+                write(client, buffer, sizeof(buffer));
 
-                while (mode == 2 && read(client, buffer, sizeof(buffer))) {
-                    write(fd1[sub_num][1], buffer, sizeof(buffer));
-                    mode = 3;
-                }
+                read(client, buffer, sizeof(buffer)); //nurse signalling
+                write(fd1[sub_num][1], buffer, sizeof(buffer));
 
-                while (mode == 3 && read(fd2[sub_num][0], buffer, sizeof(buffer))) { //server sending who the dead person is
-                    write(client, buffer, sizeof(buffer));
-                    mode = 4; //i really love how we just have unnecessary while loops and we just stick to them -george
-                }
+                read(fd2[sub_num][0], buffer, sizeof(buffer)); //server sending who the dead person is
+                write(client, buffer, sizeof(buffer));
 
+                mode = 4;
                 while (mode == 4) {
+                    read(client, buffer, sizeof(buffer));
+                    printf("Subserver read %s from client\n", buffer);
                     read(fd2[sub_num][0], buffer, sizeof(buffer));
-                    if (strcmp(buffer, "your turn") == 0) { // if it's signaled by host
-                      read(client, buffer, sizeof(buffer)); // read what the statement of the client was
-                      write(fd1[sub_num][1], buffer, sizeof(buffer)); // write the statement to the host
-                    } else { // the host wrote another statement to subserver
-                      write(client, buffer, sizeof(buffer)); // subserver writes statement to client
-                    }
+                    printf("Subserver read %s statements\n", buffer);
+                    write(client, buffer, sizeof(buffer));
                 }
             }
 
-
-
-            read(client, buffer, sizeof(buffer)); //only temporary because I don't want the servers to close
             close(client);
             exit(0);
         }
