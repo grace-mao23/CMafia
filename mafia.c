@@ -488,11 +488,11 @@ int main() {
                         char *actual = "V";
                         actual = strstr(game_buffer, actual) + 1;
                         readVotes(actual);
-                        game_over = 1;
+                        //game_over = 1;
                         night = 1;
                         num_day++;
                     }
-                    if (2 * maf > num_players || maf <= 0) { //checks to see if game is over
+                    if (2 * maf >= num_players || maf <= 0) { //checks to see if game is over
                         game_over = 1;
                         printf("There are %d mafia and %d players left in the game\n", maf, num_players);
                         sleep(1);

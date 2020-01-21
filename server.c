@@ -348,11 +348,11 @@ int main() {
 
                 strcpy(buffer,"\0");
                 read(client, buffer, sizeof(buffer));
-                printf("Subserver3 read %s from client\n", buffer);
+              //  printf("Subserver3 read %s from client\n", buffer);
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
-                printf("subserver3.5 did this\n");
+                //printf("subserver3.5 did this\n");
                 read(fd2[sub_num][0], buffer, sizeof(buffer));
-                printf("Subserver4 read %s statements\n", buffer);
+              //  printf("Subserver4 read %s statements\n", buffer);
                 write(client, buffer, sizeof(buffer));
                 mode = 0;
                 continue1 = 0;
