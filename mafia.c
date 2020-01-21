@@ -134,26 +134,6 @@ int len_single(char *ary) {
     return count;
 }
 
-char *to_string(char **ary) {
-    int size = 0;
-    int i = 0;
-    for (; i < len_double(ary); i++) {
-        size += len_single(ary[i]);
-        size += 2;
-    }
-    size -= 1;
-    char *line = malloc(size *sizeof(char));
-    line[0] = 0;
-    for (i = 0; i < len_double(ary); i++) {
-        if (strcmp(ary[i], " ") != 0) { //" " means the player has died
-            strcat(line, ary[i]);
-        }
-        if (i < len_double(ary) - 1) {
-            strcat(line, ", ");
-        }
-    }
-    return line;
-}
 
 void print_players() {
     printf("In Game: ");
@@ -220,8 +200,62 @@ int valid_mafia(char *name) {
     }
     return 0;
 }
+//change turn struct
+void removeMember(char * name){
+  int index=getRole(name);
+  int replace=-1;
+  num_players--;
+  if(roles[index]==1){
+    for (size_t i = 0; i < maf; i++) {
+      if(strcmp(m_turn.member[i],name)==0){
+        replace=i;
+      }
+      if(replace==maf-1){
+        m_turn.index=(m_turn.index+1)%(maf-1);
+        i=maf;
+      }else if(replace!=-1){
+        if(i!=maf-1){
+            strcpy(m_turn.member[i],m_turn.member[i+1]);
+        }
+      }
+    }
+    maf--;
+  }else if(roles[index]==2){
+    for (size_t i = 0; i < det; i++) {
+      if(strcmp(d_turn.member[i],name)==0){
+        replace=i;
+      }
+      if(replace==det-1){
+        d_turn.index=(d_turn.index+1)%(det-1);
+        i=det;
+      }else if(replace!=-1){
+        if(i!=det-1){
+            strcpy(d_turn.member[i],d_turn.member[i+1]);
+        }
+      }
+    }
+    det--;
+  }else if(roles[index]==3){
+    for (size_t i = 0; i < nur; i++) {
+      if(strcmp(n_turn.member[i],name)==0){
+        replace=i;
+      }
+      if(replace==nur-1){
+        n_turn.index=(n_turn.index+1)%(nur-1);
+        i=nur;
+      }else if(replace!=-1){
+        if(i!=nur-1){
+            strcpy(n_turn.member[i],n_turn.member[i+1]);
+        }
+      }
+    }
+    nur--;
+  }
 
-
+  for (size_t i = index; i < num_players; i++) {
+    strcpy(players[i],players[i+1]);
+  }
+}
 // notes:
 // num_players attainable through length of users later
 // OR maybe game start when num_players equals length of char ** with usernames
@@ -336,16 +370,19 @@ int main() {
                     sleep(1);
                 } else {
                     if (type_day == 0) {
-                        if (strcmp(victim, "") == 0) {
+                        removeMember(victim);
+                        if (strcmp(victim, "\0") == 0) {
                             printf("Nobody Died!\n");
                             sleep(2);
                         } else {
                             printf("%s has died!\n", victim);
                             if (strcmp(username, victim) == 0) {
                                 game_over = 1;
+
                             } else {
                                 printf("You have 5 minutes to discuss.\n"); //George's Timer
                             }
+                            strcpy(victim,"\0");
                         }
                     } else if (type_day == 1) {
                         //chatbox
@@ -377,10 +414,7 @@ int main() {
                         }
                         printf("\nYou have selected to kill: %s\n", victim);
                         write(sd_conn, victim, sizeof(victim));
-                        m_turn.index++;
-                        if (m_turn.index == maf) {
-                            m_turn.index = 0;
-                        }
+                        m_turn.index=(m_turn.index+1)%maf;
                     } else {
                         printf("\nWaiting for Mafia...\n");
                         strcpy(game_buffer, "done");
@@ -425,10 +459,7 @@ int main() {
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                     }
                     read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
-                    d_turn.index++;
-                    if (d_turn.index == det) {
-                        d_turn.index = 0;
-                    }
+                    d_turn.index=(d_turn.index+1)%det;
                     type_night++;
                 }
                 if (type_night == 2) {
@@ -449,10 +480,7 @@ int main() {
                         }
                         printf("\nYou have chosen to save: %s\n", game_buffer);
                         write(sd_conn, game_buffer, sizeof(game_buffer));
-                        n_turn.index++;
-                        if (n_turn.index == nur) {
-                            n_turn.index = 0;
-                        }
+                        n_turn.index=(n_turn.index+1)%nur;
                     } else {
                         printf("\nWaiting for Nurse...\n");
                         strcpy(game_buffer, "done");
@@ -462,7 +490,7 @@ int main() {
                 }
                 num_night++;
                 night = 0;
-                read(sd_conn, victim, sizeof(game_buffer));
+                read(sd_conn, victim, sizeof(victim));
                 sleep(1);
                 if (strcmp(victim, username) == 0) { //checking to see if he dead
                     printf("Unfortunately, you have DIED\n");
