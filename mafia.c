@@ -488,7 +488,6 @@ int main() {
                         char *actual = "V";
                         actual = strstr(game_buffer, actual) + 1;
                         readVotes(actual);
-                        printint(votes);
                         game_over = 1;
                         night = 1;
                         num_day++;
@@ -534,7 +533,8 @@ int main() {
                         }
                         printf("\n\\Mafia$ You have selected to kill: %s\n", victim);
                         write(sd_conn, victim, sizeof(victim));
-                        m_turn.index = (m_turn.index+1)%maf;
+                        m_turn.index = (m_turn.index + 1) % maf;
+                        sleep(1);
                     } else {
                         printf("\n\\Mafia$ Waiting for Mafia...\n");
                         strcpy(game_buffer, "done");
@@ -573,6 +573,7 @@ int main() {
                             }
                             strcpy(game_buffer, "done");
                             write(sd_conn, game_buffer, sizeof(game_buffer));
+                            sleep(1);
                         } else {
                             printf("\n\\Mafia$ Waiting for Detective...\n");
                             strcpy(game_buffer, "done");
