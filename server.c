@@ -236,6 +236,21 @@ int main() {
                             write(fd2[i][1], statements, 12000);
                             printf("HOST wrote statements to %d\n", i);
                         }
+
+                        char * vote =malloc(sizeof(char)*100);
+                        for (i = 1; i <= sub_num; i++) {
+                            read(fd1[i][0], buffer, sizeof(buffer));
+                            printf("HOST read votes %s\n", buffer);
+                            if(strcmp(buffer,"dead")!=0){
+                              strcat(vote, buffer);
+                              strcat(vote,",");
+                            }
+                        }
+
+                        for (i = 1; i <= sub_num; i++) {
+                            write(fd2[i][1], vote, 100);
+                            printf("HOST wrote votes to %d\n", i);
+                        }
                     }
                 }
             }
@@ -302,7 +317,17 @@ int main() {
                     read(fd2[sub_num][0], spec_buffer, sizeof(spec_buffer));
                     printf("Subserver read %s statements\n", spec_buffer);
                     write(client, spec_buffer, sizeof(spec_buffer));
-                    mode = 0;
+                    mode = 5;
+                }
+                while(mode==5){
+                  read(client, buffer, sizeof(buffer));
+                  printf("Subserver read %s from client\n", buffer);
+                  write(fd1[sub_num][1], buffer, sizeof(buffer));
+                  char spec_buffer[100] = "";
+                  read(fd2[sub_num][0], spec_buffer, sizeof(spec_buffer));
+                  printf("Subserver read %s statements\n", spec_buffer);
+                  write(client, spec_buffer, sizeof(spec_buffer));
+                  mode=0;
                 }
             }
 
