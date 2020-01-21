@@ -223,7 +223,7 @@ int main() {
                         }
 
                         for (i = 1; i <= sub_num; i++) {
-                            buffer = '\0';
+                            //buffer = '\0';
                             strcpy(buffer, "your turn");
                             printf("%d turn\n", i);
                             write(fd2[i][1], buffer, sizeof(buffer)); // signals for subserver that it's time
