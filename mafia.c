@@ -271,7 +271,7 @@ void removeMember(char *name) {
 
 void readVotes(char *line){
     for (size_t i = 0; i < num_players; i++) {
-        votes[line[2 * i] - 97]++;
+        votes[line[i] - 97]++;
     }
     int max = 0;
     int dup = 0;
@@ -429,7 +429,7 @@ int main() {
                         }
                     }
                     if (type_day == 1) { // statements
-                        char actual[1000] = "\\$";
+                        char actual[1000] = "\\";
                         if (getRole(username) != -1) {
                             printf("\\Mafia$ You will now have the chance to enter your statements\n");
                             printf("\\Mafia$ Your statement: ");
@@ -437,7 +437,7 @@ int main() {
                             game_buffer[strlen(game_buffer) - 1] = '\0';
                             printf("\\Mafia$ You entered: \"%s\"\n", game_buffer);
                             strcat(actual, username);
-                            strcat(actual, ": ")
+                            strcat(actual, "$ ");
                             strcat(actual, game_buffer);
                         } else {
                             strcpy(actual, "dead");
@@ -445,7 +445,7 @@ int main() {
                         write(sd_conn, actual, sizeof(actual)); // write statement to subserver
                         int waiting_thing = 1;
                         while (waiting_thing && read(sd_conn, game_buffer, sizeof(game_buffer))) {
-                            if (game_buffer[0] == 'H') {
+                            if (game_buffer[0] == '\\') {
                                 waiting_thing = 0;
                             }
                         }
@@ -453,38 +453,42 @@ int main() {
                         type_day++;
                     }
                     if (type_day == 2) {
-                        char new_buffer[BUFFER_SIZE] = "";
                         for (size_t i = 0; i < num_players; i++) {
                             votes[i] = 0;
                         }
-                        /*if (getRole(username) != -1) {
-                            printf("Please Vote for Who You Think is the Mafia!\n");
-                            printf("Here are all your candidates: ");
+                        if (getRole(username) != -1) {
+                            printf("\\Mafia$ Please Vote for Who You Think is the Mafia!\n");
+                            printf("\\Mafia$ Here are all your candidates:\n");
                             print_players();
-                            printf("\\Vote: ");
-                            fgets(new_buffer, 1000,stdin);
-                            new_buffer[strlen(new_buffer) - 1] = '\0';
-                            while (!valid(new_buffer)) { //function to see if its valid victim
-                                printf("\nYou have chosen an invalid candidate.\nHere are all of your possible suspects.\n");
+                            printf("\\Mafia$ Vote: ");
+                            fgets(game_buffer, 1000,stdin);
+                            game_buffer[strlen(game_buffer) - 1] = '\0';
+                            while (!valid(game_buffer)) { //function to see if its valid victim
+                                printf("\n\\Mafia$ You have chosen an invalid candidate.\n\\Mafia$ Here are all of your possible suspects.\n");
                                 print_players();
                                 sleep(1);
-                                printf("\\Vote: ");
-                                fgets(new_buffer, 1000, stdin);
-                                new_buffer[strlen(new_buffer) - 1] = '\0';
+                                printf("\\Mafia$ Vote: ");
+                                fgets(game_buffer, 1000, stdin);
+                                game_buffer[strlen(game_buffer) - 1] = '\0';
                             }
-                            printf("You have selected to vote for %s\n", game_buffer);
+                            printf("\\Mafia$ You have selected to vote for %s\n", game_buffer);
                             char vote = 97 + getRole(game_buffer);
                             strcpy(game_buffer,"\0");
                             strcat(game_buffer, &vote);
                         } else {
-                            strcpy(new_buffer, "dead");
+                            strcpy(game_buffer, "dead");
                         }
-                        printf("Did 1: %s\n", new_buffer);
-                        write(sd_conn, new_buffer, sizeof(new_buffer));
-                        printf("Did 2\n");
-                        read(sd_conn, new_buffer, sizeof(new_buffer));
-                        printf("Did 3: %s\n", new_buffer);
-                        readVotes(new_buffer);*/
+                        write(sd_conn, game_buffer, sizeof(game_buffer));
+                        int waiting_thing = 1;
+                        while (waiting_thing && read(sd_conn, game_buffer, sizeof(game_buffer))) {
+                            if (game_buffer[0] == 'V') {
+                                waiting_thing = 0;
+                            }
+                        }
+                        char *actual = "V";
+                        actual = strstr(game_buffer, actual) + 1;
+                        readVotes(actual);
+                        printint(votes);
                         game_over = 1;
                         night = 1;
                         num_day++;
@@ -504,7 +508,7 @@ int main() {
                     } else {
                         strcpy(buffer, "notover");
                         write(sd_conn, buffer, sizeof(buffer));
-                        printf("\\Mafia$ There are %d mafia, %d detectives, %d nurses, and %d players left in the game\n", maf, det, nur, num_players);
+                        printf("\\Mafia$ There are %d mafia, %d detectives, %d nurses left in the game, with a total of %d players\n", maf, det, nur, num_players);
                         sleep(1);
                         printf("\\Mafia$ The game will end shortly...\n");
                         sleep(2);

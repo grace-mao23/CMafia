@@ -51,7 +51,7 @@ Waiting for Detective...
 
 Waiting for Nurse...
 ```
-- Detective will get to choose to investigate one person. The person must be a player that is playing right now, or else they will be prompted to choose again. Likewise with mafia, if there are more than one detective, then only one detective gets to pick per round.
+- Detective will get to choose to investigate one person. The person must be a player that is playing right now, or else they will be prompted to choose again. Likewise with mafia, if there are more than one detective, then only one detective gets to pick per round. It is possible to investigate yourself, but that is kind of stupid.
 ```
 Waiting for Mafia...
 
@@ -86,6 +86,6 @@ You have selected to save: b
 ```
 Afterwards, when all roles have gotten a turn, you will get a message saying whether you have survived or died. Note that if the nurse and mafia pick the same person, then nobody dies.
 
-What comes next is the day phase. Here, the person who died gets announced to everyone. Then, everybody has a chance to say one statement of at most 900 characters (which goes unchecked, so you should count them yourself or your game will break) about who they think the murderer is. Those statements get displayed to everyone, and then they will get a chance to vote. If you are spectating the game, you cannot say a statement, but you can also view them. Then, you must pay $3 for us to continue the game. Seriously, though, unfortunately, voting has not been implemented yet, as the code breaks because our read IS NOT BLOCKING for some reason.
+What comes next is the day phase. Here, the person who died gets announced to everyone. Then, everybody has a chance to say one statement of at most 900 characters (which goes unchecked, so you should count them yourself or your game will break) about who they think the murderer is. Those statements get displayed to everyone, and then they will get a chance to vote. If you are spectating the game, you cannot say a statement, but you can also view them. Then, you must pay $3 for us to continue the game. Seriously, though, unfortunately, voting has not been implemented yet, as our way of determining a majority is flawed, but we can't fix.
 
 And unfortunately, the game can only last one cycle. The game breaks after the second night and we don't know why. Sorry :(. Our code simply doesn't like us. The read function simply doesn't know how to block?? Honestly, being able to do one night as an accomplishment already. We were able to implement pipes, memory allocation, forking, and networking. You can also see that we close all the servers correctly and we free all of our allocated memory.

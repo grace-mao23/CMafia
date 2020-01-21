@@ -236,7 +236,7 @@ int main() {
                         }
 
                         char *statements = malloc(sizeof(char) * 12000);
-                        strcpy(statements, "\\$Mafia Here are the statements: \n");
+                        strcpy(statements, "\\Mafia$ Here are the statements:\n\n");
 
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
@@ -250,10 +250,10 @@ int main() {
                             write(fd2[i][1], statements, 12000);
                         }
                         free(statements);
-                        /*char *vote = malloc(sizeof(char) * 12000);
+                        char *vote = malloc(sizeof(char) * 12000);
+                        strcpy(vote, "V");
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
-                            printf("HOST read votes %s to %d\n", buffer, i);
                             if (strcmp(buffer, "dead") != 0) {
                                 strcat(vote, buffer);
                                 strcat(vote, ",");
@@ -261,13 +261,11 @@ int main() {
                         }
 
                         for (i = 1; i <= sub_num; i++) {
-                            printf("Did this biggy %d\n", i);
                             write(fd2[i][1], vote, sizeof(vote));
-                            printf("HOST wrote votes to %d\n", i);
                         }
                         continue1 = 0;
                         //checking to see if game over
-                        for (i = 1; i <= sub_num; i++) {
+                        /*for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
                             if (strcmp(buffer, "over") == 0) {
                                 continue1 = 0;
@@ -348,7 +346,7 @@ int main() {
                 read(fd2[sub_num][0], spec_buffer, sizeof(spec_buffer));
                 write(client, spec_buffer, sizeof(spec_buffer));
 
-                /*strcpy(buffer,"\0");
+                strcpy(buffer,"\0");
                 read(client, buffer, sizeof(buffer));
                 printf("Subserver3 read %s from client\n", buffer);
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
@@ -356,14 +354,14 @@ int main() {
                 read(fd2[sub_num][0], buffer, sizeof(buffer));
                 printf("Subserver4 read %s statements\n", buffer);
                 write(client, buffer, sizeof(buffer));
-                mode = 0;*/
+                mode = 0;
                 continue1 = 0;
                 //checking to see if game is over at the end of the day
-                read(client, buffer, sizeof(buffer));
+                /*read(client, buffer, sizeof(buffer));
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
                 if (strcmp(buffer, "over") == 0) {
                     continue1 = 0;
-                }
+                }*/
             }
             close(client);
             close(fd1[sub_num][1]);

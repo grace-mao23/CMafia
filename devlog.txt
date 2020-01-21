@@ -43,4 +43,8 @@ Created a system that enables each player to say one sentence about who they thi
 George -- 00:35 1-21-2020
 Finished the system that closes all the pipes and sockets when the game is over, whether the mafia or the town has won.
 
-Amanda -- 01:
+Amanda -- 04:01 1-21-2020
+Realized that the voting aspect of the project is simply not working, so decided to abolish it and end the game as soon as statements are printed.
+
+George -- 06:46 1-21-2020
+Added final finishing touches to help make the game more visually appealing. In addition, fixed some of the voting features, but not all.
