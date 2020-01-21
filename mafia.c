@@ -430,10 +430,10 @@ int main() {
                             strcpy(game_buffer, "dead");
                         }
                         write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
-                        int waiting_thing = 0;
-                        while (waiting_thing == 0 && read(sd_conn, game_buffer, sizeof(game_buffer))) {
+                        int waiting_thing = 1;
+                        while (waiting_thing && read(sd_conn, game_buffer, sizeof(game_buffer))) {
                             if (game_buffer[0] == 'H') {
-                                waiting_thing = 1;
+                                waiting_thing = 0;
                             }
                         }
                         printf("%s\n", game_buffer);
@@ -460,8 +460,7 @@ int main() {
                             }
                             printf("You have selected to vote for %s\n", game_buffer);
                             char vote = 97 + getRole(game_buffer);
-                            strcpy(game_buffer, "\0");
-                            strncat(game_buffer, &vote, 1);
+                            strcat(game_buffer, &vote);
                         } else {
                             strcpy(game_buffer, "dead");
                         }
@@ -469,7 +468,10 @@ int main() {
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                         printf("Did 2\n");
                         sleep(1);
-                        read(sd_conn, game_buffer, sizeof(game_buffer));
+                        int waiting_thing = 1;
+                        while (waiting_thing && read(sd_conn, game_buffer, sizeof(game_buffer))) {
+                            waiting_thing = 0;
+                        }
                         printf("Did 3: %s\n", game_buffer);
                         readVotes(game_buffer);
                         night = 1;
