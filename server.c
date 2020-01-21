@@ -233,7 +233,7 @@ int main() {
                         }
 
                         for (i = 1; i <= sub_num; i++) {
-                            write(fd2[i][1], statements, sizeof(statements));
+                            write(fd2[i][1], statements, 12000);
                             printf("HOST wrote statements to %d\n", i);
                         }
                     }
