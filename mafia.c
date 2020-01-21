@@ -201,7 +201,7 @@ int valid_mafia(char *name) {
     return 0;
 }
 //change turn struct
-void removeMember(char * name){
+void removeMember(char *name) {
     int index = getRole(name);
     int replace = -1;
     num_players--;
@@ -253,7 +253,7 @@ void removeMember(char * name){
     }
 
     for (size_t i = index; i < num_players; i++) {
-        strcpy(players[i], players[i+1]);
+        strcpy(players[i], players[i + 1]);
     }
 }
 // notes:
@@ -516,17 +516,6 @@ int main() {
                     }
                 } else {
                     printf("Congradulations, you have SURVIVED the night\n");
-                }
-                if (strcmp(victim, "") != 0) {
-                    int role = roles[getRole(victim)];
-                    if (role == 1) {
-                        //remove mafia
-                    } else if (role == 2) {
-                        //remove detective
-                    } else if (role == 3) {
-                        //remove nurse
-                    }
-                    roles[getRole(victim)] = -1;
                 }
             }
         }
