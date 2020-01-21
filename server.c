@@ -181,8 +181,8 @@ int main() {
                         // host writes list of players to EACH subserver
                     }
 
-                    int continue = 1;
-                    while (continue) {
+                    int continue1 = 1;
+                    while (continue1) {
                         for (i = 1; i <= sub_num; i++) { // host reads what the victim is
                             read(fd1[i][0], buffer, sizeof(buffer));
                             if (strcmp(buffer, "done") != 0) {
@@ -268,8 +268,8 @@ int main() {
                     write(client, buffer, sizeof(buffer));
                 }
             }
-            int continue = 1;
-            while (continue) {
+            int continue1 = 1;
+            while (continue1) {
                 while (mode == 0 && read(client, buffer, sizeof(buffer))) { //subserver sending victim/saved/done
                 //    printf("Subserver: received from client\n");
                     write(fd1[sub_num][1], buffer, sizeof(buffer));
