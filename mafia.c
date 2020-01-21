@@ -268,6 +268,29 @@ void removeMember(char *name) {
         //roles[i] = roles[i + 1];
     }
 }
+
+void readVotes(char * line){
+    for (size_t i = 0; i < num_players; i++) {
+      votes[line[2 * i] - 96]++;
+    }
+    int max=0;
+    int dup=0;
+    for (size_t i = 0; i < num_players; i++) {
+      if(votes[i]>votes[max]){
+        max=i;
+        dup=0;
+      }else if(votes[i]==votes[max]){
+        dup=1;
+      }
+    }
+    if(dup){
+      printf("It was a tie! Nobody Gets Voted Out!\n");
+    }else{
+      printf("%s was voted to die! \n",players[max]);
+      //insert gameover code for players max
+      removeMember(players[max]);
+    }
+}
 // notes:
 // num_players attainable through length of users later
 // OR maybe game start when num_players equals length of char ** with usernames
@@ -287,10 +310,12 @@ int main() {
     sd_conn = client_setup(TEST_IP);
     players = calloc(12, sizeof(char*));
     roles = calloc(12, sizeof(int));
+    votes = calloc(12, sizeof(int));
     for (size_t i = 0; i < 12; i++) {
         players[i] = malloc(sizeof(char) * 1000);
         strcpy(players[i], "\0");
         roles[i] = -1;
+        votes=0;
     }
     if (sd_conn >= 0) {
         printf("Waiting for players to join...\n");
@@ -412,9 +437,37 @@ int main() {
                             printf("%s\n", game_buffer);
                             type_day++;
                         }
-                    }
-                    if (type_day == 2) {
-                        //voting
+                        //printf("Here's what everyone said!\n\n");
+                        printf("%s\n", game_buffer);
+                        type_day++;
+                    } else {
+                        for (size_t i = 0; i < num_players; i++) {
+                          votes[i]=0;
+                        }
+                        if(getRole(username)!=-1){
+                          printf("Please Vote for Who You Think is the Mafia!\n");
+                          printf("Here are all your canidates: ");
+                          print_players();
+                          printf("\\Vote: ");
+                          fgets(game_buffer,10,stdin);
+                          game_buffer[strlen(game_buffer) - 1] = '\0';
+                          while (!valid(game_buffer)) { //function to see if its valid victim
+                              printf("\nYou have chosen an invalid canidate.\nHere are all of your possible suspects.\n");
+                              print_players();
+                              sleep(1);
+                              printf("\\Vote: ");
+                              fgets(buffer, 1000, stdin);
+                              buffer[strlen(buffer) - 1] = '\0';
+                            }
+                         char vote=96+getRole(game_buffer);
+                         strcpy(game_buffer,"\0");
+                         strncat(game_buffer,&vote,1);
+                        }else{
+                          strcpy(game_buffer,"dead");
+                        }
+                          write(sd_conn,game_buffer,sizeof(game_buffer));
+                          read(sd_conn,game_buffer,sizeof(game_buffer));
+                          readVotes(game_buffer);
                         night = 1;
                         num_day++;
                     }
