@@ -251,10 +251,10 @@ void removeMember(char *name) {
         }
         nur--;
     }
-  for (size_t i = index; i < num_players; i++) {
-    strcpy(players[i],players[i+1]);
-    roles[i]=roles[i+1];
-  }
+    for (size_t i = index; i < num_players; i++) {
+        strcpy(players[i],players[i + 1]);
+        roles[i] = roles[i + 1];
+    }
 }
 // notes:
 // num_players attainable through length of users later
@@ -382,28 +382,26 @@ int main() {
                             type_day++;
                         }
                     } else if (type_day == 1) { // statements
-                        if(getRole(username)!=-1){
-                          printf("You will now have the chance to enter your statements\n");
-                          printf("Your statement: ");
-                          fgets(game_buffer, 1000, stdin);
-                          game_buffer[strlen(game_buffer)-1] = '\0';
-                          printf("You entered %s\n", game_buffer);
-                          write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
-                          // subserver won't receive it until it's the subserver's turn from host
-                          sleep(5);
-                          read(sd_conn, game_buffer, sizeof(game_buffer));
-                          printf("Here's what everyone said!\n\n");
-                          printf("%s\n", game_buffer);
-                          type_day++;
+                        if (getRole(username) != -1) {
+                            printf("You will now have the chance to enter your statements\n");
+                            printf("Your statement: ");
+                            fgets(game_buffer, 1000, stdin);
+                            game_buffer[strlen(game_buffer) - 1] = '\0';
+                            printf("You entered %s\n", game_buffer);
+                            write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
+                            // subserver won't receive it until it's the subserver's turn from host
+                            sleep(5);
+                            read(sd_conn, game_buffer, sizeof(game_buffer));
+                            printf("Here's what everyone said!\n\n");
+                            printf("%s\n", game_buffer);
+                            type_day++;
                         }
                     } else {
                         //voting
                         night = 1;
                         num_day++;
                     }
-
-                  }
-
+                }
             } else { //nighttime
                 printf("\nNIGHT BEGINNING!\n");
                 if (type_night == 0) {
@@ -426,7 +424,7 @@ int main() {
                         }
                         printf("\nYou have selected to kill: %s\n", victim);
                         write(sd_conn, victim, sizeof(victim));
-                        m_turn.index=(m_turn.index+1)%maf;
+                        m_turn.index = (m_turn.index+1)%maf;
                     } else {
                         printf("\nWaiting for Mafia...\n");
                         strcpy(game_buffer, "done");
@@ -471,7 +469,7 @@ int main() {
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                     }
                     read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
-                    d_turn.index=(d_turn.index+1)%det;
+                    d_turn.index = (d_turn.index + 1) % det;
                     type_night++;
                 }
                 if (type_night == 2) {
@@ -492,7 +490,7 @@ int main() {
                         }
                         printf("\nYou have chosen to save: %s\n", game_buffer);
                         write(sd_conn, game_buffer, sizeof(game_buffer));
-                        n_turn.index=(n_turn.index+1)%nur;
+                        n_turn.index = (n_turn.index + 1) % nur;
                     } else {
                         printf("\nWaiting for Nurse...\n");
                         strcpy(game_buffer, "done");
@@ -506,13 +504,13 @@ int main() {
                 sleep(1);
                 if (strcmp(victim, username) == 0) { //checking to see if he dead
                     printf("Unfortunately, you have DIED\n");
-                    printf("Do you wish to quit? (yes/no) ");
-                    fgets(game_buffer,1000,stdin);
+                    printf("Do you wish to quit? (yes/no): ");
+                    fgets(game_buffer, 1000, stdin);
                     game_buffer[strlen(game_buffer)] = '\0';
-                    if(strcmp(game_buffer,"yes")==0){
-                      game_over=1;
-                    }else{
-                      printf("\nSpectating the game now...\n");
+                    if(strcmp(game_buffer,"yes") == 0) {
+                        game_over = 1;
+                    } else {
+                        printf("\nSpectating the game now...\n");
                     }
                 } else {
                     printf("Congradulations, you have SURVIVED the night\n");
