@@ -379,24 +379,26 @@ int main() {
                             type_day++;
                         } else {
                             printf("%s has died!\n", victim);
+                            type_day++;
                         }
-                        type_day++;
                     }
                     if (type_day == 1) { // statements
-                        printf("You will now have the chance to enter your statements\n");
-                        printf("Your statement: ");
-                        fgets(game_buffer, 1000, stdin);
-                        //game_buffer[strlen(game_buffer)] = '\0';
-                        write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
-                        // subserver won't receive it until it's the subserver's turn from host
-                        sleep(10);
-                        for (int i = 0; i < num_players; i++) {
-                            read(sd_conn, game_buffer, sizeof(game_buffer));
-                            printf("%s: %s\n", players[i], game_buffer);
+                        if (getRole(username) != -1) {
+                            printf("You will now have the chance to enter your statements\n");
+                            printf("Your statement: ");
+                            fgets(game_buffer, 1000, stdin);
+                            game_buffer[strlen(game_buffer)] = '\0';
+                            write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
+                            // subserver won't receive it until it's the subserver's turn from host
+                            sleep(10);
+                            for (int i = 0; i < num_players; i++) {
+                                read(sd_conn, game_buffer, sizeof(game_buffer));
+                                printf("%s: %s\n", players[i], game_buffer);
+                            }
                         }
                         type_day++;
                     }
-                    if (type_day == 2) {
+                    if (type_day == 2)
                         //voting
                         night = 1;
                         num_day++;
@@ -505,7 +507,14 @@ int main() {
                 sleep(1);
                 if (strcmp(victim, username) == 0) { //checking to see if he dead
                     printf("Unfortunately, you have DIED\n");
-                    printf("Spectating the game now...\n");
+                    printf("Do you wish to quit? (yes/no)");
+                    fgets(game_buffer,1000,stdin);
+                    game_buffer[strlen(game_buffer)] = '\0';
+                    if(strcmp(game_buffer,"yes")){
+                      game_over=1;
+                    }else{
+                      printf("Spectating the game now...\n");
+                    }
                 } else {
                     printf("Congradulations, you have SURVIVED the night\n");
                 }
