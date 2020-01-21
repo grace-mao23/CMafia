@@ -211,7 +211,10 @@ int main() {
                             }
                         }
 
-                        
+                        for (i = 1; i <= sub_num; i++) {
+                            strcpy(buffer, "nurse done");
+                            write(fd2[i][1], buffer, sizeof(buffer));
+                        }
 
                         if (strcmp(victim, saved) == 0) { //if victim and saved are the same, then no one dies
                             strcpy(buffer, "");
@@ -310,11 +313,14 @@ int main() {
 
                 read(client, buffer, sizeof(buffer)); //subserver does detective signalling
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
+
                 read(fd2[sub_num][0], buffer, sizeof(buffer));
                 write(client, buffer, sizeof(buffer));
 
                 read(client, buffer, sizeof(buffer)); //nurse signalling
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
+                read(fd2[sub_num][0], buffer, sizeof(buffer));
+                write(client, buffer, sizeof(buffer));
 
                 read(fd2[sub_num][0], buffer, sizeof(buffer)); //server sending who the dead person is
                 write(client, buffer, sizeof(buffer));

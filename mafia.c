@@ -582,7 +582,6 @@ int main() {
                             }
                             printf("\nYou have chosen to save: %s\n", game_buffer);
                             write(sd_conn, game_buffer, sizeof(game_buffer));
-                            n_turn.index = (n_turn.index + 1) % nur;
                         } else {
                             printf("\nWaiting for Nurse...\n");
                             strcpy(game_buffer, "done");
