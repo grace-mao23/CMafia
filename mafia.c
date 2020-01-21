@@ -374,18 +374,25 @@ int main() {
                         if (strcmp(victim, "\0") == 0) {
                             printf("Nobody Died!\n");
                             sleep(2);
+                            type_day++;
                         } else {
                             printf("%s has died!\n", victim);
                             if (strcmp(username, victim) == 0) {
                                 game_over = 1;
-
-                            } else {
-                                printf("You have 5 minutes to discuss.\n"); //George's Timer
                             }
-                            strcpy(victim,"\0");
+                            type_day++;
                         }
-                    } else if (type_day == 1) {
-                        //chatbox
+                    } else if (type_day == 1) { // statements
+                        printf("You will now have the chance to enter your statements\n");
+                        printf("Your statement: ");
+                        fgets(game_buffer, 1000, stdin);
+                        game_buffer[strlen(game_buffer)] = '\0';
+                        write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
+                        // subserver won't receive it until it's the subserver's turn from host
+                        for (int i = 0; i < num_players; i++) {
+                            read(sd_conn, game_buffer, sizeof(game_buffer));
+                            printf("%s: %s\n", players[i], game_buffer);
+                        }
                     } else {
                         //voting
                     }
