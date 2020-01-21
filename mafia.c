@@ -401,7 +401,7 @@ int main() {
                         num_day++;
                     }
                     type_day = 0;
-                }
+            
             } else { //nighttime
                 printf("\nNIGHT BEGINNING!\n");
                 if (type_night == 0) {
