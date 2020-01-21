@@ -221,16 +221,20 @@ int main() {
                                 write(fd2[i][1], victim, sizeof(victim));
                             }
                         }
-                    }
 
-                    for (i = 1; i <= sub_num; i++) {
-                        strcpy(buffer, "your turn");
-                        write(fd2[i][1], buffer, sizeof(buffer)); // signals for subserver that it's time
-                        read(fd1[i][0], buffer, sizeof(buffer)); // reads the statement from subserver
-                        for (i = 1; i < 13; i++) {
-                          write(fd2[i][1], buffer, sizeof(buffer)); // writes statement to every subserver
+                        for (i = 1; i <= sub_num; i++) {
+                            strcpy(buffer, "your turn");
+                            printf("%d turn\n", i);
+                            write(fd2[i][1], buffer, sizeof(buffer)); // signals for subserver that it's time
+                            read(fd1[i][0], buffer, sizeof(buffer)); // reads the statement from subserver
+                            for (i = 1; i < 13; i++) {
+                              printf("Writing %s to subservers\n", buffer);
+                              write(fd2[i][1], buffer, sizeof(buffer)); // writes statement to every subserver
+                            }
                         }
                     }
+
+
                 }
             }
         } else { // child ==> SUBSERVER
@@ -296,17 +300,19 @@ int main() {
                     write(client, buffer, sizeof(buffer));
                     mode = 4; //i really love how we just have unnecessary while loops and we just stick to them -george
                 }
-            }
 
-            while (mode == 4) {
-                read(fd2[sub_num][0], buffer, sizeof(buffer));
-                if (strcmp(buffer, "your turn") == 0) { // if it's signaled by host
-                  read(client, buffer, sizeof(buffer)); // read what the statement of the client was
-                  write(fd1[sub_num][1], buffer, sizeof(buffer)); // write the statement to the host
-                } else { // the host wrote another statement to subserver
-                  write(client, buffer, sizeof(buffer)); // subserver writes statement to client
+                while (mode == 4) {
+                    read(fd2[sub_num][0], buffer, sizeof(buffer));
+                    if (strcmp(buffer, "your turn") == 0) { // if it's signaled by host
+                      read(client, buffer, sizeof(buffer)); // read what the statement of the client was
+                      write(fd1[sub_num][1], buffer, sizeof(buffer)); // write the statement to the host
+                    } else { // the host wrote another statement to subserver
+                      write(client, buffer, sizeof(buffer)); // subserver writes statement to client
+                    }
                 }
             }
+
+
 
             read(client, buffer, sizeof(buffer)); //only temporary because I don't want the servers to close
             close(client);

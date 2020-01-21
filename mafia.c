@@ -382,19 +382,20 @@ int main() {
                             type_day++;
                         }
                     } else if (type_day == 1) { // statements
-                        if(getRole[username]!=-1){
+                        if(getRole([username])!=-1){
                           printf("You will now have the chance to enter your statements\n");
                           printf("Your statement: ");
                           fgets(game_buffer, 1000, stdin);
-                          game_buffer[strlen(game_buffer)] = '\0';
+                          //game_buffer[strlen(game_buffer)] = '\0';
                           write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
                           // subserver won't receive it until it's the subserver's turn from host
+                          sleep(10);
                           for (int i = 0; i < num_players; i++) {
                               read(sd_conn, game_buffer, sizeof(game_buffer));
                               printf("%s: %s\n", players[i], game_buffer);
                             }
                           }
-                        type_day++;
+                          type_day++;
                     } else {
                         //voting
                         night = 1;
