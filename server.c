@@ -112,7 +112,7 @@ int main() {
 
 
     // someone has run server.c !!!!!!!!
-    while (inplay != 0) {
+    while (inplay) {
         int client = server_connect(sd); // server receives client !!!!
         sub_num = lowest_available(taken);
         taken[sub_num] = 1;
@@ -244,7 +244,7 @@ int main() {
                             write(fd2[i][1], statements, 12000);
                             printf("HOST wrote statements to %d\n", i);
                         }
-                        char *vote = malloc(sizeof(char) * 12000);
+                        /*char *vote = malloc(sizeof(char) * 12000);
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
                             printf("HOST read votes %s to %d\n", buffer, i);
@@ -259,6 +259,7 @@ int main() {
                             write(fd2[i][1], vote, sizeof(vote));
                             printf("HOST wrote votes to %d\n", i);
                         }
+                        continue1 = 0;
                         //checking to see if game over
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
@@ -268,8 +269,14 @@ int main() {
                                 close(fd2[i][1]);
                                 close(fd1[i][0]);
                             }
-                        }
+                        }*/
                     }
+                    for (i = 1; i < sub_num; i++) {
+                        close(client);
+                        close(fd2[i][1]);
+                        close(fd1[i][0]);
+                    }
+                    inplay = 0;
                 }
             }
         } else { // child ==> SUBSERVER
@@ -336,7 +343,6 @@ int main() {
                 read(fd2[sub_num][0], spec_buffer, sizeof(spec_buffer));
                 printf("Subserver2 read %s statements\n", spec_buffer);
                 write(client, spec_buffer, sizeof(spec_buffer));
-                mode = 5;
 
                 /*strcpy(buffer,"\0");
                 read(client, buffer, sizeof(buffer));
@@ -347,19 +353,18 @@ int main() {
                 printf("Subserver4 read %s statements\n", buffer);
                 write(client, buffer, sizeof(buffer));
                 mode = 0;*/
-
+                continue1 = 0;
                 //checking to see if game is over at the end of the day
                 read(client, buffer, sizeof(buffer));
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
                 if (strcmp(buffer, "over") == 0) {
                     continue1 = 0;
-                    close(client);
-                    close(fd1[sub_num][1]);
-                    close(fd2[sub_num][0]);
                 }
             }
             close(client);
-            exit(0);
+            close(fd1[sub_num][1]);
+            close(fd2[sub_num][0]);
+            inplay = 0;
         }
     }
     close(sd);

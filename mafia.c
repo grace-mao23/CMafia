@@ -315,7 +315,7 @@ int main() {
         players[i] = malloc(sizeof(char) * 1000);
         strcpy(players[i], "\0");
         roles[i] = -1;
-        votes=0;
+        votes = 0;
     }
     if (sd_conn >= 0) {
         printf("Waiting for players to join...\n");
@@ -349,6 +349,10 @@ int main() {
             // client reads list of usernames from subserver
             if (buffer[0] == 'U') {
                 memmove(buffer, buffer + 1, strlen(buffer));
+                for (size_t i = 0; i < 12; i++) {
+                    free(players[i]);
+                }
+                free(players);
                 players = parse_args(buffer, ", ");
                 game_start = 1;
             }
@@ -472,10 +476,11 @@ int main() {
                         read(sd_conn, new_buffer, sizeof(new_buffer));
                         printf("Did 3: %s\n", new_buffer);
                         readVotes(new_buffer);*/
+                        game_over = 1;
                         night = 1;
                         num_day++;
                     }
-                    if (2 * maf >= num_players || maf <= 0) { //checks to see if game is over
+                    if (2 * maf > num_players || maf <= 0) { //checks to see if game is over
                         game_over = 1;
                         printf("There are %d mafia and %d players left in the game\n", maf, num_players);
                         sleep(1);
@@ -491,7 +496,7 @@ int main() {
                         strcpy(buffer, "notover");
                         write(sd_conn, buffer, sizeof(buffer));
                         sleep(1);
-                        printf("The night will begin shortly...\n");
+                        printf("The game will end shortly...\n");
                         sleep(2);
                     }
                 }
@@ -609,5 +614,12 @@ int main() {
             }
         }
     }
+    free(username);
+    free(victim);
+    for (size_t i = 0; i < 12; i++) {
+        free(players[i]);
+    }
+    free(votes);
+    free(roles);
     return 0;
 }
