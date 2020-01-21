@@ -222,16 +222,20 @@ int main() {
                             }
                         }
 
+                        char *statements = malloc(sizeof(char *) * 12);
+                        statements = "";
+
                         for (i = 1; i <= sub_num; i++) {
-                            //buffer = '\0';
-                            strcpy(buffer, "your turn");
-                            printf("%d turn\n", i);
-                            write(fd2[i][1], buffer, sizeof(buffer)); // signals for subserver that it's time
-                            read(fd1[i][0], buffer, sizeof(buffer)); // reads the statement from subserver
-                            for (i = 1; i <= sub_num; i++) {
-                              printf("Writing %s to subservers\n", buffer);
-                              write(fd2[i][1], buffer, sizeof(buffer)); // writes statement to every subserver
-                            }
+                            read(fd1[i][0], buffer, sizeof(buffer));
+                            printf("HOST read %s\n", buffer);
+                            strcat(statements, buffer);
+                            strcat(statements, "\n");
+                            printf("Statements is now %s\n", statements);
+                        }
+
+                        for (i = 1; i <= sub_num; i++) {
+                            write(fd2[i][1], statements, sizeof(statements));
+                            printf("HOST wrote statements to %d\n", i);
                         }
                     }
 
@@ -303,16 +307,11 @@ int main() {
                 }
 
                 while (mode == 4) {
+                    read(client, buffer, sizeof(buffer));
+                    printf("Subserver read %s from client\n", buffer);
                     read(fd2[sub_num][0], buffer, sizeof(buffer));
-                    if (strcmp(buffer, "your turn") == 0) { // if it's signaled by host
-                      printf("Subserver: my turn!\n");
-                      read(client, buffer, sizeof(buffer)); // read what the statement of the client was
-                      printf("Subserver read: %s\n", buffer);
-                      write(fd1[sub_num][1], buffer, sizeof(buffer)); // write the statement to the host
-                    } else { // the host wrote another statement to subserver
-                      printf("Subserver received %s from host\n", buffer);
-                      write(client, buffer, sizeof(buffer)); // subserver writes statement to client
-                    }
+                    printf("Subserver read %s statements\n", buffer);
+                    write(client, buffer, sizeof(buffer));
                 }
             }
 
