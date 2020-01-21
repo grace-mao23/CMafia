@@ -47,7 +47,7 @@ int detectiveNum(int users) {
 //need to initialize turns to 0
 char *genRoles(int total) {
     int players=total;
-    char * string=malloc(sizeof(char) * 1000);
+    char *string = malloc(sizeof(char) * 1000);
     char *assign = malloc(total * sizeof(char));
     for (size_t i = 0; i < maf; i++) {
         assign[i]= '1';
@@ -107,7 +107,7 @@ int main() {
 
 
     sd = server_setup();
-    int checkin = 2; // when to prompt host // chenge to 6
+    int checkin = 3; // when to prompt host // chenge to 6
     char *buffer_p = 0; // buffer pointer
 
 
