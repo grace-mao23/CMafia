@@ -341,12 +341,10 @@ int main() {
                             sleep(2);
                         } else {
                             printf("%s has died!\n", victim);
-                            if (strcmp(username, victim) == 0) {
-                                game_over = 1;
-                            }
-                            type_day++;
                         }
-                    } else if (type_day == 1) { // statements
+                        type_day++;
+                    }
+                    if (type_day == 1) { // statements
                         printf("You will now have the chance to enter your statements\n");
                         printf("Your statement: ");
                         fgets(game_buffer, 1000, stdin);
@@ -357,9 +355,12 @@ int main() {
                             read(sd_conn, game_buffer, sizeof(game_buffer));
                             printf("%s: %s\n", players[i], game_buffer);
                         }
-                    } else {
+                        type_day++;
+                    }
+                    if (type_day == 2) {
                         //voting
                     }
+                    type_day = 0;
                 }
                 night = 1;
                 num_day++;
