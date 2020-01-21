@@ -6,15 +6,15 @@
 
 ## PROPOSAL
 ### Description
-For our final project, we will be creating a multiplayer Mafia game in the terminal. Up to 12 people can play, but once a game has started, no new players may join. At the start, roles (mafia, doctor, police, etc.) will be distributed randomly, and all other players will remain citizens. The number of mafias will be determined by how many players there are. At the beginning of each round called the “night” phase, the mafia will decide who to kill, the doctor will decide who to heal, and the police can find out one player’s role (might be more roles)... After that, dead players will only be able to view the game, not participate. After that phase of the game, there will be a minute for a debate of who people think is part of the mafia. Then, each player votes for a player that they think are the mafia for a minute. If any person gets the majority of the votes, the voting goes further: There will be a minute for players to vote (or abstain) if they think the person should be executed. If that player gets a majority of yeses, then he shall be executed. Its role will not be displayed. The game ends when either all mafia die or mafia outnumber the citizens.
+For our final project, we will be creating a multiplayer Mafia game in the terminal. Up to 12 people can play, but once a game has started, no new players may join. At the start, roles (mafia, nurse, or detective) will be distributed randomly, and all other players will remain citizens. The number of mafias will be determined by how many players there are. At the beginning of each round called the “night” phase, the mafia will decide who to kill, the nurse will decide who to heal, and the detective can find out one player’s role (might be more roles)... After that, dead players will only be able to view the game, not participate. After that phase of the game, each player can write a statement explaining why they are not the mafia. Then, each player votes for a player that they think are the mafia for a minute. If any person gets the majority of the votes, the voting goes further: There will be a minute for players to vote if they think the person should be executed. If a player gets a majority of yeses, then he shall be executed. Ties will result in no one being executed. The voted person's role will not be displayed. The game ends when either all mafia die or mafia outnumber the citizens.
 
 ### User Experience
-A user will either join a server or open a server. After the minimum amount of people are on the server, the host can choose to start game or wait for more players. Then everyone enters a username and gets a role displayed only to themselves. Next, the night round commences and one person of each special role vote for a person of their choice (to kill, to heal, or check identity depending on the role of the person). Then, in the morning, the results are announced. Every user can debate in a forum-like chat. There will be time warnings of how long they have to chat (1 minute, 30 seconds, time’s up!). Then everyone will vote for someone to be executed (ties means no one dies). Another night round continues and the round keeps going until all mafia members are dead or mafia outnumbers the innocent people. The people who died before the game ends can choose to spectate the game or leave the game.
+A user will either join a server or open a server. After the minimum amount of people are on the server, the host can choose to start game or wait for more players. Then everyone enters a username and gets a role displayed only to themselves. Next, the night round commences and one person of each special role vote for a person of their choice (to kill, to heal, or check identity depending on the role of the person). Then, in the morning, the results are announced. Every user can type up their defense. Then everyone will vote for someone to be executed (ties means no one dies). Another night round continues and the round keeps going until all mafia members are dead or mafia outnumbers the innocent people. The people who died before the game ends can choose to spectate the game or leave the game.
 
 **Example**
 ```
 \Mafia$ Waiting for players to Join…
-\Mafia$ 5 players in game, start? (y/n)
+\Mafia$ 5 players in game, start? (yes/no)
 \Mafia$ Waiting for other players to Join
 \Mafia$ Enter Username : dan_
 Your Username is: dandymandy
@@ -32,33 +32,28 @@ Next Mafia to vote: horhay63
 \Mafia$ Waiting for Doctor to select someone to save…
 \Mafia$ Waiting for Police to select someone to save…
 \Mafia$ Night Ended!
-\Mafia$ maybelline was killed! Discuss who you think is the mafia! You have 60 seconds.
-Horhay63: okay guys who do u think it is
-Maobao123:the most sus guy is the one that talks first
-\Mafia$: But what if you a_
-Horhay63: okay guys who do u think it is
-Maobao123: the most sus guy is the one that talks first
-You: But what if you are using reverse psychology?
-Times Up!
+\Mafia$ maybelline was killed!
+Please Present your statements!
+Horhay63: I'm not the mafia. I'm just a civilian
+maobao123: I am the detective
+dandymandy: I am a detectivie and I checked that horhay was a civilian
+dwdwdwdw: I am the doctor
+apples111: I am innocent
 Vote for who you think is the mafia!
+\vote$ maob_
 \Mafia$ maobao123 died :( The next night is beginning…
 ```
 
 ### Technical Design
 Topics Implemented:
-1. Shared Memory
-2. Semaphores
-3. Networking
-4. Pipes
-5. Forking
+1. Allocating Memory
+2. Networking
+3. Pipes
+4. Forking
 
-SHARED MEMORY
+ALLOCATING MEMORY
 
-Between spectate mode and the game mode, players should still be able to access the existing game that they died in. However while they are spectating, they shouldn't be able to play the game, but should be able to spectate. In this way, shared memory would be used to preserve the game data so that spectating players can still view it.
-
-SEMAPHORES
-
-We will use semaphores so that during the “night” phase, the mafias and each player will have to take turns to perform their action. Additionally, while players are spectating a game, they should not be able to play the game, and this would help control the number of subservers.
+For many of our variables (such as char * and char * * pointers) we need to calloc and malloc. For example, to hold variables such as username of the client, list of player names, voting list ... etc. 
 
 NETWORKING
 
@@ -66,11 +61,11 @@ We will need networking because this is a multiplayer game (not pass and play ve
 
 PIPES
 
-Pipes along with semaphores will be used to monitor the subservers on the main server, where memory will need to be controlled by the main server but transferred to and changed by the subservers.
+We will need pipes so that the main server can communicate with all the subservers and transmit and read information. The server has to facilitate all the usernames being written and write it to all the other clients so they can have an updated players list and also for coordinating votes and individual choices of individual clients must be shared with subserver to share with server to give to all other subservers to write to clients.
 
 FORK
 
-We will need forking so that we can fork a server-client off of the main client so that we have a more organized code. A forked child will get all the data from the main parent and if it messes up, we can make the child die and fork again and revert to the original data.
+We will need forking so that we can fork a server-subserver off of the main client so that we have a more organized code. A forked child will get all the data from the main parent and if it messes up, we can make the child die and fork again and revert to the original data.
 
 ### Development Stages
 1. Modular Setup and Data Structures
@@ -94,32 +89,52 @@ We will need forking so that we can fork a server-client off of the main client 
 
 ### Data Structures and Algorithms
 **Structures**
-* *char[] roles
+* int[] roles
    * The list of roles at the beginning of the game.
 * *char[] players
    * The list of nicknames. The indices correspond to the roles in the arrays
 * int[] votes
    * Gives a tally of the number of votes each person has (you can’t change your vote by the way)
 * int num_players
-   * At the beginning of the game, keeps track of how many players are on the server.
-* int[] status
-   * List of booleans that tell which person is alive or dead
-* int timer
-   *Is used for situations in which time is involved.
-* int days
-   * The number of days that have passed
-* *char
-   * A String that will distinguish what time of day it currently is; it cycles from debate, voting, yes/no voting, execution, doctor healing, mafia debate, and mafia voting/killing
-* *char message
-   * Helps for messaging, which is described below in algorithms
-* int has_message
-   * Boolean that says whether there is an impending message from anybody
+   * Keeps track of how many players are on the server.
+int maf
+   * Keeps track of how many mafia members left
+int nur
+   * Keeps track of how many nurse members left
+int det
+   * Keeps track of how many detective members left
+char * username
+   * Keeps track of name of each client
+char *victim
+   * Keeps track of who mafia chose to kill
+int game_over
+   * Keeps track of if game is over or not
+int game_start
+   * Keeps track when to start game
+int num_day
+   * Keeps track of how day phases occured
+int num_night
+   * Keeps track of how night phases occured
+int type_night
+   * Keeps track of what phase of night it is
+int type_day
+   * Keeps track of what phase of day it is
+
+struct turns {
+    char * *member; //shows members of this role
+    int index;      //which member is voting next
+};
+struct turns m_turn;
+struct turns n_turn;
+struct turns d_turn;
 
 **Algorithms**
-* Timer
-   * We will need a timer to keep track of the amount of time that has elapsed based on a given point. It will be used to time debates and the amount of time the roles are given for the night.
+* Random
+   * We randomize the roles by first creating a list of all the possible roles (if a game has 2 mafia 1 nurse 1 detective and 2 civilians then the list would be [1,1,3,2,0,0] where the numbers 0-3 represent a specific role) and then choose an index of it to be put into roles one by one. One it is chosen, the number is swapped with the last element and the modder is decreased
 * Chat Piping
    * We will need to interpret the information given by pipes. This allows secret conversations between people, whether they are in the mafia or not. It will create a pipe starting from the person who wants to initiate a *secret* and then the end at the person who it wants to be sent to. Then, it must be formatted correctly to be displayed in the recipient’s terminal.
+* Sending int info
+  * We will send information of integers by converting them into chars so we don't have to deal with how many digits there are and parsing integers
 
 ### Timeline
 Date | Objective
@@ -143,8 +158,7 @@ E | Easy
 
 **George**
 * Networking (H)
-* Police Role (M)
-* Sharing memory across computers (M)
+* Nurse Role (M)
 * Username Controls (E)
 * End Game (E)
 
@@ -152,12 +166,10 @@ E | Easy
 * Mafia Role (H)
 * Creating Server (M)
 * Vote (M)
-* Timer (E)
 * Quit Game (E)
 
 **Grace**
-* Chat Room (H)
-* Doctor Role (M)
+* Statements (H)
+* Detective Role (M)
 * Allowing people to join server (M)
 * Terminal Updates (E)
-* Spectate mode (E)
