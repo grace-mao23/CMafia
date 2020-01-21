@@ -459,33 +459,19 @@ int main() {
                                 fgets(new_buffer, 1000, stdin);
                                 new_buffer[strlen(new_buffer) - 1] = '\0';
                             }
-<<<<<<< HEAD
-                            printf("You have selected to vote for %s\n", new_buffer);
-                            char vote = 97 + getRole(new_buffer);
-                            strcat(new_buffer, &vote);
-=======
                             printf("You have selected to vote for %s\n", game_buffer);
                             char vote = 97 + getRole(game_buffer);
                             strcpy(game_buffer,"\0");
                             strcat(game_buffer, &vote);
->>>>>>> 6eff87ca4c7b78950bf4c169a44685448d602816
                         } else {
                             strcpy(new_buffer, "dead");
                         }
                         printf("Did 1: %s\n", new_buffer);
                         write(sd_conn, new_buffer, sizeof(new_buffer));
                         printf("Did 2\n");
-<<<<<<< HEAD
                         read(sd_conn, new_buffer, sizeof(new_buffer));
                         printf("Did 3: %s\n", new_buffer);
                         readVotes(new_buffer);
-=======
-                        sleep(1);
-                        int waiting_thing = 1;
-                        read(sd_conn, game_buffer, sizeof(game_buffer));
-                        printf("Did 3: %s\n", game_buffer);
-                        readVotes(game_buffer);
->>>>>>> 6eff87ca4c7b78950bf4c169a44685448d602816
                         night = 1;
                         num_day++;
                     }
