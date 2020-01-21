@@ -251,10 +251,10 @@ void removeMember(char *name) {
         }
         nur--;
     }
-
-    for (size_t i = index; i < num_players; i++) {
-        strcpy(players[i], players[i + 1]);
-    }
+  for (size_t i = index; i < num_players; i++) {
+    strcpy(players[i],players[i+1]);
+    roles[i]=roles[i+1];
+  }
 }
 // notes:
 // num_players attainable through length of users later
@@ -506,13 +506,13 @@ int main() {
                 sleep(1);
                 if (strcmp(victim, username) == 0) { //checking to see if he dead
                     printf("Unfortunately, you have DIED\n");
-                    printf("Do you wish to quit? (yes/no)");
-                    fgets(game_buffer, 1000, stdin);
+                    printf("Do you wish to quit? (yes/no) ");
+                    fgets(game_buffer,1000,stdin);
                     game_buffer[strlen(game_buffer)] = '\0';
-                    if(strcmp(game_buffer, "yes")){
-                        game_over = 1;
-                    } else {
-                        printf("Spectating the game now...\n");
+                    if(strcmp(game_buffer,"yes")==0){
+                      game_over=1;
+                    }else{
+                      printf("\nSpectating the game now...\n");
                     }
                 } else {
                     printf("Congradulations, you have SURVIVED the night\n");
