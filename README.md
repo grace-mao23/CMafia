@@ -88,4 +88,4 @@ Afterwards, when all roles have gotten a turn, you will get a message saying whe
 
 What comes next is the day phase. Here, the person who died gets announced to everyone. Then, everybody has a chance to say one statement about who they think the murderer is. Those statements get displayed to everyone, and then they will get a chance to vote. Unfortunately, that has not been implemented yet, but the code is there, just uncommented.
 
-And unfortunately, the game can only last one cycle. The game breaks after the second night and we don't know why. Sorry :(. Our code simply doesn't like us.
+And unfortunately, the game can only last one cycle. The game breaks after the second night and we don't know why. Sorry :(. Our code simply doesn't like us. The read function simply doesn't know how to block??

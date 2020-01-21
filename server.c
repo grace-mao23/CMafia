@@ -309,6 +309,7 @@ int main() {
             }
             int continue1 = 1;
             while (continue1) {
+                strcpy(buffer, "\0");
                 read(client, buffer, sizeof(buffer)); //subserver sending victim/saved/done
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
                 read(fd2[sub_num][0], buffer, sizeof(buffer)); // subserver receives signal
