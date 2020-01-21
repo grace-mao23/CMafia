@@ -210,6 +210,9 @@ int main() {
                                 strcpy(saved, buffer);
                             }
                         }
+
+                        
+
                         if (strcmp(victim, saved) == 0) { //if victim and saved are the same, then no one dies
                             strcpy(buffer, "");
                             for (i = 1; i <= sub_num; i++) {

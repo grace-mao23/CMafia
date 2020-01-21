@@ -395,11 +395,11 @@ int main() {
                         }
                     }
                     if (type_day == 1) { // statements
-                        if(getRole(username) != -1){
+                        if (getRole(username) != -1) {
                             printf("You will now have the chance to enter your statements\n");
                             printf("Your statement: ");
                             fgets(game_buffer, 1000, stdin);
-                            game_buffer[strlen(game_buffer)-1] = '\0';
+                            game_buffer[strlen(game_buffer) - 1] = '\0';
                             printf("You entered %s\n", game_buffer);
                             write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
 
@@ -409,7 +409,6 @@ int main() {
                                     waiting_thing = 1;
                                 }
                             }
-                        //  printf("Here's what everyone said!\n\n");
                             printf("%s\n", game_buffer);
                             type_day++;
                         }
@@ -421,7 +420,7 @@ int main() {
                     }
                     if (2 * maf >= num_players || maf <= 0) { //checks to see if game is over
                         game_over = 1;
-                        printf("There are %d mafia and %d players left in the game\n", maf, players);
+                        printf("There are %d mafia and %d players left in the game\n", maf, num_players);
                         sleep(1);
                         if (maf <= 0) {
                             printf("The TOWN wins!\n");
@@ -472,73 +471,73 @@ int main() {
                   //  printf("\n\n\nNext\n\n\n");
                 }
                 if (type_night == 1) {
-                    if(det>0){
-                      if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
-                          printf("\nDetective! Here are all of your suspects.\n");
-                          print_players();
-                          sleep(2);
-                          printf("\\Choose to investigate a suspect: ");
-                          fgets(game_buffer, 1000, stdin);
-                          game_buffer[strlen(game_buffer) - 1] = '\0';
-                          while (!valid(buffer)) { //function to see if its valid victim
-                              printf("\nYou have chosen an invalid suspect.\nHere are all of your possible suspects.\n");
-                              print_players();
-                              sleep(1);
-                              printf("\\Choose to investigate a suspects: ");
-                              fgets(buffer, 1000, stdin);
-                              buffer[strlen(buffer) - 1] = '\0';
+                    if (det > 0) {
+                        if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
+                            printf("\nDetective! Here are all of your suspects.\n");
+                            print_players();
+                            sleep(1);
+                            printf("\\Choose to investigate a suspect: ");
+                            fgets(game_buffer, 1000, stdin);
+                            game_buffer[strlen(game_buffer) - 1] = '\0';
+                            while (!valid(buffer)) { //function to see if its valid victim
+                                printf("\nYou have chosen an invalid suspect.\nHere are all of your possible suspects.\n");
+                                print_players();
+                                sleep(1);
+                                printf("\\Choose to investigate a suspects: ");
+                                fgets(buffer, 1000, stdin);
+                                buffer[strlen(buffer) - 1] = '\0';
                             }
                             printf("\nYou have chosen to investigate: %s\n", game_buffer);
                             sleep(1);
                             if (roles[getRole(game_buffer)] == 0) {
-                              printf("%s's identity is: Civilian\n", game_buffer);
+                                printf("%s's identity is: Civilian\n", game_buffer);
                             } else if (roles[getRole(game_buffer)] == 1) {
-                              printf("%s's identity is: Mafia\n", game_buffer);
+                                printf("%s's identity is: Mafia\n", game_buffer);
                             } else if (roles[getRole(game_buffer)] == 2) {
-                              printf("%s's identity is: Detective\n", game_buffer);
+                                printf("%s's identity is: Detective\n", game_buffer);
                             } else {
-                              printf("%s's identity is: Nurse\n", game_buffer);
+                                printf("%s's identity is: Nurse\n", game_buffer);
                             }
                             strcpy(game_buffer, "done");
                             write(sd_conn, game_buffer, sizeof(game_buffer));
-                          } else {
+                        } else {
                             printf("\nWaiting for Detective...\n");
                             strcpy(game_buffer, "done");
                             write(sd_conn, game_buffer, sizeof(game_buffer));
-                          }
-                          read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
-                          d_turn.index=(d_turn.index+1)%det;
                         }
-                        type_night++;
-                      }
+                        read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
+                        d_turn.index = (d_turn.index + 1) % det;
+                    }
+                    type_night++;
+                }
                 if (type_night == 2) {
-                  if(nur>0){
-                    if (strcmp(username, n_turn.member[n_turn.index]) == 0) {
-                        printf("\nNurse! Here are all of your patients:\n");
-                        print_players();
-                        sleep(1);
-                        printf("\\Choose to save a patients: ");
-                        fgets(game_buffer, 1000, stdin);
-                        game_buffer[strlen(game_buffer) - 1] = '\0';
-                        while (!valid(buffer)) { //function to see if its valid victim
-                            printf("\nYou have voted for an invalid patient.\nHere are all of your possible patients.\n");
+                    if (nur > 0) {
+                        if (strcmp(username, n_turn.member[n_turn.index]) == 0) {
+                            printf("\nNurse! Here are all of your patients:\n");
                             print_players();
                             sleep(1);
-                            printf("\\Choose to save a patient: ");
-                            fgets(buffer, 1000, stdin);
-                            buffer[strlen(buffer) - 1] = '\0';
+                            printf("\\Choose to save a patients: ");
+                            fgets(game_buffer, 1000, stdin);
+                            game_buffer[strlen(game_buffer) - 1] = '\0';
+                            while (!valid(buffer)) { //function to see if its valid victim
+                                printf("\nYou have voted for an invalid patient.\nHere are all of your possible patients.\n");
+                                print_players();
+                                sleep(1);
+                                printf("\\Choose to save a patient: ");
+                                fgets(buffer, 1000, stdin);
+                                buffer[strlen(buffer) - 1] = '\0';
+                            }
+                            printf("\nYou have chosen to save: %s\n", game_buffer);
+                            write(sd_conn, game_buffer, sizeof(game_buffer));
+                            n_turn.index = (n_turn.index + 1) % nur;
+                        } else {
+                            printf("\nWaiting for Nurse...\n");
+                            strcpy(game_buffer, "done");
+                            write(sd_conn, game_buffer, sizeof(game_buffer));
                         }
-                        printf("\nYou have chosen to save: %s\n", game_buffer);
-                        write(sd_conn, game_buffer, sizeof(game_buffer));
+                        read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
                         n_turn.index = (n_turn.index + 1) % nur;
-                    } else {
-                        printf("\nWaiting for Nurse...\n");
-                        strcpy(game_buffer, "done");
-                        write(sd_conn, game_buffer, sizeof(game_buffer));
                     }
-                    read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
-                    n_turn.index=(n_turn.index+1)%nur;
-                  }
                     type_night = 0;
                 }
                 num_night++;
