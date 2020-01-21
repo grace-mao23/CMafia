@@ -45,7 +45,7 @@ int detectiveNum(int users) {
     return detective;
 }
 //need to initialize turns to 0
-char * genRoles(int total) {
+char *genRoles(int total) {
     int players=total;
     char * string=malloc(sizeof(char) * 1000);
     char *assign = malloc(total * sizeof(char));
@@ -210,12 +210,10 @@ int main() {
                             strcpy(saved, buffer);
                         }
                     }
-                    printf("victim: %s\n", victim);
-                    printf("saved: %s\n", saved);
                     if (strcmp(victim, saved) == 0) { //if victim and saved are the same, then no one dies
                         strcpy(buffer, "");
                         for (i = 1; i <= sub_num; i++) {
-                            write(fd2[i][1], victim, sizeof(victim));
+                            write(fd2[i][1], buffer, sizeof(buffer));
                         }
                     } else {
                         for (i = 1; i <= sub_num; i++) {
