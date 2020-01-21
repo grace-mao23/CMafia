@@ -505,8 +505,8 @@ int main() {
                         write(sd_conn, game_buffer, sizeof(game_buffer));
                         game_over = 1;
                     } else {
-                        strcpy(buffer, "notover");
-                        write(sd_conn, buffer, sizeof(buffer));
+                        strcpy(game_buffer, "notover");
+                        write(sd_conn, game_buffer, sizeof(game_buffer));
                         printf("\\Mafia$ There are %d mafia, %d detectives, %d nurses left in the game, with a total of %d players\n", maf, det, nur, num_players);
                         sleep(1);
                         printf("\\Mafia$ The game will end shortly...\n");
@@ -552,13 +552,13 @@ int main() {
                             printf("\\Mafia$ Choose to investigate a suspect: ");
                             fgets(game_buffer, 1000, stdin);
                             game_buffer[strlen(game_buffer) - 1] = '\0';
-                            while (!valid(buffer)) { //function to see if its valid victim
+                            while (!valid(game_buffer)) { //function to see if its valid victim
                                 printf("\n\\Mafia$ You have chosen an invalid suspect.\nHere are all of your possible suspects.\n");
                                 print_players();
                                 sleep(1);
                                 printf("\\Mafia$ Choose to investigate a suspect: ");
-                                fgets(buffer, 1000, stdin);
-                                buffer[strlen(buffer) - 1] = '\0';
+                                fgets(game_buffer, 1000, stdin);
+                                game_buffer[strlen(game_buffer) - 1] = '\0';
                             }
                             printf("\n\\Mafia$ You have chosen to investigate: %s\n", game_buffer);
                             sleep(1);
@@ -593,13 +593,13 @@ int main() {
                             printf("\\Mafia$ Choose to save a patients: ");
                             fgets(game_buffer, 1000, stdin);
                             game_buffer[strlen(game_buffer) - 1] = '\0';
-                            while (!valid(buffer)) { //function to see if its valid victim
+                            while (!valid(game_buffer)) { //function to see if its valid victim
                                 printf("\n\\Mafia$ You have voted for an invalid patient.\nHere are all of your possible patients.\n");
                                 print_players();
                                 sleep(1);
                                 printf("\\Mafia$ Choose to save a patient: ");
-                                fgets(buffer, 1000, stdin);
-                                buffer[strlen(buffer) - 1] = '\0';
+                                fgets(game_buffer, 1000, stdin);
+                                game_buffer[strlen(game_buffer) - 1] = '\0';
                             }
                             printf("\n\\Mafia$ You have chosen to save: %s\n", game_buffer);
                             write(sd_conn, game_buffer, sizeof(game_buffer));
