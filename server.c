@@ -221,18 +221,20 @@ int main() {
                                 write(fd2[i][1], victim, sizeof(victim));
                             }
                         }
-                    }
 
-                    for (i = 1; i <= sub_num; i++) {
-                        strcpy(buffer, "your turn");
-                        printf("%d turn\n", i);
-                        write(fd2[i][1], buffer, sizeof(buffer)); // signals for subserver that it's time
-                        read(fd1[i][0], buffer, sizeof(buffer)); // reads the statement from subserver
-                        for (i = 1; i < 13; i++) {
-                          printf("Writing %s to subservers\n", buffer);
-                          write(fd2[i][1], buffer, sizeof(buffer)); // writes statement to every subserver
+                        for (i = 1; i <= sub_num; i++) {
+                            strcpy(buffer, "your turn");
+                            printf("%d turn\n", i);
+                            write(fd2[i][1], buffer, sizeof(buffer)); // signals for subserver that it's time
+                            read(fd1[i][0], buffer, sizeof(buffer)); // reads the statement from subserver
+                            for (i = 1; i < 13; i++) {
+                              printf("Writing %s to subservers\n", buffer);
+                              write(fd2[i][1], buffer, sizeof(buffer)); // writes statement to every subserver
+                            }
                         }
                     }
+
+
                 }
             }
         } else { // child ==> SUBSERVER
