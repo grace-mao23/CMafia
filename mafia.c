@@ -388,7 +388,7 @@ int main() {
                         printf("You will now have the chance to enter your statements\n");
                         printf("Your statement: ");
                         fgets(game_buffer, 1000, stdin);
-                        //game_buffer[strlen(game_buffer)] = '\0';
+                        game_buffer[strlen(game_buffer)] = '\0';
                         write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
                         // subserver won't receive it until it's the subserver's turn from host
                         sleep(10);
