@@ -398,7 +398,7 @@ int main() {
                         }
                         type_day++;
                     }
-                    if (type_day == 2)
+                    if (type_day == 2) {
                         //voting
                         night = 1;
                         num_day++;
@@ -511,9 +511,9 @@ int main() {
                     fgets(game_buffer, 1000, stdin);
                     game_buffer[strlen(game_buffer)] = '\0';
                     if(strcmp(game_buffer, "yes")){
-                      game_over=1;
-                    }else{
-                      printf("Spectating the game now...\n");
+                        game_over = 1;
+                    } else {
+                        printf("Spectating the game now...\n");
                     }
                 } else {
                     printf("Congradulations, you have SURVIVED the night\n");
