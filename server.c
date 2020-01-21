@@ -181,43 +181,45 @@ int main() {
                         // host writes list of players to EACH subserver
                     }
 
-
-                    for (i = 1; i <= sub_num; i++) { // host reads what the victim is
-                        read(fd1[i][0], buffer, sizeof(buffer));
-                        if (strcmp(buffer, "done") != 0) {
-                            strcpy(victim, buffer); // sent by mafia
-                            printf("%s\n", victim);
+                    int continue = 1;
+                    while (continue) {
+                        for (i = 1; i <= sub_num; i++) { // host reads what the victim is
+                            read(fd1[i][0], buffer, sizeof(buffer));
+                            if (strcmp(buffer, "done") != 0) {
+                                strcpy(victim, buffer); // sent by mafia
+                                printf("%s\n", victim);
+                            }
                         }
-                    }
-                  //  printf("Host: victim is %s\n", victim);
-                    for (i = 1; i <= sub_num; i++) { // host writes the signal to each subserver
-                        strcpy(buffer, "mafia done");
-                        write(fd2[i][1], buffer, sizeof(buffer));
-                    }
-
-                    for (i = 1; i <= sub_num; i++) {
-                        read(fd1[i][0], buffer, sizeof(buffer));
-                    }
-
-                    for (i = 1; i <= sub_num; i++) {
-                        strcpy(buffer, "detective done");
-                        write(fd2[i][1], buffer, sizeof(buffer));
-                    }
-
-                    for (i = 1; i <= sub_num; i++) {
-                        read(fd1[i][0], buffer, sizeof(buffer));
-                        if (strcmp(buffer, "done") != 0) {
-                            strcpy(saved, buffer);
-                        }
-                    }
-                    if (strcmp(victim, saved) == 0) { //if victim and saved are the same, then no one dies
-                        strcpy(buffer, "");
-                        for (i = 1; i <= sub_num; i++) {
+                      //  printf("Host: victim is %s\n", victim);
+                        for (i = 1; i <= sub_num; i++) { // host writes the signal to each subserver
+                            strcpy(buffer, "mafia done");
                             write(fd2[i][1], buffer, sizeof(buffer));
                         }
-                    } else {
+
                         for (i = 1; i <= sub_num; i++) {
-                            write(fd2[i][1], victim, sizeof(victim));
+                            read(fd1[i][0], buffer, sizeof(buffer));
+                        }
+
+                        for (i = 1; i <= sub_num; i++) {
+                            strcpy(buffer, "detective done");
+                            write(fd2[i][1], buffer, sizeof(buffer));
+                        }
+
+                        for (i = 1; i <= sub_num; i++) {
+                            read(fd1[i][0], buffer, sizeof(buffer));
+                            if (strcmp(buffer, "done") != 0) {
+                                strcpy(saved, buffer);
+                            }
+                        }
+                        if (strcmp(victim, saved) == 0) { //if victim and saved are the same, then no one dies
+                            strcpy(buffer, "");
+                            for (i = 1; i <= sub_num; i++) {
+                                write(fd2[i][1], buffer, sizeof(buffer));
+                            }
+                        } else {
+                            for (i = 1; i <= sub_num; i++) {
+                                write(fd2[i][1], victim, sizeof(victim));
+                            }
                         }
                     }
 
@@ -266,31 +268,34 @@ int main() {
                     write(client, buffer, sizeof(buffer));
                 }
             }
-            while (mode == 0 && read(client, buffer, sizeof(buffer))) { //subserver sending victim/saved/done
-            //    printf("Subserver: received from client\n");
-                write(fd1[sub_num][1], buffer, sizeof(buffer));
-              //  printf("Subserver: wrote to host\n");
-                read(fd2[sub_num][0], buffer, sizeof(buffer)); // subserver receives signal
-                //printf("Subserver: received signal from host\n");
-                write(client, buffer, sizeof(buffer)); // subserver sends signal to client
-                mode = 1;
-            }
+            int continue = 1;
+            while (continue) {
+                while (mode == 0 && read(client, buffer, sizeof(buffer))) { //subserver sending victim/saved/done
+                //    printf("Subserver: received from client\n");
+                    write(fd1[sub_num][1], buffer, sizeof(buffer));
+                  //  printf("Subserver: wrote to host\n");
+                    read(fd2[sub_num][0], buffer, sizeof(buffer)); // subserver receives signal
+                    //printf("Subserver: received signal from host\n");
+                    write(client, buffer, sizeof(buffer)); // subserver sends signal to client
+                    mode = 1;
+                }
 
-            while (mode == 1 && read(client, buffer, sizeof(buffer))) { //subserver does detective signalling
-                write(fd1[sub_num][1], buffer, sizeof(buffer));
-                read(fd2[sub_num][0], buffer, sizeof(buffer));
-                write(client, buffer, sizeof(buffer));
-                mode = 2;
-            }
+                while (mode == 1 && read(client, buffer, sizeof(buffer))) { //subserver does detective signalling
+                    write(fd1[sub_num][1], buffer, sizeof(buffer));
+                    read(fd2[sub_num][0], buffer, sizeof(buffer));
+                    write(client, buffer, sizeof(buffer));
+                    mode = 2;
+                }
 
-            while (mode == 2 && read(client, buffer, sizeof(buffer))) {
-                write(fd1[sub_num][1], buffer, sizeof(buffer));
-                mode = 3;
-            }
+                while (mode == 2 && read(client, buffer, sizeof(buffer))) {
+                    write(fd1[sub_num][1], buffer, sizeof(buffer));
+                    mode = 3;
+                }
 
-            while (mode == 3 && read(fd2[sub_num][0], buffer, sizeof(buffer))) { //server sending who the dead person is
-                write(client, buffer, sizeof(buffer));
-                mode = 4; //i really love how we just have unnecessary while loops and we just stick to them -george
+                while (mode == 3 && read(fd2[sub_num][0], buffer, sizeof(buffer))) { //server sending who the dead person is
+                    write(client, buffer, sizeof(buffer));
+                    mode = 4; //i really love how we just have unnecessary while loops and we just stick to them -george
+                }
             }
 
             while (mode == 4) {

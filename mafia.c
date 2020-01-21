@@ -470,7 +470,7 @@ int main() {
                 }
                 num_night++;
                 night = 0;
-                read(sd_conn, victim, sizeof(game_buffer));
+                read(sd_conn, victim, sizeof(victim));
                 sleep(1);
                 if (strcmp(victim, username) == 0) { //checking to see if he dead
                     printf("Unfortunately, you have DIED\n");
