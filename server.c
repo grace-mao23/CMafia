@@ -70,8 +70,10 @@ char *genRoles(int total) {
         assign[total] = assign[index];
         assign[index] = temp;
     }
+    free(assign);
     return string;
 }
+
 int main() {
     int inplay = 1;
     int game_start = 0;
@@ -151,11 +153,13 @@ int main() {
                     detectiveNum(sub_num);
                     strcpy(buffer, "\0");
                     strcpy(buffer, "R");
-                    strcat(buffer, genRoles(sub_num));
+                    char *temp = genRoles(sub_num);
+                    strcat(buffer, temp);
                     for (i = 1; i <= sub_num; i++) {
                         write(fd2[i][1], buffer, sizeof(buffer));
                         // host writes number of players to subserver
                     }
+                    free(temp);
                     strcpy(buffer,"\0");
                     int j = 0;
                     sleep(1);
@@ -244,6 +248,7 @@ int main() {
                             write(fd2[i][1], statements, 12000);
                             printf("HOST wrote statements to %d\n", i);
                         }
+                        free(statements);
                         /*char *vote = malloc(sizeof(char) * 12000);
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
@@ -367,6 +372,12 @@ int main() {
             inplay = 0;
         }
     }
+    for (int i = 0; i < 12; i++) {
+        free(players[i]);
+    }
+    free(players);
+    free(victim);
+    free(saved);
     close(sd);
     return 0;
 }
