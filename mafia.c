@@ -455,9 +455,9 @@ int main() {
                               fgets(buffer, 1000, stdin);
                               buffer[strlen(buffer) - 1] = '\0';
                             }
-                         char vote=96+getRole[game_buffer];
+                         char vote=96+getRole(game_buffer);
                          strcpy(game_buffer,"\0");
-                         strcat(game_buffer,vote);
+                         strncat(game_buffer,&vote,1);
                         }else{
                           strcpy(game_buffer,"dead");
                         }
@@ -469,7 +469,7 @@ int main() {
                     }
                     if (2 * maf >= num_players || maf <= 0) { //checks to see if game is over
                         game_over = 1;
-                        printf("There are %d mafia and %d players left in the game\n", maf, players);
+                        printf("There are %d mafia and %d players left in the game\n", maf, num_players);
                         sleep(1);
                         if (maf <= 0) {
                             printf("The TOWN wins!\n");
