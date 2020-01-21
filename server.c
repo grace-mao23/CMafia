@@ -210,6 +210,12 @@ int main() {
                                 strcpy(saved, buffer);
                             }
                         }
+
+                        for (i = 1; i <= sub_num; i++) {
+                            strcpy(buffer, "nurse done");
+                            write(fd2[i][1], buffer, sizeof(buffer));
+                        }
+
                         if (strcmp(victim, saved) == 0) { //if victim and saved are the same, then no one dies
                             strcpy(buffer, "");
                             for (i = 1; i <= sub_num; i++) {
@@ -227,8 +233,10 @@ int main() {
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
                             printf("HOST read %s\n", buffer);
-                            strcat(statements, buffer);
-                            strcat(statements, "\n");
+                            if (strcmp(buffer, "dead") != 0) {
+                                strcat(statements, buffer);
+                                strcat(statements, "\n");
+                            }
                             printf("Statements is now %s\n", statements);
                         }
 
@@ -236,18 +244,19 @@ int main() {
                             write(fd2[i][1], statements, 12000);
                             printf("HOST wrote statements to %d\n", i);
                         }
-                        char * vote =malloc(sizeof(char)*100);
+                        char *vote = malloc(sizeof(char) * 12000);
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
-                            printf("HOST read votes %s\n", buffer);
-                            if(strcmp(buffer,"dead")!=0){
-                              strcat(vote, buffer);
-                              strcat(vote,",");
+                            printf("HOST read votes %s to %d\n", buffer, i);
+                            if (strcmp(buffer, "dead") != 0) {
+                                strcat(vote, buffer);
+                                strcat(vote, ",");
                             }
                         }
 
                         for (i = 1; i <= sub_num; i++) {
-                            write(fd2[i][1], vote, 100);
+                            printf("Did this biggy %d\n", i);
+                            write(fd2[i][1], vote, sizeof(vote));
                             printf("HOST wrote votes to %d\n", i);
                         }
                         //checking to see if game over
@@ -307,37 +316,37 @@ int main() {
 
                 read(client, buffer, sizeof(buffer)); //subserver does detective signalling
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
+
                 read(fd2[sub_num][0], buffer, sizeof(buffer));
                 write(client, buffer, sizeof(buffer));
 
                 read(client, buffer, sizeof(buffer)); //nurse signalling
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
+                read(fd2[sub_num][0], buffer, sizeof(buffer));
+                write(client, buffer, sizeof(buffer));
 
                 read(fd2[sub_num][0], buffer, sizeof(buffer)); //server sending who the dead person is
                 write(client, buffer, sizeof(buffer));
                 //printf("Transmission\n");
 
-                mode = 4;
-                while (mode == 4) {
-                    read(client, buffer, sizeof(buffer));
-                    printf("Subserver read %s from client\n", buffer);
-                    write(fd1[sub_num][1], buffer, sizeof(buffer));
-                    char spec_buffer[12000] = "";
-                    read(fd2[sub_num][0], spec_buffer, sizeof(spec_buffer));
-                    printf("Subserver read %s statements\n", spec_buffer);
-                    write(client, spec_buffer, sizeof(spec_buffer));
-                    mode = 5;
-                }
-                while(mode==5){
-                  read(client, buffer, sizeof(buffer));
-                  printf("Subserver read %s from client\n", buffer);
-                  write(fd1[sub_num][1], buffer, sizeof(buffer));
-                  char spec_buffer[100] = "";
-                  read(fd2[sub_num][0], spec_buffer, sizeof(spec_buffer));
-                  printf("Subserver read %s statements\n", spec_buffer);
-                  write(client, spec_buffer, sizeof(spec_buffer));
-                  mode=0;
-                }
+                read(client, buffer, sizeof(buffer));
+                printf("Subserver1 read %s from client\n", buffer);
+                write(fd1[sub_num][1], buffer, sizeof(buffer));
+                char spec_buffer[12000] = "";
+                read(fd2[sub_num][0], spec_buffer, sizeof(spec_buffer));
+                printf("Subserver2 read %s statements\n", spec_buffer);
+                write(client, spec_buffer, sizeof(spec_buffer));
+                mode = 5;
+
+                strcpy(buffer,"\0");
+                read(client, buffer, sizeof(buffer));
+                printf("Subserver3 read %s from client\n", buffer);
+                write(fd1[sub_num][1], buffer, sizeof(buffer));
+                printf("subserver3.5 did this\n");
+                read(fd2[sub_num][0], buffer, sizeof(buffer));
+                printf("Subserver4 read %s statements\n", buffer);
+                write(client, buffer, sizeof(buffer));
+                mode = 0;
 
                 //checking to see if game is over at the end of the day
                 read(client, buffer, sizeof(buffer));

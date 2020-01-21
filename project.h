@@ -18,7 +18,7 @@ int client_setup(char *server);
 void error_check(int i, char *s);
 void taken_setup(int *taken);
 int lowest_available(int *taken);
-#define PORT "42068"
+#define PORT "42070"
 #define TEST_IP "127.0.0.1"
 #define BUFFER_SIZE 1024
 #define INPLAY 0
