@@ -236,7 +236,6 @@ int main() {
                             write(fd2[i][1], statements, 12000);
                             printf("HOST wrote statements to %d\n", i);
                         }
-
                         char * vote =malloc(sizeof(char)*100);
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
@@ -250,6 +249,16 @@ int main() {
                         for (i = 1; i <= sub_num; i++) {
                             write(fd2[i][1], vote, 100);
                             printf("HOST wrote votes to %d\n", i);
+                        }
+                        //checking to see if game over
+                        for (i = 1; i <= sub_num; i++) {
+                            read(fd1[i][0], buffer, sizeof(buffer));
+                            if (strcmp(buffer, "over") == 0) {
+                                continue1 = 0;
+                                close(client);
+                                close(fd2[i][1]);
+                                close(fd1[i][0]);
+                            }
                         }
                     }
                 }
@@ -329,8 +338,17 @@ int main() {
                   write(client, spec_buffer, sizeof(spec_buffer));
                   mode=0;
                 }
-            }
 
+                //checking to see if game is over at the end of the day
+                read(client, buffer, sizeof(buffer));
+                write(fd1[sub_num][1], buffer, sizeof(buffer));
+                if (strcmp(buffer, "over") == 0) {
+                    continue1 = 0;
+                    close(client);
+                    close(fd1[sub_num][1]);
+                    close(fd2[sub_num][0]);
+                }
+            }
             close(client);
             exit(0);
         }
