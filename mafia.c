@@ -384,12 +384,12 @@ int main() {
                     num_day++;
                 } else {
                     if (type_day == 0) {
-                        removeMember(victim);
                         if (strcmp(victim, "\0") == 0) {
                             printf("Nobody Died!\n");
                             sleep(2);
                             type_day++;
                         } else {
+                            removeMember(victim);
                             printf("%s has died!\n", victim);
                             type_day++;
                         }
