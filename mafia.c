@@ -389,8 +389,7 @@ int main() {
                           game_buffer[strlen(game_buffer)-1] = '\0';
                           printf("You entered %s\n", game_buffer);
                           write(sd_conn, game_buffer, sizeof(game_buffer)); // write statement to subserver
-                          // subserver won't receive it until it's the subserver's turn from host
-                          sleep(5);
+                          
                           read(sd_conn, game_buffer, sizeof(game_buffer));
                           printf("Here's what everyone said!\n\n");
                           printf("%s\n", game_buffer);

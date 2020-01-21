@@ -291,6 +291,7 @@ int main() {
 
                 read(fd2[sub_num][0], buffer, sizeof(buffer)); //server sending who the dead person is
                 write(client, buffer, sizeof(buffer));
+                printf("Transmission\n");
 
                 mode = 4;
                 while (mode == 4) {
@@ -300,7 +301,7 @@ int main() {
                     read(fd2[sub_num][0], buffer, sizeof(buffer));
                     printf("Subserver read %s statements\n", buffer);
                     write(client, buffer, sizeof(buffer));
-
+                    mode = 0;
                 }
             }
 
