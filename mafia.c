@@ -211,7 +211,11 @@ void removeMember(char *name) {
                 replace = i;
             }
             if (replace == maf - 1) {
+              if(maf-1!=0){
                 m_turn.index = (m_turn.index + 1) % (maf - 1);
+              }else{
+                m_turn.index = -1;
+              }
                 i = maf;
             } else if (replace != -1) {
                 if (i != maf - 1) {
@@ -226,7 +230,11 @@ void removeMember(char *name) {
                 replace = i;
             }
             if (replace == det - 1) {
+              if(det-1!=0){
                 d_turn.index = (d_turn.index + 1) % (det - 1);
+              }else{
+                d_turn.index = -1;
+              }
                 i = det;
             } else if (replace != -1) {
                 if (i != det - 1) {
@@ -241,7 +249,11 @@ void removeMember(char *name) {
                 replace = i;
             }
             if (replace == nur - 1) {
-                n_turn.index = (n_turn.index + 1) % (nur - 1);
+                if(nur-1!=0){
+                  n_turn.index = (n_turn.index + 1) % (nur - 1);
+                }else{
+                  n_turn.index = -1;
+                }
                 i = nur;
             } else if (replace != -1) {
                 if (i != nur - 1) {
