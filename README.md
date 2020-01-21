@@ -68,4 +68,19 @@ b's identity is: Civilian
 
 Waiting for Nurse...
 ```
--
+- Nurse will get to choose to save one person to save. The person must be a player that is playing right now, or else they will be prompted to choose again. Likewise with mafia, if there are more than one nurse, then only one nurse gets to pick per round.
+```
+Waiting for Mafia...
+
+Waiting for Detective...
+
+Nurse! Here are all of your patients:
+Patients: a, b, c, d
+\Choose to save a patient: aba
+
+You have voted for an invalid patient.
+Here are all of your possible patients.
+Patients: a, b, c, d
+\Choose to save a patient: b
+You have selected to save: b
+```
