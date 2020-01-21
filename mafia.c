@@ -501,8 +501,8 @@ int main() {
                         } else {
                             printf("The MAFIA wins!\n");
                         }
-                        strcpy(buffer, "over");
-                        write(sd_conn, buffer, sizeof(buffer));
+                        strcpy(game_buffer, "over");
+                        write(sd_conn, game_buffer, sizeof(game_buffer));
                         game_over = 1;
                     } else {
                         strcpy(buffer, "notover");
