@@ -284,6 +284,7 @@ int main() {
                 mode = 4; //i really love how we just have unnecessary while loops and we just stick to them -george
             }
 
+            read(client, buffer, sizeof(buffer)); //only temporary because I don't want the servers to close
             close(client);
             exit(0);
         }

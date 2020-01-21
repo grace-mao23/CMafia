@@ -155,7 +155,23 @@ char *to_string(char **ary) {
 void print_players() {
     printf("In Game: ");
     for (size_t i = 0; i < num_players; i++) {
-        printf("%s",players[i]);
+        if (players[i] >= 0) { //negative means they died
+            printf("%s", players[i]);
+        }
+        if (i != num_players - 1) {
+            printf(", ");
+        } else {
+            printf("\n\n");
+        }
+    }
+}
+
+void print_players_mafia() { //this is for mafia when printing who's in the game that they can kill
+    printf("In Game: ");
+    for (size_t i = 0; i < num_players; i++) {
+        if (roles[i] >= 0 && roles[i] != 1) {
+            printf("%s", players[i]);
+        }
         if (i != num_players - 1) {
             printf(", ");
         } else {
@@ -199,11 +215,22 @@ int valid(char *name) {
     int i = 0;
     for (; i < num_players; i++) {
         if (strcmp(players[i], name) == 0) {
-            return 1;
+            return (roles[i] >= 0);
         }
     }
     return 0;
 }
+
+int valid_mafia(char *name) {
+    int i = 0;
+    for (; i < num_players; i++) {
+        if (strcmp(players[i], name) == 0) {
+            return (roles[i] >= 0 && roles[i] != 1);
+        }
+    }
+    return 0;
+}
+
 
 // notes:
 // num_players attainable through length of users later
@@ -311,10 +338,12 @@ int main() {
         while (!game_over) {
             if (!night) { //daytime
                 printf("It's Daytime!\n");
+                sleep(1);
                 if (num_day == 1) {
                     printf("Welcome to Mafia!\n");
                     sleep(2);
                     printf("The night will begin shortly...\n");
+                    sleep(1);
                 } else {
                     if (type_day == 0) {
                         if (strcmp(victim, "") == 0) {
@@ -340,14 +369,16 @@ int main() {
                 if (type_night == 0) {
                     if (strcmp(username, m_turn.member[m_turn.index]) == 0) {
                         printf("Here are all of your victims: \n");
-                        print_players();
+                        print_players_mafia();
+                        sleep(1);
                         printf("\\Vote for your victim: ");
                         fgets(victim, 1000, stdin);
                         victim[strlen(victim) - 1] = '\0';
                         printf("%s\n", victim);
-                        printf("valid: %d\n", valid(victim));
-                        while (!valid(victim)) { //function to see if its valid victim
-                            printf("\nYou have voted for an invalid victim.%s\n Here are all of your victims\n", to_string(players));
+                        printf("valid: %d\n", valid_mafia(victim));
+                        while (!valid_mafia(victim)) { //function to see if its valid victim
+                            printf("\nYou have voted for an invalid victim.\nHere are all of your possible victims\n");
+                            print_players_mafia();
                             printf("\\Vote for your victim: ");
                             fgets(victim, 1000, stdin);
                             victim[strlen(victim) - 1] = '\0';
@@ -371,6 +402,7 @@ int main() {
                     if (strcmp(username, d_turn.member[d_turn.index]) == 0) {
                         printf("Here are all of your suspects: ");
                         print_players();
+                        sleep(2);
                         printf("\\Choose to investigate a suspect: ");
                         fgets(game_buffer, 1000, stdin);
                         game_buffer[strlen(game_buffer) - 1] = '\0';
@@ -381,7 +413,7 @@ int main() {
                             buffer[strlen(buffer) - 1] = '\0';
                         }
                         printf("\nYou have chosen to investigate: %s\n", game_buffer);
-                        sleep(2);
+                        sleep(1);
                         if (roles[getRole(game_buffer)] == 0) {
                             printf("%s's identity is: Civilian\n", game_buffer);
                         } else if (roles[getRole(game_buffer)] == 1) {
@@ -415,6 +447,7 @@ int main() {
                     if (strcmp(username, n_turn.member[n_turn.index]) == 0) {
                         printf("Here are all of your patients: ");
                         print_players();
+                        sleep(1);
                         printf("\\Choose to save a patients: ");
                         fgets(game_buffer, 1000, stdin);
                         game_buffer[strlen(game_buffer) - 1] = '\0';
@@ -422,7 +455,7 @@ int main() {
                             printf("\nYou have voted for an invalid victim.\n Here are all of your patients: %s\n", to_string(players));
                             printf("\\Choose to save a patient: ");
                             fgets(buffer, 1000, stdin);
-                            buffer[strlen(buffer)-1] = '\0';
+                            buffer[strlen(buffer) - 1] = '\0';
                         }
                         printf("\nYou have chosen to save: %s\n", game_buffer);
                         write(sd_conn, game_buffer, sizeof(game_buffer));
@@ -439,13 +472,24 @@ int main() {
                 }
                 num_night++;
                 night = 0;
-                read(sd_conn, game_buffer, sizeof(game_buffer));
-                printf("did id\n");
-                if (strcmp(game_buffer, username) == 0) { //checking to see if he dead
+                read(sd_conn, victim, sizeof(game_buffer));
+                if (strcmp(victim, username) == 0) { //checking to see if he dead
                     printf("Unfortunately, you have DIED\n");
                     printf("Spectating the game now...\n");
                 } else {
                     printf("Congradulations, you have SURVIVED the night\n");
+                }
+                if (strcmp(victim, "") != 0) {
+                    num_players--;
+                    int role = roles[getRole(victim)];
+                    if (role == 1) {
+                        //remove mafia
+                    } else if (role == 2) {
+                        //remove detective
+                    } else if (role == 3) {
+                        //remove nurse
+                    }
+                    roles[getRole(victim)] = -1;
                 }
             }
         }
