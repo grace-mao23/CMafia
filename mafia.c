@@ -460,6 +460,7 @@ int main() {
                             }
                             printf("You have selected to vote for %s\n", game_buffer);
                             char vote = 97 + getRole(game_buffer);
+                            strcpy(game_buffer,"\0");
                             strcat(game_buffer, &vote);
                         } else {
                             strcpy(game_buffer, "dead");
@@ -469,8 +470,7 @@ int main() {
                         printf("Did 2\n");
                         sleep(1);
                         int waiting_thing = 1;
-                        read(sd_conn, game_buffer, sizeof(game_buffer))
-                            waiting_thing = 0;
+                        read(sd_conn, game_buffer, sizeof(game_buffer));
                         printf("Did 3: %s\n", game_buffer);
                         readVotes(game_buffer);
                         night = 1;
