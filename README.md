@@ -31,7 +31,7 @@ Now you can play! To initiate game play, the main server terminal must indicate 
 You must respond correctly with "yes" or "no" and then press the Return key on your keyboard. Responding with any other response will cause the program to fail. In addition, if there are 4 or more users connected, but you are still on the prompt concerning with 3 people, that is okay! If you say yes, it will start the game without the latest players, and only play with the first 3 people in the game. If you say no, then it will give you the prompt regarding 4 players.
 
 
-At the beginning of the game, everyone gets assigned one of the four following roles: Civilian, Mafia, Detective, and Nurse. Civilians are basically useless. Mafia gets to kill one person during the night phase. Nurse gets to heal one person during the night phase. Detectives get to find out the role of one other person in the night phase.
+At the beginning of the game, everyone gets to choose a username.  Then, everyone gets assigned one of the four following roles: Civilian, Mafia, Detective, and Nurse. Civilians are basically useless. Mafia gets to kill one person during the night phase. Nurse gets to heal one person during the night phase. Detectives get to find out the role of one other person in the night phase.
 
 
 Once the game begins, the day phase will begin. The first day, there will be nothing for you to do. Then, comes the night phase, where each of the following roles can do their actions:
@@ -84,3 +84,8 @@ Patients: a, b, c, d
 \Choose to save a patient: b
 You have selected to save: b
 ```
+Afterwards, when all roles have gotten a turn, you will get a message saying whether you have survived or died. Note that if the nurse and mafia pick the same person, then nobody dies.
+
+What comes next is the day phase. Here, the person who died gets announced to everyone. Then, everybody has a chance to say one statement about who they think the murderer is. Those statements get displayed to everyone, and then they will get a chance to vote. Unfortunately, that has not been implemented yet, but the code is there, just uncommented.
+
+And unfortunately, the game can only last one cycle. The game breaks after the second night and we don't know why. Sorry :(. Our code simply doesn't like us.

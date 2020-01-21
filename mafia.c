@@ -442,9 +442,9 @@ int main() {
                     if (type_day == 2) {
                         char new_buffer[BUFFER_SIZE] = "";
                         for (size_t i = 0; i < num_players; i++) {
-                            votes[i]=0;
+                            votes[i] = 0;
                         }
-                        if (getRole(username) != -1) {
+                        /*if (getRole(username) != -1) {
                             printf("Please Vote for Who You Think is the Mafia!\n");
                             printf("Here are all your candidates: ");
                             print_players();
@@ -471,7 +471,7 @@ int main() {
                         printf("Did 2\n");
                         read(sd_conn, new_buffer, sizeof(new_buffer));
                         printf("Did 3: %s\n", new_buffer);
-                        readVotes(new_buffer);
+                        readVotes(new_buffer);*/
                         night = 1;
                         num_day++;
                     }

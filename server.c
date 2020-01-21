@@ -337,7 +337,7 @@ int main() {
                 write(client, spec_buffer, sizeof(spec_buffer));
                 mode = 5;
 
-                strcpy(buffer,"\0");
+                /*strcpy(buffer,"\0");
                 read(client, buffer, sizeof(buffer));
                 printf("Subserver3 read %s from client\n", buffer);
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
@@ -345,7 +345,7 @@ int main() {
                 read(fd2[sub_num][0], buffer, sizeof(buffer));
                 printf("Subserver4 read %s statements\n", buffer);
                 write(client, buffer, sizeof(buffer));
-                mode = 0;
+                mode = 0;*/
 
                 //checking to see if game is over at the end of the day
                 read(client, buffer, sizeof(buffer));
