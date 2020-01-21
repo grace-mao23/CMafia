@@ -321,41 +321,47 @@ int main() {
             int continue1 = 1;
             while (continue1) {
                 strcpy(buffer, "\0");
-                read(client, buffer, sizeof(buffer)); //subserver sending victim/saved/done
-                write(fd1[sub_num][1], buffer, sizeof(buffer));
-                read(fd2[sub_num][0], buffer, sizeof(buffer)); // subserver receives signal
-                write(client, buffer, sizeof(buffer)); // subserver sends signal to client
 
-                read(client, buffer, sizeof(buffer)); //subserver does detective signalling
-                write(fd1[sub_num][1], buffer, sizeof(buffer));
+                while (mode == 0) {
+                    read(client, buffer, sizeof(buffer)); //subserver sending victim/saved/done
+                    write(fd1[sub_num][1], buffer, sizeof(buffer));
+                    read(fd2[sub_num][0], buffer, sizeof(buffer)); // subserver receives signal
+                    write(client, buffer, sizeof(buffer)); // subserver sends signal to client
 
-                read(fd2[sub_num][0], buffer, sizeof(buffer));
-                write(client, buffer, sizeof(buffer));
+                    read(client, buffer, sizeof(buffer)); //subserver does detective signalling
+                    write(fd1[sub_num][1], buffer, sizeof(buffer));
 
-                read(client, buffer, sizeof(buffer)); //nurse signalling
-                write(fd1[sub_num][1], buffer, sizeof(buffer));
-                read(fd2[sub_num][0], buffer, sizeof(buffer));
-                write(client, buffer, sizeof(buffer));
+                    read(fd2[sub_num][0], buffer, sizeof(buffer));
+                    write(client, buffer, sizeof(buffer));
 
-                read(fd2[sub_num][0], buffer, sizeof(buffer)); //server sending who the dead person is
-                write(client, buffer, sizeof(buffer));
+                    read(client, buffer, sizeof(buffer)); //nurse signalling
+                    write(fd1[sub_num][1], buffer, sizeof(buffer));
+                    read(fd2[sub_num][0], buffer, sizeof(buffer));
+                    write(client, buffer, sizeof(buffer));
 
-                read(client, buffer, sizeof(buffer));
-                write(fd1[sub_num][1], buffer, sizeof(buffer));
-                char spec_buffer[12000] = "";
-                read(fd2[sub_num][0], spec_buffer, sizeof(spec_buffer));
-                write(client, spec_buffer, sizeof(spec_buffer));
+                    read(fd2[sub_num][0], buffer, sizeof(buffer)); //server sending who the dead person is
+                    write(client, buffer, sizeof(buffer));
+                    mode = 1;
+                }
 
-                strcpy(buffer,"\0");
-                read(client, buffer, sizeof(buffer));
-              //  printf("Subserver3 read %s from client\n", buffer);
-                write(fd1[sub_num][1], buffer, sizeof(buffer));
-                //printf("subserver3.5 did this\n");
-                read(fd2[sub_num][0], buffer, sizeof(buffer));
-              //  printf("Subserver4 read %s statements\n", buffer);
-                write(client, buffer, sizeof(buffer));
-                mode = 0;
-                continue1 = 0;
+                while (mode == 1) {
+                    read(client, buffer, sizeof(buffer));
+                    write(fd1[sub_num][1], buffer, sizeof(buffer));
+                    char spec_buffer[12000] = "";
+                    read(fd2[sub_num][0], spec_buffer, sizeof(spec_buffer));
+                    write(client, spec_buffer, sizeof(spec_buffer));
+
+                    strcpy(buffer,"\0");
+                    read(client, buffer, sizeof(buffer));
+                  //  printf("Subserver3 read %s from client\n", buffer);
+                    write(fd1[sub_num][1], buffer, sizeof(buffer));
+                    //printf("subserver3.5 did this\n");
+                    read(fd2[sub_num][0], buffer, sizeof(buffer));
+                  //  printf("Subserver4 read %s statements\n", buffer);
+                    write(client, buffer, sizeof(buffer));
+                    mode = 0;
+                }
+                //continue1 = 0;
                 //checking to see if game is over at the end of the day
                 /*read(client, buffer, sizeof(buffer));
                 write(fd1[sub_num][1], buffer, sizeof(buffer));
