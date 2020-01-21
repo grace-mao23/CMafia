@@ -454,7 +454,7 @@ int main() {
                               printf("\\Vote: ");
                               fgets(buffer, 1000, stdin);
                               buffer[strlen(buffer) - 1] = '\0';
-                            }
+                        }
                          char vote=96+getRole(game_buffer);
                          strcpy(game_buffer,"\0");
                          strncat(game_buffer,&vote,1);
@@ -578,7 +578,6 @@ int main() {
                         }
                         printf("\nYou have chosen to save: %s\n", game_buffer);
                         write(sd_conn, game_buffer, sizeof(game_buffer));
-                        n_turn.index = (n_turn.index + 1) % nur;
                     } else {
                         printf("\nWaiting for Nurse...\n");
                         strcpy(game_buffer, "done");
