@@ -76,7 +76,7 @@ int detectiveNum(int users) {
 
 void printint(int *list) {
     printf("starting to print\n\n");
-    for(size_t i = 0; i < num_players; i++){
+    for (size_t i = 0; i < num_players; i++) {
         printf("%d, ", list[i]);
     }
     printf("\n");
@@ -101,7 +101,7 @@ void startSpecial() {
         n_turn.member[i] = malloc(sizeof(char) * 1000);
         strcpy(n_turn.member[i], "\0");
     }
-    for (size_t i = 0; i<num_players; i++) {
+    for (size_t i = 0; i < num_players; i++) {
         if (roles[i] == 1){
             strcpy(m_turn.member[m_turn.index], players[i]);
             m_turn.index++;
@@ -211,11 +211,11 @@ void removeMember(char *name) {
                 replace = i;
             }
             if (replace == maf - 1) {
-              if(maf-1!=0){
-                m_turn.index = (m_turn.index + 1) % (maf - 1);
-              }else{
-                m_turn.index = -1;
-              }
+                if (maf - 1 != 0) {
+                    m_turn.index = (m_turn.index + 1) % (maf - 1);
+                } else {
+                    m_turn.index = -1;
+                }
                 i = maf;
             } else if (replace != -1) {
                 if (i != maf - 1) {
@@ -230,11 +230,11 @@ void removeMember(char *name) {
                 replace = i;
             }
             if (replace == det - 1) {
-              if(det-1!=0){
-                d_turn.index = (d_turn.index + 1) % (det - 1);
-              }else{
-                d_turn.index = -1;
-              }
+                if (det - 1 != 0) {
+                    d_turn.index = (d_turn.index + 1) % (det - 1);
+                } else {
+                    d_turn.index = -1;
+                }
                 i = det;
             } else if (replace != -1) {
                 if (i != det - 1) {
@@ -249,10 +249,10 @@ void removeMember(char *name) {
                 replace = i;
             }
             if (replace == nur - 1) {
-                if(nur-1!=0){
-                  n_turn.index = (n_turn.index + 1) % (nur - 1);
-                }else{
-                  n_turn.index = -1;
+                if (nur - 1 != 0) {
+                    n_turn.index = (n_turn.index + 1) % (nur - 1);
+                } else {
+                    n_turn.index = -1;
                 }
                 i = nur;
             } else if (replace != -1) {
@@ -374,8 +374,7 @@ int main() {
         mafiaNum(num_players);
         detectiveNum(num_players);
         nurseNum(num_players);
-        startSpecial();//has to be after these three functions aboce
-      //  printint(roles);
+        startSpecial(); //has to be after these three functions above
         printf("\n");
         if (roles[getRole(username)] == 0) {
             printf("\\Mafia$ Your Role: Civilian\n");
@@ -539,7 +538,6 @@ int main() {
                     }
                     read(sd_conn, game_buffer, sizeof(game_buffer)); //block until server sends signal
                     type_night++;
-                  //  printf("\n\n\nNext\n\n\n");
                 }
                 if (type_night == 1) {
                     if (det > 0) {

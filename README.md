@@ -28,7 +28,7 @@ Now you can play! To initiate game play, the main server terminal must indicate 
 ```
 3 players in the game. Ready to start? (yes/no)
 ```
-You must respond correctly with "yes" or "no" and then press the Return key on your keyboard. Responding with any other response will cause the program to fail. In addition, if there are 4 or more users connected, but you are still on the prompt concerning with 3 people, that is okay! If you say yes, it will start the game without the latest players, and only play with the first 3 people in the game. If you say no, then it will give you the prompt regarding 4 players.
+You must respond correctly with "yes" or "no" and then press the Return key on your keyboard. Responding with any other response will cause the program to fail. In addition, if there are 4 or more users connected, but you are still on the prompt concerning with 3 people, that is okay! If you say yes, it will start the game without the latest players, and only play with the first 3 people in the game. If you say no, then it will give you the prompt regarding 4 players. In addition, what's cool as that the main server also prints information of what is happening in the game.
 
 
 At the beginning of the game, everyone gets to choose a username. If you choose a username with no length or greater than 15 characters, it will prompt you to provide a different one. However, it does not check if a username is taken. Then, everyone gets assigned one of the four following roles: Civilian, Mafia, Detective, and Nurse. Civilians are basically useless. Mafia gets to kill one person during the night phase. Nurse gets to heal one person during the night phase. Detectives get to find out the role of one other person in the night phase.
