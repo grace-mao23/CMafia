@@ -334,6 +334,8 @@ int main() {
                     sleep(2);
                     printf("The night will begin shortly...\n");
                     sleep(1);
+                    night = 1;
+                    num_day++;
                 } else {
                     if (type_day == 0) {
                         if (strcmp(victim, "") == 0) {
@@ -358,12 +360,14 @@ int main() {
                             read(sd_conn, game_buffer, sizeof(game_buffer));
                             printf("%s: %s\n", players[i], game_buffer);
                         }
+                        type_day++;
                     } else {
                         //voting
+                        night = 1;
+                        num_day++;
                     }
+
                 }
-                night = 1;
-                num_day++;
             } else { //nighttime
                 printf("\nNIGHT BEGINNING!\n");
                 if (type_night == 0) {
