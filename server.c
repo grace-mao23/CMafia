@@ -168,7 +168,7 @@ int main() {
                                 players[i - 1][k - 1] = buffer[k];
                             }
                         }
-	                  }
+                    }
                     strcpy(buffer, "\0");
                     strcpy(buffer, "U");
                     int a = 0;// which username slot we are on
@@ -228,13 +228,11 @@ int main() {
                             write(fd2[i][1], buffer, sizeof(buffer)); // signals for subserver that it's time
                             read(fd1[i][0], buffer, sizeof(buffer)); // reads the statement from subserver
                             for (i = 1; i <= sub_num; i++) {
-                              printf("Writing %s to subservers\n", buffer);
-                              write(fd2[i][1], buffer, sizeof(buffer)); // writes statement to every subserver
+                                printf("Writing %s to subservers\n", buffer);
+                                write(fd2[i][1], buffer, sizeof(buffer)); // writes statement to every subserver
                             }
                         }
                     }
-
-
                 }
             }
         } else { // child ==> SUBSERVER
