@@ -382,7 +382,7 @@ int main() {
                             type_day++;
                         }
                     } else if (type_day == 1) { // statements
-                        if(getRole([username])!=-1){
+                        if(getRole(username)!=-1){
                           printf("You will now have the chance to enter your statements\n");
                           printf("Your statement: ");
                           fgets(game_buffer, 1000, stdin);
