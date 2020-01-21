@@ -221,8 +221,8 @@ int main() {
                             }
                         }
 
-                        char *statements = malloc(sizeof(char *) * 12);
-                        statements = "";
+                        char *statements = malloc(sizeof(char) * 12000);
+                        strcpy(statements, "Here are the statements: \n");
 
                         for (i = 1; i <= sub_num; i++) {
                             read(fd1[i][0], buffer, sizeof(buffer));
@@ -233,7 +233,7 @@ int main() {
                         }
 
                         for (i = 1; i <= sub_num; i++) {
-                            write(fd2[i][1], statements, sizeof(statements));
+                            write(fd2[i][1], statements, 12000);
                             printf("HOST wrote statements to %d\n", i);
                         }
 
@@ -302,15 +302,18 @@ int main() {
 
                 read(fd2[sub_num][0], buffer, sizeof(buffer)); //server sending who the dead person is
                 write(client, buffer, sizeof(buffer));
+                //printf("Transmission\n");
 
                 mode = 4;
                 while (mode == 4) {
                     read(client, buffer, sizeof(buffer));
                     printf("Subserver read %s from client\n", buffer);
                     write(fd1[sub_num][1], buffer, sizeof(buffer));
-                    read(fd2[sub_num][0], buffer, sizeof(buffer));
-                    printf("Subserver read %s statements\n", buffer);
-                    write(client, buffer, sizeof(buffer));
+                    char spec_buffer[12000] = "";
+                    read(fd2[sub_num][0], spec_buffer, sizeof(spec_buffer));
+                    printf("Subserver read %s statements\n", spec_buffer);
+                    write(client, spec_buffer, sizeof(spec_buffer));
+                    mode = 0;
                 }
 
                 //checking to see if game is over at the end of the day
